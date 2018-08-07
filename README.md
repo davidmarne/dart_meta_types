@@ -1,5 +1,7 @@
 # dart_meta_types
 
+[![Pub](https://img.shields.io/pub/v/meta_types.svg)](https://pub.dartlang.org/packages/meta_types)
+
 a code gen solution for defining sealed classes, data classes, and enum classes for dart.
 [examples](meta_types/example/example.dart).
 
