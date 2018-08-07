@@ -7,7 +7,7 @@ a code gen solution for defining sealed classes, data classes, and enum classes 
 
 ## puropse
 
-* attempt to keep dart up to par with data types supported by modern languages.
+* attempt to keep dart up to par with data types supported by kotlin.
 * provide means for defining algebreic data types in dart.
 * define patterns and apis for generating 3rd party mixins to provide additional functionality to generated models. e.g. meta_types_json.
 * support explicitly defining dataclasses as abstract, interface, extendable, and/or final. The generator can enforces strict practices for these concepts which dart-lang itself does not enforce.
