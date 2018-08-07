@@ -10,7 +10,7 @@ a code gen solution for defining sealed classes, data classes, and enum classes 
 * define patterns and apis for generating 3rd party mixins to provide additional functionality to generated models. e.g. meta_types_json.
 * support explicitly defining dataclasses as abstract, interface, extendable, and/or final. The generator can enforces strict practices for these concepts which dart-lang itself does not enforce.
 * provide means for representing non-nullable and nullable types in your data model.
-* provide means for meta-programming with your models without using dart:mirrors
+* provide means for meta-programming with your models without using dart:mirrors.
 
 ## How to use meta_types
 
@@ -45,7 +45,7 @@ Sealed classes are immutable classes that have multiple fields, but only a singl
 
 Enum classes are classes that represent enumerations, using any type to represent the enumeration values. Enum classes cannot be extended or used as interfaces. All generated models extend `EnumClass`.
 
-## Example - Binary tree AGT using sealed and data classes
+## Example - Binary tree ADT using sealed and data classes
 
 ```dart
 
