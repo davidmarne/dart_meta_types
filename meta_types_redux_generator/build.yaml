@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      meta_types_redux_generator|meta_types_redux:
+        enabled: true
+
+builders:
+  meta_types_redux:
+    target: ":meta_types_redux_generator"
+    import: "package:meta_types_redux_generator/builder.dart"
+    builder_factories: ["metaTypesRedux"]
+    build_extensions: {".dart": [".meta_types_redux.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]

@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      meta_types_generator|meta_types:
+        enabled: true
+
+builders:
+  meta_types:
+    target: ":meta_types_generator"
+    import: "package:meta_types_generator/builder.dart"
+    builder_factories: ["metaTypes"]
+    build_extensions: {".dart": [".meta_types.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]

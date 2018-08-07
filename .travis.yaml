@@ -1,0 +1,16 @@
+language: dart
+script:
+  - cd meta_types
+  - pub get
+  - pub run build_runner build
+  - cd meta_types_generator
+  - pub get
+  - pub run build_runner test
+  - cd meta_types_json
+  - pub get
+  - pub run build_runner build
+  - dart example/example.dart
+  - cd meta_types_redux
+  - pub get
+  - pub run build_runner build
+  - dart example/example.dart

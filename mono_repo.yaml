@@ -1,0 +1,13 @@
+# Created by mono_repo
+meta_types:
+  published: true
+meta_types_generator:
+  published: true
+meta_types_json:
+  published: true
+meta_types_json_generator:
+  published: true
+meta_types_redux:
+  published: true
+meta_types_redux_generator:
+  published: true
