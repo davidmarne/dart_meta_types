@@ -65,7 +65,9 @@ abstract class $Branch<T> {
   $BinaryTree<T> get left;
   $BinaryTree<T> get right;
 }
+```
 
+```dart
 // model usage
 
 void preorderTraversal(BinaryTree<int> tree) => tree.when(
@@ -118,7 +120,9 @@ abstract class $ExampleDataClass {
   @computed
   int get computedField => fieldWithDefault + 5;
 }
+```
 
+```dart
 // model usage
 
 final d = ExampleDataClass(
