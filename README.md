@@ -51,6 +51,8 @@ Enum classes are classes that represent enumerations, using any type to represen
 
 ```dart
 
+// model definitions
+
 @SealedClass()
 abstract class $BinaryTree<T> {
   T get leaf;
@@ -63,6 +65,8 @@ abstract class $Branch<T> {
   $BinaryTree<T> get left;
   $BinaryTree<T> get right;
 }
+
+// model usage
 
 void preorderTraversal(BinaryTree<int> tree) => tree.when(
       leaf: (val) {
@@ -95,7 +99,7 @@ preorderTraversal(tree);
 
 ### Example: data class features
 ```dart
-// regular data class,
+// model definition
 @DataClass()
 abstract class $ExampleDataClass {
   // fieldWithNoDefault is a field without a default value
@@ -114,6 +118,19 @@ abstract class $ExampleDataClass {
   @computed
   int get computedField => fieldWithDefault + 5;
 }
+
+// model usage
+
+final d = ExampleDataClass(
+  fieldWithNoDefault: 0,
+  nullable: Nullable<int>.nil(),
+);
+
+print(d.fieldWithNoDefault); // 0
+print(d.fieldWithDefault); // 10
+print(d.nullable.value); // null
+print(d.computedField); // 15
+
 ```
 
 see more examples [here](meta_types/example/example.dart)
