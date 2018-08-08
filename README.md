@@ -28,6 +28,8 @@ When writing class definitions ALWAYS use other class definitions when referenci
 
 For this reason, class definitions for public models should always be made public.
 
+Note, this is different from other dart code gen solutions such as json_serializable and built_value, because the model definition is NOT used in your code. The generated classes are used directly in your code. This lets the generator generate constructors and additional fields and funcitons that are not present in the model definition.
+
 ## Types
 
 * All metatypes are hashable and comparable.
