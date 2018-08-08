@@ -93,4 +93,27 @@ final tree = BinaryTree<int>.branchFactory(
 preorderTraversal(tree);
 ```
 
+### Example: data class features
+```dart
+// regular data class,
+@DataClass()
+abstract class $ExampleDataClass {
+  // fieldWithNoDefault is a field without a default value
+  // the constructor will require a value be passed for this param
+  int get fieldWithNoDefault;
+
+  // fieldWithDefault uses a default value of 10 if
+  // no other value is passed to the constructor
+  int get fieldWithDefault => 10;
+
+  // data class fields are not nullable, one must
+  // use the Nullable class to represent nullable fields
+  Nullable<int> get nullable;
+
+  // computed fields memoize the result of the getter function
+  @computed
+  int get computedField => fieldWithDefault + 5;
+}
+```
+
 see more examples [here](meta_types/example/example.dart)
