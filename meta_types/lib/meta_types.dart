@@ -9,13 +9,13 @@ const computed = 'computed';
 class DataClass {
   final bool isFinal;
   final bool isInterface;
-  final bool isAbstract;
+  final bool isConst;
 
   const DataClass({
-    bool isFinal = true,
+    this.isFinal = true,
     this.isInterface = false,
-    this.isAbstract = false,
-  }) : this.isFinal = isAbstract || isInterface ? false : isFinal;
+    this.isConst = false,
+  });
 
   Iterable<ComputedField> get computedFields =>
       throw NotGenerated('computedFields');
@@ -31,7 +31,11 @@ class DataClass {
 /// class boilerplate
 class EnumClass<E, T> {
   final Type type;
-  const EnumClass([Type type]) : this.type = type ?? Object;
+  final bool isConst;
+  const EnumClass({
+    this.type,
+    this.isConst = false,
+  }) : this.type = type ?? Object;
   T get value => throw NotGenerated('value');
   Set<E> get allValues => throw NotGenerated('values');
   E valueOfOther(T t) => throw NotGenerated('valueOf');
@@ -40,7 +44,12 @@ class EnumClass<E, T> {
 /// [SealedClass] can be used to annotate classes to generate sealed
 /// class boilerplate
 class SealedClass {
-  const SealedClass();
+  final Type type;
+  final bool isConst;
+  const SealedClass({
+    this.type,
+    this.isConst = false,
+  });
   Iterable<ComputedField> get computedFields =>
       throw NotGenerated('computedFields');
   Iterable<SealedClassField> get unionFields =>
@@ -144,3 +153,54 @@ class EnumClassField<T> extends Field<T> {
 class ComputedField<T> extends Field<T> {
   const ComputedField(String name) : super(name);
 }
+// Iterable<DataClassField> jsonToFields(Map<String, dynamic> json) {
+//   return json.keys.map((k) => DataClassValue(k, _jsonToValue(json[k])));
+// }
+
+// dynamic _jsonToValue(dynamic json) {
+//   if (json is Map<String, dynamic>) {
+//     return json.keys.map((k) => DataClassValue(k, _jsonToValue(json[k])));
+//   }
+//   if (json is List) {
+//     return json.map((v) => _jsonToValue(v));
+//   }
+//   return json;
+// }
+
+// Map<String, dynamic> dataClassToJson(DataClass d) {
+//   return _toJson(d);
+// }
+
+// dynamic _toJson(dynamic data) {
+//   if (data is DataClass) {
+//     return Map<String, dynamic>.fromIterable(
+//       d.fields,
+//       key: (f) => f.name,
+//       value: (f) => _toJson(f.value),
+//     );
+//   }
+//   if (data is SealedClass) {
+//     return <String, dynamic>{
+//       data.name: _toJson(data.value),
+//     };
+//   }
+//   if (data is EnumClass) {
+//     return <String, dynamic>{
+//       data.name: _toJson(data.value),
+//     };
+//   }
+//   if (data is List) {
+//     return data.map(_toJson);
+//   }
+//   if (data is Map) {
+//     return Map.fromEntries(
+//       data.entries.map(
+//         (e) => MapEntry(
+//           e.key,
+//           _toJson(e.value),
+//         ),
+//       ),
+//     );
+//   }
+//   return data;
+// }
