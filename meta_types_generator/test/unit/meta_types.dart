@@ -5,7 +5,6 @@ import 'package:meta_types/meta_types.dart';
 
 part 'fourc/sealed_class.dart';
 part 'fourc/enum_class.dart';
-part 'fourc/computed.dart';
 part 'fourc/data_class.dart';
 part 'fourc/meta_class.dart';
 part 'fourc/field.dart';

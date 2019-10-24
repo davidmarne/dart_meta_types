@@ -39,7 +39,7 @@ Class generateSealedBase(Sealed sealedClass) => Class((b) => b
   ..abstract = true
   ..types.addAll(sealedClass.generics.map((g) => Reference(g.type)))
   ..name = 'I' + sealedClass.name
-  ..extend = Reference('Sealed')
+  // ..extend = Reference('Sealed')
   ..methods.addAll([
     ..._genNonCumputedFieldsOption(sealedClass, isAbstract: true),
     ..._genNonCumputedFieldsWhen(sealedClass, isAbstract: true),
@@ -112,7 +112,7 @@ Method _wheno(Sealed sealedClass, {bool isAbstract = false}) => Method(
           ),
         )
         ..body = isAbstract ? null : Code('''
-          ${_cloneWhen(sealedClass)}
+          ${_cloneWhenO(sealedClass)}
           return otherwise();'''),
     );
 
@@ -148,6 +148,11 @@ String _cloneWhen(Sealed sealedClass) => sealedClass.nonComputedFields.fold(
     '',
     (comb, field) =>
         '$comb if (_${field.name} != null) { return ${field.name}(${_removeVoidPropertyPrivate(field)}); }');
+
+String _cloneWhenO(Sealed sealedClass) => sealedClass.nonComputedFields.fold(
+    '',
+    (comb, field) =>
+        '$comb if (_${field.name} != null) { if (${field.name} != null) return ${field.name}(${_removeVoidPropertyPrivate(field)}); else return otherwise(); }');
 
 Method _equality(Sealed sealedClass) => Method(
       (b) => b

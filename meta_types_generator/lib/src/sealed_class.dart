@@ -2,7 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'meta_class.dart' show TemplateException;
 import 'package:meta_types/meta_types_models.dart'
-    show Sealed, SealedField, Option, Generic;
+    show Sealed, SealedField, Option, Generic, MetaUnion;
 import 'meta_class_cache.dart';
 import 'util.dart';
 
@@ -49,7 +49,14 @@ Sealed sealedFromClassElement(
               throw TemplateException(
                   'interfaces cannot be final. see: ${element.name}');
             }
-            return sealed;
+            return MetaUnion.sealed(sealed);
+          },
+          data: (data) {
+            if (data.isFinal) {
+              throw TemplateException(
+                  'interfaces cannot be final. see: ${element.name}');
+            }
+            return MetaUnion.data(data);
           },
           otherwise: () {
             throw TemplateException(
@@ -60,6 +67,10 @@ Sealed sealedFromClassElement(
     );
   });
 
+  final sealedInterfaces =
+      interfaces.where((i) => i.isSealed).map((u) => u.sealed);
+  final dataInterfaces = interfaces.where((i) => i.isData).map((u) => u.data);
+
   return Sealed(
     name: element.name.replaceAll('\$', ''),
     generics: element.typeParameters.map(
@@ -69,7 +80,7 @@ Sealed sealedFromClassElement(
     isInterface: false, //annotation.getField('isInterface').toBoolValue(),
     // isConst:
     //     element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
-    interfaces: interfaces,
+    interfaces: sealedInterfaces,
     fields: fields,
   );
 }

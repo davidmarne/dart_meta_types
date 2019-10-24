@@ -6,7 +6,17 @@ import 'util.dart';
 Class generateData(Data dataClass) => Class((b) => b
   ..abstract = false
   // ..mixins.addAll(_mixins(dataClass))
-  ..types.addAll(dataClass.generics.map((g) => Reference(g.type)))
+  ..types.addAll(
+    dataClass.generics.map(
+      (g) => Reference(
+        g.type +
+            g.extension.when(
+              some: (s) => ' extends $s',
+              none: () => '',
+            ),
+      ),
+    ),
+  )
   ..constructors.add(new Constructor(
     (b) => b
       // ..constant = dataClass.computedFields.isEmpty && dataClass.isConst

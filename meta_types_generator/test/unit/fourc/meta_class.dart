@@ -2,22 +2,28 @@ part of meta_types;
 
 @DataClass(isInterface: true)
 abstract class Meta<T extends Field> {
-  String get templateClassName => '_\$$name';
-  String get generatedClassName => '_$name';
   String get name;
   bool get isPrivate;
   Iterable<Generic> get generics;
+  Iterable<T> get fields;
+}
 
-  Iterable<T> get fields => throw NotGenerated('Meta:fields');
+@SealedClass()
+abstract class $MetaUnionValue {
+  const $MetaUnionValue();
+
+  Data<DataValue> get data;
+  Sealed<SealedValue> get sealed;
+  Enum<EnumValue> get enumeration;
 }
 
 @SealedClass()
 abstract class $MetaUnion {
   const $MetaUnion();
 
-  DataClass get data;
-  SealedClass get sealed;
-  EnumClass get enumeration;
+  Data<DataField> get data;
+  Sealed<SealedField> get sealed;
+  Enum<EnumField> get enumeration;
 }
 
 @DataClass()
@@ -39,3 +45,6 @@ abstract class Field {
 abstract class Value {
   Object get value;
 }
+
+@DataClass(isInterface: true)
+abstract class FieldValue implements Value, Field {}

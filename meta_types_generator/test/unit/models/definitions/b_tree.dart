@@ -25,7 +25,7 @@ String preorderTraversal(BinaryTree<int> tree) => tree.when(
       ].join(','),
     );
 
-final testTree = BinaryTree<int>.branch(
+final BinaryTree<int> testTree = BinaryTree.branch(
   Branch(
     value: 1,
     left: BinaryTree.branch(

@@ -1,6 +1,6 @@
 part of models;
 
-@EnumClass(Signal)
+@EnumClass()
 abstract class $ProtocolState {
   static const Waiting waiting = Waiting();
   static const Talking talking = Talking();

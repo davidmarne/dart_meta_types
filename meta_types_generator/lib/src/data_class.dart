@@ -26,35 +26,39 @@ Data dataFromClassElement(
     return DataField(
       isComputed: isComputed(accessor.metadata),
       isAbstract: accessor.isAbstract,
+      isDefaulted: !accessor.isAbstract && !isComputed(accessor.metadata),
       name: accessor.name,
       returnType: resolveFieldReturnTypeName(cache, accessor), // TODO:
       returnTypeGenerics: Option<List<String>>.none(),
     );
   });
 
-  final interfaces = element.interfaces.map((e) {
-    return cache.find(e.name).when(
-      none: () {
-        throw TemplateException(
-            'interfaces must be data classes. see ${e.name}');
-      },
-      some: (interface) {
-        return interface.wheno(
-          data: (data) {
-            if (data.isFinal) {
-              throw TemplateException(
-                  'interfaces cannot be final. see: ${element.name}');
-            }
-            return data;
-          },
-          otherwise: () {
+  final interfaces = element.interfaces
+      .map((e) {
+        return cache.find(e.name).when(
+          none: () {
             throw TemplateException(
-                'interfaces must be data classes. see ${element.name}');
+                'interfaces must be data classes. see ${e.name}');
+          },
+          some: (interface) {
+            return interface.wheno(
+              data: (data) {
+                if (data.isFinal) {
+                  throw TemplateException(
+                      'interfaces cannot be final. see: ${element.name}');
+                }
+                return data;
+              },
+              otherwise: () {
+                throw TemplateException(
+                    'interfaces must be data classes. see ${element.name}');
+              },
+            );
           },
         );
-      },
-    );
-  }).expand((e) => [e, ...e.interfaces]);
+      })
+      .expand((e) => [e, ...e.interfaces])
+      .toSet();
 
   return Data(
     name: element.name.replaceAll('\$', ''),
@@ -65,7 +69,11 @@ Data dataFromClassElement(
     interfaces: interfaces,
     fields: fields,
     generics: element.typeParameters.map(
-      (p) => Generic(type: p.name, extension: Option.none()),
+      (p) => Generic(
+          type: p.name,
+          extension: p.bound == null
+              ? Option.none()
+              : Option.some(p.bound.toString())),
     ),
   );
 }

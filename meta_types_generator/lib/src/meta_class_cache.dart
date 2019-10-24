@@ -4,9 +4,9 @@ import 'package:analyzer/dart/constant/value.dart';
 
 import 'package:meta_types/meta_types_models.dart';
 import 'data_class.dart';
-// import 'enum_class.dart';
+import 'enum_class.dart';
 // import 'meta_class.dart';
-// import 'sealed_class.dart';
+import 'sealed_class.dart';
 // import 'option.dart';
 
 class MetaClassCache {
@@ -49,7 +49,10 @@ class MetaClassCache {
           (a) => a.computeConstantValue(),
         )
         .singleWhere(
-          (w) => const ['DataClass', 'SealedClass', 'EnumClass']
+          (w) => const [
+            'DataClass',
+            'SealedClass',
+          ] //'EnumClass']
               .contains(w.type.name),
           orElse: () => null,
         );
@@ -65,10 +68,10 @@ class MetaClassCache {
                 dataFromClassElement(e, annotation, this),
               );
             case 'SealedClass':
-            // return MetaUnion.sealed(
-            //   // SealedClass.fromClassElement(e, annotation, this),
-            // );
-            case 'EnumClass':
+              return MetaUnion.sealed(
+                sealedFromClassElement(e, annotation, this),
+              );
+            // case 'EnumClass':
             // return MetaUnion.enumeration(
             //   EnumClass.fromClassElement(e, annotation, this),
             // );
