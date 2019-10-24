@@ -1,27 +1,22 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:dart_style/dart_style.dart';
-import 'meta_class.dart';
-import 'meta_class_cache.dart';
-import 'sealed_class.dart';
-import 'option.dart';
+import 'package:meta_types/meta_types_models.dart'
+    show Sealed, SealedField, Option, Generic;
 import 'util.dart';
 
 //// TODO: mixin
 // TODO: fix $story
 // Fix field type generics
-Class generateSealedClass(SealedClass sealedClass) => Class((b) => b
+Class generateSealed(Sealed sealedClass) => Class((b) => b
   ..abstract = false
-  ..types.addAll(
-      sealedClass.metaClassReference.generics.map((g) => Reference(g.symbol)))
+  ..types.addAll(sealedClass.generics.map((g) => Reference(g.type)))
   ..constructors.addAll(_constructors(sealedClass))
   ..constructors.add(_defaultConstructor(sealedClass))
-  ..name = sealedClass.metaClassReference.symbol
+  ..name = sealedClass.name
   // ..mixins = _mixins(sealedClass)
   ..types.addAll([])
   ..extend = Reference(
-    '\$${sealedClass.metaClassReference.symbol}' +
-        classGenerics(sealedClass.metaClassReference.generics),
-    sealedClass.metaClassReference.url,
+    '\$${sealedClass.name}' + classGenerics(sealedClass.generics),
+    '',
   )
   ..fields.addAll([
     ..._genComputedFields(sealedClass),
@@ -40,12 +35,11 @@ Class generateSealedClass(SealedClass sealedClass) => Class((b) => b
     _toString(sealedClass),
   ]));
 
-Class generateSealedClassBase(SealedClass sealedClass) => Class((b) => b
+Class generateSealedBase(Sealed sealedClass) => Class((b) => b
   ..abstract = true
-  ..types.addAll(
-      sealedClass.metaClassReference.generics.map((g) => Reference(g.symbol)))
-  ..name = 'I' + sealedClass.metaClassReference.symbol
-  ..extend = Reference('SealedClass')
+  ..types.addAll(sealedClass.generics.map((g) => Reference(g.type)))
+  ..name = 'I' + sealedClass.name
+  ..extend = Reference('Sealed')
   ..methods.addAll([
     ..._genNonCumputedFieldsOption(sealedClass, isAbstract: true),
     ..._genNonCumputedFieldsWhen(sealedClass, isAbstract: true),
@@ -53,46 +47,43 @@ Class generateSealedClassBase(SealedClass sealedClass) => Class((b) => b
     _wheno(sealedClass, isAbstract: true),
   ]));
 
-Constructor _defaultConstructor(SealedClass sealedClass) => new Constructor(
+Constructor _defaultConstructor(Sealed sealedClass) => new Constructor(
       (b) => b
         ..optionalParameters.addAll(
-          sealedClass.allNonComputedFields.map(
+          sealedClass.nonComputedFields.map(
             (f) => Parameter(
               (b) => b
                 ..named = true
-                ..name = f.propertyName
+                ..name = f.name
                 ..type = Reference(_replaceVoidReturnTypeWithBool(f)),
             ),
           ),
         )
-        ..initializers.addAll(_initializers(sealedClass.allNonComputedFields))
+        ..initializers.addAll(_initializers(sealedClass.nonComputedFields))
         ..body = Code('''
         var found = false;
-        ${_initializer(sealedClass.allNonComputedFields)}
+        ${_initializer(sealedClass.nonComputedFields)}
         throw Exception("TODO");
         '''),
     );
 
-Iterable<Reference> _mixins(SealedClass sealedClass) =>
-    sealedClass.mixins.map((m) => Reference(m));
-
-String _initializer(Iterable<SealedClassField> fields) => fields.fold(
+String _initializer(Iterable<SealedField> fields) => fields.fold(
     '',
     (comb, field) =>
-        '$comb if (${field.propertyName} != null) { if (found) throw Exception("todo"); found = true; }');
+        '$comb if (${field.name} != null) { if (found) throw Exception("todo"); found = true; }');
 
-Iterable<Code> _initializers(Iterable<SealedClassField> fields) => fields
-    .map((field) => Code('_${field.propertyName} = ${field.propertyName}'));
+Iterable<Code> _initializers(Iterable<SealedField> fields) =>
+    fields.map((field) => Code('_${field.name} = ${field.name}'));
 
-Method _when(SealedClass sealedClass, {bool isAbstract = false}) => Method(
+Method _when(Sealed sealedClass, {bool isAbstract = false}) => Method(
       (b) => b
         ..name = 'when'
         ..types.add(Reference('WHEN'))
         ..returns = Reference('WHEN')
-        ..optionalParameters.addAll(sealedClass.allNonComputedFields.map((f) =>
+        ..optionalParameters.addAll(sealedClass.nonComputedFields.map((f) =>
             Parameter((b) => b
               ..named = true
-              ..name = f.propertyName
+              ..name = f.name
               ..type =
                   Reference('WHEN Function(${_removeReturnTypeVoid(f)})'))))
         ..body = isAbstract ? null : Code('''
@@ -100,7 +91,7 @@ Method _when(SealedClass sealedClass, {bool isAbstract = false}) => Method(
           throw FallThroughError();'''),
     );
 
-Method _wheno(SealedClass sealedClass, {bool isAbstract = false}) => Method(
+Method _wheno(Sealed sealedClass, {bool isAbstract = false}) => Method(
       (b) => b
         ..name = 'wheno'
         ..types.add(Reference('WHENO'))
@@ -110,11 +101,11 @@ Method _wheno(SealedClass sealedClass, {bool isAbstract = false}) => Method(
           ..name = 'otherwise'
           ..type = Reference('WHENO Function()')))
         ..optionalParameters.addAll(
-          sealedClass.allNonComputedFields.map(
+          sealedClass.nonComputedFields.map(
             (f) => Parameter(
               (b) => b
                 ..named = true
-                ..name = f.propertyName
+                ..name = f.name
                 ..type =
                     Reference('WHENO Function(${_removeReturnTypeVoid(f)})'),
             ),
@@ -125,40 +116,40 @@ Method _wheno(SealedClass sealedClass, {bool isAbstract = false}) => Method(
           return otherwise();'''),
     );
 
-Iterable<Constructor> _constructors(SealedClass sealedClass) =>
-    sealedClass.allNonComputedFields.map(
+Iterable<Constructor> _constructors(Sealed sealedClass) =>
+    sealedClass.nonComputedFields.map(
       (f) => Constructor(
         (b) => b
-          ..constant = sealedClass.computedFields.isEmpty && sealedClass.isConst
-          ..name = f.propertyName
+          // ..constant = sealedClass.computedFields.isEmpty && sealedClass.isConst
+          ..name = f.name
           ..requiredParameters.addAll([
-            if (f.returnTypeName != 'void')
+            if (f.returnType != 'void')
               Parameter(
                 (b) => b
-                  ..name = f.propertyName
-                  ..type = Reference(f.returnTypeName),
+                  ..name = f.name
+                  ..type = Reference(f.returnType),
               ),
           ])
           ..initializers.addAll(
-            sealedClass.allNonComputedFields.map(
+            sealedClass.nonComputedFields.map(
               (ifield) => Code(
                 ifield == f
-                    ? (f.returnTypeName == 'void'
-                        ? '_${ifield.propertyName} = true'
-                        : 'assert(${ifield.propertyName} != null), _${ifield.propertyName} = ${ifield.propertyName}')
-                    : '_${ifield.propertyName} = null',
+                    ? (f.returnType == 'void'
+                        ? '_${ifield.name} = true'
+                        : 'assert(${ifield.name} != null), _${ifield.name} = ${ifield.name}')
+                    : '_${ifield.name} = null',
               ),
             ),
           ),
       ),
     );
 
-String _cloneWhen(SealedClass sealedClass) => sealedClass.allNonComputedFields.fold(
+String _cloneWhen(Sealed sealedClass) => sealedClass.nonComputedFields.fold(
     '',
     (comb, field) =>
-        '$comb if (_${field.propertyName} != null) { return ${field.propertyName}(${_removeVoidPropertyPrivate(field)}); }');
+        '$comb if (_${field.name} != null) { return ${field.name}(${_removeVoidPropertyPrivate(field)}); }');
 
-Method _equality(SealedClass sealedClass) => Method(
+Method _equality(Sealed sealedClass) => Method(
       (b) => b
         ..name = 'operator =='
         ..returns = TypeReference((b) => b..symbol = 'bool')
@@ -167,97 +158,94 @@ Method _equality(SealedClass sealedClass) => Method(
           ..type = Reference('dynamic')))
         ..body = Code('''
           if (identical(other, this)) return true;
-          if (other is! ${sealedClass.metaClassReference.symbol}) return false;
-          return ${_equalityFold(sealedClass.allNonComputedFields)};'''),
+          if (other is! ${sealedClass.name}) return false;
+          return ${_equalityFold(sealedClass.nonComputedFields)};'''),
     );
 
-String _equalityFold(Iterable<SealedClassField> e) => e
-    .map((field) => '_${field.propertyName} == other._${field.propertyName}')
-    .join('&&');
+String _equalityFold(Iterable<SealedField> e) =>
+    e.map((field) => '_${field.name} == other._${field.name}').join('&&');
 
-Method _hashCode(SealedClass sealedClass) => Method(
+Method _hashCode(Sealed sealedClass) => Method(
       (b) => b
         ..name = 'hashCode'
         ..type = MethodType.getter
         ..returns = TypeReference((b) => b..symbol = 'int')
         ..body = Code('''
-          return \$jf(${_hashFold(sealedClass.allNonComputedFields)});'''),
+          return \$jf(${_hashFold(sealedClass.nonComputedFields)});'''),
     );
 
-String _hashFold(Iterable<SealedClassField> e) => e.fold(
+String _hashFold(Iterable<SealedField> e) => e.fold(
     '',
     (params, field) =>
-        '\$jc(${params.isNotEmpty ? params : 0}, _${field.propertyName}.hashCode)');
+        '\$jc(${params.isNotEmpty ? params : 0}, _${field.name}.hashCode)');
 
-Method _toString(SealedClass sealedClass) => Method(
+Method _toString(Sealed sealedClass) => Method(
       (b) => b
         ..name = 'toString'
         ..returns = TypeReference((b) => b..symbol = 'String')
         ..body = Code('''
-          final value = when(${_toStringWhen(sealedClass.allNonComputedFields)});
-          return \'${sealedClass.metaClassReference.symbol}( \$value )\';'''),
+          final value = when(${_toStringWhen(sealedClass.nonComputedFields)});
+          return \'${sealedClass.name}( \$value )\';'''),
     );
 
-String _toStringWhen(Iterable<SealedClassField> e) => e.fold(
+String _toStringWhen(Iterable<SealedField> e) => e.fold(
     '',
     (comb, field) =>
-        '$comb${field.propertyName}: (${_removeVoidProperty(field)}) => \'${field.propertyName}${_isVoid(field) ? "" : " \$"}${_removeVoidProperty(field)}\',');
+        '$comb${field.name}: (${_removeVoidProperty(field)}) => \'${field.name}${_isVoid(field) ? "" : " \$"}${_removeVoidProperty(field)}\',');
 
-Iterable<Field> _genNonComputedFields(SealedClass e) =>
-    e.allNonComputedFields.map(
+Iterable<Field> _genNonComputedFields(Sealed e) => e.nonComputedFields.map(
       (field) => Field(
         (b) => b
           ..modifier = FieldModifier.final$
-          ..name = '_${field.propertyName}'
+          ..name = '_${field.name}'
           ..type = Reference(
             _replaceVoidReturnTypeWithBool(field),
           ),
       ),
     );
 
-Iterable<Field> _genComputedFields(SealedClass e) => e.computedFields.map(
+Iterable<Field> _genComputedFields(Sealed e) => e.computedFields.map(
       (field) => Field(
         (b) => b
-          ..name = '_${field.propertyName}'
-          ..type = Reference(field.returnTypeName),
+          ..name = '_${field.name}'
+          ..type = Reference(field.returnType),
       ),
     );
 
-Iterable<Method> _genNonCumputedFieldsGetter(SealedClass e) =>
-    e.allNonComputedFields.map(
+Iterable<Method> _genNonCumputedFieldsGetter(Sealed e) =>
+    e.nonComputedFields.map(
       (field) => Method(
         (b) => b
-          ..name = field.propertyName
+          ..name = field.name
           ..type = MethodType.getter
-          ..returns = Reference(field.returnTypeName)
+          ..returns = Reference(field.returnType)
           ..body = Code('''
-            if (_${field.propertyName} != null) return ${_removeVoidPropertyPrivate(field)};
+            if (_${field.name} != null) return ${_removeVoidPropertyPrivate(field)};
             throw Exception('TODO name htis');'''),
       ),
     );
 
-Iterable<Method> _genNonCumputedFieldsCheck(SealedClass e,
+Iterable<Method> _genNonCumputedFieldsCheck(Sealed e,
         {bool isAbstract = false}) =>
-    e.allNonComputedFields.map(
+    e.nonComputedFields.map(
       (field) => Method(
         (b) => b
-          ..name = "is" + capitalize(field.propertyName)
+          ..name = "is" + capitalize(field.name)
           ..type = MethodType.getter
           ..returns = Reference('bool')
-          ..body = isAbstract
-              ? null
-              : Code('''return _${field.propertyName} != null;'''),
+          ..body =
+              isAbstract ? null : Code('''return _${field.name} != null;'''),
       ),
     );
 
-Iterable<Method> _genNonCumputedFieldsOption(SealedClass e,
+Iterable<Method> _genNonCumputedFieldsOption(Sealed e,
         {bool isAbstract = false}) =>
-    e.allNonComputedFields.map(
+    e.nonComputedFields.map(
       (field) => Method(
         (b) => b
-          ..name = field.propertyName + 'Option'
+          ..name = field.name + 'Option'
           ..type = MethodType.getter
-          ..returns = Reference('Option<${field.returnTypeName}>')
+          ..returns = Reference('Option<${field.returnType}>')
           ..body = isAbstract
               ? null
               : Code(
@@ -266,13 +254,13 @@ Iterable<Method> _genNonCumputedFieldsOption(SealedClass e,
     );
 
 Iterable<Method> _genNonCumputedFieldsWhen(
-  SealedClass e, {
+  Sealed e, {
   bool isAbstract = false,
 }) =>
-    e.allNonComputedFields.map(
+    e.nonComputedFields.map(
       (field) => Method(
         (b) => b
-          ..name = 'when' + capitalize(field.propertyName)
+          ..name = 'when' + capitalize(field.name)
           ..returns = Reference('void')
           ..requiredParameters.add(
             Parameter(
@@ -285,28 +273,26 @@ Iterable<Method> _genNonCumputedFieldsWhen(
           ..body = isAbstract
               ? null
               : Code(
-                  '''if (_${field.propertyName} != null) handler(${_removeVoidPropertyPrivate(field)});'''),
+                  '''if (_${field.name} != null) handler(${_removeVoidPropertyPrivate(field)});'''),
       ),
     );
 
-Iterable<Method> _genComputedFieldsGetter(SealedClass e) =>
-    e.computedFields.map(
+Iterable<Method> _genComputedFieldsGetter(Sealed e) => e.computedFields.map(
       (field) => Method(
         (b) => b
-          ..name = field.propertyName
-          ..returns = Reference(field.returnTypeName)
+          ..name = field.name
+          ..returns = Reference(field.returnType)
           ..type = MethodType.getter
-          ..body = Code(
-              '''return _${field.propertyName} ??= super.${field.propertyName};'''),
+          ..body = Code('''return _${field.name} ??= super.${field.name};'''),
       ),
     );
 
-String _replaceVoidReturnTypeWithBool(SealedClassField field) =>
-    _isVoid(field) ? 'bool' : field.returnTypeName;
-String _removeReturnTypeVoid(SealedClassField field) =>
-    _isVoid(field) ? '' : field.returnTypeName;
-String _removeVoidProperty(SealedClassField field) =>
-    _isVoid(field) ? '' : field.propertyName;
-String _removeVoidPropertyPrivate(SealedClassField field) =>
-    _isVoid(field) ? '' : '_' + field.propertyName;
-bool _isVoid(SealedClassField field) => field.returnTypeName == 'void';
+String _replaceVoidReturnTypeWithBool(SealedField field) =>
+    _isVoid(field) ? 'bool' : field.returnType;
+String _removeReturnTypeVoid(SealedField field) =>
+    _isVoid(field) ? '' : field.returnType;
+String _removeVoidProperty(SealedField field) =>
+    _isVoid(field) ? '' : field.name;
+String _removeVoidPropertyPrivate(SealedField field) =>
+    _isVoid(field) ? '' : '_' + field.name;
+bool _isVoid(SealedField field) => field.returnType == 'void';

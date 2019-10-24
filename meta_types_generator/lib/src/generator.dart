@@ -3,9 +3,11 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
-import 'meta_class.dart';
+
 import 'meta_class_cache.dart';
-import 'option.dart';
+
+import 'package:meta_types/meta_types_models.dart'
+    show Data, DataField, Option, Generic;
 import 'data_class_generator.dart';
 import 'sealed_class_generator.dart';
 
@@ -22,16 +24,16 @@ class MetaTypesGenerator extends Generator {
       library.classes.map((c) => cache.find(c.name)).map((metaClassOption) {
         // log.severe("DAVE metaClassOption $metaClassOption");
         return metaClassOption.map(
-          (metaClass) => metaClass.whenDef(
-            data: (d) => d.isInterface ? <Class>[] : [generateDataClass(d)],
+          (metaClass) => metaClass.wheno(
+            data: (d) => d.isInterface ? <Class>[] : [generateData(d)],
             sealed: (d) => d.isInterface
                 ? <Class>[]
-                : [generateSealedClass(d), generateSealedClassBase(d)],
-            def: () => <Class>[],
+                : [generateSealed(d), generateSealedBase(d)],
+            otherwise: () => <Class>[],
           ),
         );
       }).forEach((classesOption) {
-        classesOption.whenPresent((classes) {
+        classesOption.whenSome((classes) {
           classes.forEach((cls) {
             result.write(
               formatter.format(

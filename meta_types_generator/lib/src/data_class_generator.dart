@@ -1,41 +1,37 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:dart_style/dart_style.dart';
-import 'meta_class.dart';
-import 'meta_class_cache.dart';
-import 'data_class.dart';
-import 'option.dart';
+import 'package:meta_types/meta_types_models.dart'
+    show Data, DataField, Option, Generic;
 import 'util.dart';
 
-Class generateDataClass(DataClass dataClass) => Class((b) => b
+Class generateData(Data dataClass) => Class((b) => b
   ..abstract = false
   // ..mixins.addAll(_mixins(dataClass))
-  ..types.addAll(
-      dataClass.metaClassReference.generics.map((g) => Reference(g.symbol)))
+  ..types.addAll(dataClass.generics.map((g) => Reference(g.type)))
   ..constructors.add(new Constructor(
     (b) => b
-      ..constant = dataClass.computedFields.isEmpty && dataClass.isConst
+      // ..constant = dataClass.computedFields.isEmpty && dataClass.isConst
       ..initializers.addAll(
-        dataClass.allNonComputedFields.map(_initializer).expand((i) => i),
+        dataClass.nonComputedFields.map(_initializer).expand((i) => i),
       )
       ..optionalParameters.addAll(
-        dataClass.allNonComputedFields.map(
+        dataClass.nonComputedFields.map(
           (f) => Parameter(
             (b) => b
               ..named = true
-              ..name = f.propertyName
-              ..type = Reference(f.returnTypeName),
+              ..name = f.name
+              ..type = Reference(f.returnType),
           ),
         ),
       ),
   ))
-  ..name = dataClass.metaClassReference.symbol
+  ..name = dataClass.name
   ..types.addAll([])
   ..extend = Reference(
-    '\$${dataClass.metaClassReference.symbol}' +
+    '\$${dataClass.name}' +
         classGenerics(
-          dataClass.metaClassReference.generics,
+          dataClass.generics,
         ),
-    dataClass.metaClassReference.url,
+    '',
   )
   // ..methods.addAll(_)
   ..methods.add(_clone(dataClass))
@@ -48,35 +44,29 @@ Class generateDataClass(DataClass dataClass) => Class((b) => b
   ..methods.add(_equality(dataClass))
   ..methods.add(_toString(dataClass)));
 
-Iterable<Code> _initializer(DataClassField field) => [
-      Code('_${field.propertyName} = ${field.propertyName}'),
-      Code('assert(${field.propertyName} != null)'),
+Iterable<Code> _initializer(DataField field) => [
+      Code('_${field.name} = ${field.name}'),
+      Code('assert(${field.name} != null)'),
     ];
 
-Iterable<Reference> _mixins(DataClass dataClass) => dataClass.mixins
-    .map((m) => Reference(dataClass.metaClassReference.symbol + m));
-
-Method _clone(DataClass dataClass) => Method((b) => b
+Method _clone(Data dataClass) => Method((b) => b
   ..name = 'clone'
   ..returns = Reference(
-    dataClass.metaClassReference.symbol +
-        classGenerics(dataClass.metaClassReference.generics),
+    dataClass.name + classGenerics(dataClass.generics),
   )
   ..optionalParameters
-      .addAll(dataClass.allNonComputedFields.map((f) => Parameter((b) => b
+      .addAll(dataClass.nonComputedFields.map((f) => Parameter((b) => b
         ..named = true
-        ..name = f.propertyName
-        ..type = Reference(f.returnTypeName))))
+        ..name = f.name
+        ..type = Reference(f.returnType))))
   ..body = Code('''
-  return ${dataClass.metaClassReference.symbol}(${_cloneParams(dataClass)});
+  return ${dataClass.name}(${_cloneParams(dataClass)});
   '''));
 
-String _cloneParams(DataClass dataClass) => dataClass.allNonComputedFields.fold(
-    '',
-    (comb, field) =>
-        '$comb${field.propertyName}: ${field.propertyName} ?? _${field.propertyName},');
+String _cloneParams(Data dataClass) => dataClass.nonComputedFields.fold('',
+    (comb, field) => '$comb${field.name}: ${field.name} ?? _${field.name},');
 
-Method _equality(DataClass dataClass) => Method((b) => b
+Method _equality(Data dataClass) => Method((b) => b
   ..name = 'operator =='
   ..returns = TypeReference((b) => b..symbol = 'bool')
   ..requiredParameters.add(Parameter((b) => b
@@ -84,72 +74,70 @@ Method _equality(DataClass dataClass) => Method((b) => b
     ..type = Reference('dynamic')))
   ..body = Code('''
     if (identical(other, this)) return true;
-    if (other is! ${dataClass.metaClassReference.symbol}) return false;
-    return ${_equalityFold(dataClass.allNonComputedFields)};
+    if (other is! ${dataClass.name}) return false;
+    return ${_equalityFold(dataClass.nonComputedFields)};
   '''));
 
-String _equalityFold(Iterable<DataClassField> e) => e
-    .map((field) => '${field.propertyName} == other.${field.propertyName}')
-    .join('&&');
+String _equalityFold(Iterable<DataField> e) =>
+    e.map((field) => '${field.name} == other.${field.name}').join('&&');
 
-Method _hashCode(DataClass dataClass) => Method((b) => b
+Method _hashCode(Data dataClass) => Method((b) => b
   ..name = 'hashCode'
   ..type = MethodType.getter
   ..returns = TypeReference((b) => b..symbol = 'int')
   ..body = Code('''
-    return \$jf(${_hashFold(dataClass.allNonComputedFields)});
+    return \$jf(${_hashFold(dataClass.nonComputedFields)});
   '''));
 
-String _hashFold(Iterable<DataClassField> e) => e.fold(
+String _hashFold(Iterable<DataField> e) => e.fold(
     '',
     (params, field) =>
-        '\$jc(${params.isNotEmpty ? params : 0}, ${field.propertyName}.hashCode)');
+        '\$jc(${params.isNotEmpty ? params : 0}, ${field.name}.hashCode)');
 
-Method _toString(DataClass dataClass) => Method((b) => b
+Method _toString(Data dataClass) => Method((b) => b
   ..name = 'toString'
   ..returns = TypeReference((b) => b..symbol = 'String')
   ..body = Code('''
-    return "${dataClass.metaClassReference.symbol} (${_toStringFold(dataClass.allNonDefaultedFields)})";
+    return "${dataClass.name} (${_toStringFold(dataClass.nonDefaultedFields)})";
   '''));
 
-String _toStringFold(Iterable<DataClassField> e) => e
-    .map((field) => '${field.propertyName}: \$${field.propertyName}')
-    .join(', ');
+String _toStringFold(Iterable<DataField> e) =>
+    e.map((field) => '${field.name}: \$${field.name}').join(', ');
 
-Iterable<Field> _genNonComputedFields(DataClass e) =>
-    e.allNonComputedFields.map((field) => Field((b) => b
+Iterable<Field> _genNonComputedFields(Data e) =>
+    e.nonComputedFields.map((field) => Field((b) => b
       ..modifier = FieldModifier.final$
-      ..name = '_${field.propertyName}'
-      ..type = Reference(field.returnTypeName)));
+      ..name = '_${field.name}'
+      ..type = Reference(field.returnType)));
 
-Iterable<Field> _genComputedFields(DataClass e) =>
+Iterable<Field> _genComputedFields(Data e) =>
     e.computedFields.map((field) => Field((b) => b
-      ..name = '_${field.propertyName}'
-      ..type = Reference(field.returnTypeName)));
+      ..name = '_${field.name}'
+      ..type = Reference(field.returnType)));
 
-Iterable<Method> _nonDefaultedFieldsGetter(DataClass e) =>
-    e.allNonDefaultedFields.map((field) => Method((b) => b
-      ..name = field.propertyName
-      ..returns = Reference(field.returnTypeName)
+Iterable<Method> _nonDefaultedFieldsGetter(Data e) =>
+    e.nonDefaultedFields.map((field) => Method((b) => b
+      ..name = field.name
+      ..returns = Reference(field.returnType)
       ..type = MethodType.getter
       ..body = Code('''
-        return _${field.propertyName};
+        return _${field.name};
       ''')));
 
-Iterable<Method> _defaultedFieldsGetter(DataClass e) =>
-    e.allDefaultedFields.map((field) => Method((b) => b
-      ..name = field.propertyName
-      ..returns = Reference(field.returnTypeName)
+Iterable<Method> _defaultedFieldsGetter(Data e) =>
+    e.defaultedFields.map((field) => Method((b) => b
+      ..name = field.name
+      ..returns = Reference(field.returnType)
       ..type = MethodType.getter
       ..body = Code('''
-        return _${field.propertyName} ?? super.${field.propertyName};
+        return _${field.name} ?? super.${field.name};
       ''')));
 
-Iterable<Method> _genComputedFieldsGetter(DataClass e) =>
+Iterable<Method> _genComputedFieldsGetter(Data e) =>
     e.computedFields.map((field) => Method((b) => b
-      ..name = field.propertyName
-      ..returns = Reference(field.returnTypeName)
+      ..name = field.name
+      ..returns = Reference(field.returnType)
       ..type = MethodType.getter
       ..body = Code('''
-        return _${field.propertyName} ??= super.${field.propertyName};
+        return _${field.name} ??= super.${field.name};
       ''')));

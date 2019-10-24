@@ -1,7 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:meta_types/meta_types.dart' show computed;
-import 'meta_class.dart';
+import 'package:meta_types/meta_types_models.dart'
+    show Data, DataField, Option, Generic;
 import 'meta_class_cache.dart';
 
 bool isComputed(List<ElementAnnotation> metadata) => metadata
@@ -12,10 +13,10 @@ Iterable<InterfaceType> calcSupertypes(ClassElement e) =>
         ? []
         : [e.type, ...calcSupertypes(e.supertype.element)];
 
-String classGenerics(Iterable<MetaClassReference> typeParameters) {
+String classGenerics(Iterable<Generic> typeParameters) {
   return typeParameters.isEmpty
       ? ''
-      : '<${typeParameters.map((p) => p.symbol).join(",")}>';
+      : '<${typeParameters.map((p) => p.type).join(",")}>';
 }
 
 String resolveFieldReturnTypeName(
