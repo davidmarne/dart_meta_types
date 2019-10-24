@@ -1,193 +1,194 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'generator_util.dart';
+import 'package:analyzer/dart/constant/value.dart';
+import 'package:analyzer/dart/element/type.dart' show InterfaceType;
+import 'package:meta_types/meta_types_models.dart' show Data, DataField, Option;
+import 'meta_class.dart' show TemplateException;
+import 'meta_class_cache.dart';
+// import 'option.dart';
+import 'util.dart';
 
-final dataClassCache = <ClassElement, DataClass>{};
+// class DataClassField {
+//   final String returnTypeName;
+//   final String propertyName;
+//   final bool isComputedField;
+//   final bool isAbstractField;
+//   final bool isDefaultedField;
 
-DataClass getDataClass(Element element) {
-  if (element is! ClassElement) {
-    throw new Exception('DataClass annotation should only be used on classes');
-  }
+//   DataClassField({
+//     this.propertyName,
+//     this.returnTypeName,
+//     this.isComputedField,
+//     this.isAbstractField,
+//   }) : isDefaultedField = !isComputedField && !isAbstractField;
+// }
 
-  final classElement = element as ClassElement;
-  final genClassName = classElement.name.replaceAll('\$', '');
-  final genClassGenerics = classGenerics(classElement);
+// class DataClass implements MetaClass {
+//   final MetaClassReference metaClassReference;
+//   final bool isConst;
+//   final bool isFinal;
+//   final bool isInterface;
+//   final Option<DataClass> supertype;
+//   final Iterable<DataClass> allSupertypes;
+//   final Iterable<DataClass> allInterfaces;
+//   final Iterable<DataClassField> fields;
+//   final Iterable<DataClassField> computedFields;
+//   final Iterable<DataClassField> nonComputedFields;
+//   final Iterable<DataClassField> allNonComputedFields;
+//   final Iterable<DataClassField> nonDefaultedFields;
+//   final Iterable<DataClassField> allNonDefaultedFields;
+//   final Iterable<DataClassField> defaultedFields;
+//   final Iterable<DataClassField> allDefaultedFields;
+//   final Iterable<String> mixins;
 
-  // if the data class has already been computed return it
-  if (dataClassCache[classElement] != null) return dataClassCache[classElement];
+//   DataClass._({
+//     this.metaClassReference,
+//     this.isConst,
+//     this.isFinal,
+//     this.isInterface,
+//     this.supertype,
+//     this.allSupertypes,
+//     this.allInterfaces,
+//     this.fields,
+//     this.computedFields,
+//     this.nonComputedFields,
+//     this.allNonComputedFields,
+//     this.nonDefaultedFields,
+//     this.allNonDefaultedFields,
+//     this.defaultedFields,
+//     this.allDefaultedFields,
+//     this.mixins,
+//   });
 
-  if (classElement.accessors.any((a) => !a.isGetter || a.isPrivate)) {
-    throw new Exception('All dataclass accessors should be public getters');
-  }
+  Data fromClassElement(
+    ClassElement element,
+    DartObject annotation,
+    MetaClassCache cache,
+  ) {
+    // final metaClassReference = MetaClassReference(
+    //   element.name.replaceAll('\$', ''),
+    //   element.source.uri.toString(),
+    //   generics: element.typeParameters.map(
+    //     (p) => MetaClassReference(p.name, ''),
+    //   ),
+    // );
 
-  if (classElement.fields.any((f) => !f.isFinal)) {
-    throw new Exception('All fields should be final');
-  }
-
-  if (classElement.methods.isNotEmpty) {
-    throw new Exception('No methods should exist.');
-  }
-
-  DataClass supertype;
-  try {
-    if (classElement.supertype.name != 'Object') {
-      supertype = getDataClass(classElement.supertype.element);
+    if (element.fields.isNotEmpty &&
+        element.fields.every((f) => !f.isSynthetic)) {
+      throw new TemplateException(
+          'data class should have no fields. see ${element.name}');
     }
-  } catch (e) {
-    throw new Exception(
-        'Supertype must be Object or other DataClass.\n  Validating supertype raised $e');
-  }
 
-  if (supertype != null && supertype.isFinal) {
-    throw new Exception('Supertype cannot be final.');
-  }
+    final fields = element.accessors.map((accessor) {
+      if (!accessor.isGetter) {
+        throw new TemplateException(
+            'data class accessors should be getters. see ${accessor.name} on class ${element.name}');
+      }
 
-  Iterable<DataClass> interfaces;
-  try {
-    interfaces = classElement.interfaces.map((i) => getDataClass(i.element));
-  } catch (e) {
-    throw new Exception(
-        'Interfaces must be DataClasses. Validating interface raised $e');
-  }
+      return DataField(
+        isComputed: isComputed(accessor.metadata),
+        isAbstract: accessor.isAbstract,
+        name: accessor.name,
+        returnType: resolveFieldReturnTypeName(cache, accessor), // TODO:
+        returnTypeGenerics: Option<List<String>>.none(),
+      );
+    });
 
-  if (interfaces.any((i) => !i.isInterface)) {
-    throw new Exception('Interfaces must have isInterface set to true.');
-  }
+    // final supertypeMetaClassOption = cache.find(element.supertype.name);
+    // if (supertypeMetaClassOption.isAbsent &&
+    //     element.supertype.name != 'Object') {
+    //   throw TemplateException('supertypes must be data classes');
+    // }
 
-  final annotation =
-      getElementMetaAnnotation(classElement).computeConstantValue();
-  final isFinal = annotation.getField('isFinal').toBoolValue();
-  final isInterface = annotation.getField('isInterface').toBoolValue();
-  final isAbstract = annotation.getField('isAbstract').toBoolValue();
+    // final supertypeOption = supertypeMetaClassOption.when(
+    //   none: () {
+    //     if (element.supertype.name != 'Object') {
+    //       throw TemplateException('supertypes must be data classes');
+    //     }
+    //     return Option<DataClass>.none();
+    //   },
+    //   some: (supertype) {
+    //     return supertype.whenDef(
+    //       data: (data) {
+    //         if (data.isFinal) {
+    //           throw TemplateException(
+    //               'supertype cannot be final. see: ${supertype.metaClassReference.symbol}');
+    //         }
+    //         if (data.isInterface) {
+    //           throw TemplateException(
+    //               'supertype cannot be an interface. see: ${supertype.metaClassReference.symbol}');
+    //         }
+    //         return Option.some(data);
+    //       },
+    //       def: () {
+    //         throw TemplateException(
+    //             'interfaces must be data classes. see ${supertype.metaClassReference.symbol}');
+    //       },
+    //     );
+    //   },
+    // );
 
-  final supertypes = <DataClass>[];
-  var tmpSupertype = supertype;
-  while (tmpSupertype != null) {
-    supertypes.add(tmpSupertype);
-    tmpSupertype = tmpSupertype.supertype;
-  }
+    final interfaces = element.interfaces.map((e) {
+      return cache.find(e.name).when(
+        none: () {
+          throw TemplateException(
+              'interfaces must be data classes. see ${e.name}');
+        },
+        some: (interface) {
+          return interface.wheno(
+            data: (data) {
+              if (data.isFinal) {
+                throw TemplateException(
+                    'interfaces cannot be final. see: ${element.name}');
+              }
+              return data;
+            },
+            otherwise: () {
+              throw TemplateException(
+                  'interfaces must be data classes. see ${element.name}');
+            },
+          );
+        },
+      );
+    }).expand((e) => [e, ...e.allInterfaces]);
 
-  final mixins = classElement.metadata
-      .map((m) => m.computeConstantValue())
-      .where((c) => c.type.element is ClassElement)
-      .where((c) => (c.type.element as ClassElement)
-          .allSupertypes
-          .any((s) => s.name == 'MetaTypeMixin' || s.name == 'DataClassMixin'))
-      .map((c) => new MetaMixin(c, '${genClassName}${c.type.element.name}',
-          baseClassName(genClassName) + genClassGenerics));
+    // final supertypes = calcSupertypes(element.supertype.element).map((e) {
+    //   return cache.find(e.name).when(
+    //     none: () {
+    //       throw TemplateException(
+    //           'supertypes must be data classes. see ${e.name}');
+    //     },
+    //     some: (supertype) {
+    //       return supertype.whenDef(
+    //         data: (data) {
+    //           if (data.isFinal) {
+    //             throw TemplateException(
+    //                 'supertypes cannot be final. see: ${element.name} ${supertype.metaClassReference.symbol}');
+    //           }
 
-  if (isInterface && mixins.isNotEmpty) {
-    throw new Exception('Interfaces cannot include mixins');
-  }
+    //           if (data.isInterface) {
+    //             throw TemplateException(
+    //                 'supertypes cannot be interfaces. see: ${element.name}  ${supertype.metaClassReference.symbol}');
+    //           }
+    //           return data;
+    //         },
+    //         def: () {
+    //           throw TemplateException(
+    //               'supertypes must be data classes. see ${supertype.metaClassReference.symbol}');
+    //         },
+    //       );
+    //     },
+    //   );
+    // });
 
-  if (isAbstract && isFinal) {
-    throw new Exception('Abstract classes cannot be final.');
-  }
 
-  if (isInterface && isFinal) {
-    throw new Exception('Interfaces cannot be final.');
-  }
-
-  final defaultedFields = _defaultedFields(classElement).toSet()
-    ..addAll(interfaces.expand((st) => st.defaultedFields));
-
-  final nonDefaultedFields = _nonDefaultedFields(classElement).toSet()
-    ..addAll(interfaces.expand((st) => st.nonDefaultedFields));
-
-  final computedFields = _computedFields(classElement).toSet()
-    ..addAll(interfaces.expand((st) => st.computedFields));
-
-  final nonComputedFields = _nonComputedFields(classElement).toSet()
-    ..addAll(interfaces.expand((st) => st.nonComputedFields));
-
-  if (isInterface && defaultedFields.isNotEmpty) {
-    throw new Exception('Interfaces cannot have defaulted fields.');
-  }
-
-  if (isInterface && computedFields.isNotEmpty) {
-    throw new Exception('Interfaces cannot have computed fields.');
-  }
-
-  final allFields = nonComputedFields.toSet()
-    ..addAll(interfaces.expand((s) => s.nonComputedFields))
-    ..addAll(supertypes.expand((s) => s.nonComputedFields));
-
-  final dataClass = new DataClass(
-    classElement,
-    genClassName,
-    classElement.name,
-    baseClassName(genClassName),
-    genClassGenerics,
-    supertype,
-    supertypes,
-    interfaces,
-    mixins,
-    nonComputedFields,
-    computedFields,
-    nonDefaultedFields,
-    defaultedFields,
-    allFields,
-    isFinal,
-    isInterface,
-    isAbstract,
-  );
-
-  dataClassCache[classElement] = dataClass;
-  return dataClass;
-}
-
-class DataClass {
-  final ClassElement element;
-  final String generatedClassName;
-  final String templateClassName;
-  final String baseClassName;
-  final String classGenerics;
-  final DataClass supertype;
-  final Iterable<DataClass> supertypes;
-  final Iterable<DataClass> interfaces;
-  final Iterable<MetaMixin> mixins;
-  final Iterable<Field> nonComputedFields;
-  final Iterable<Field> computedFields;
-  final Iterable<Field> nonDefaultedFields;
-  final Iterable<Field> defaultedFields;
-  final Iterable<Field> allFields; // has super fields
-  final bool isFinal;
-  final bool isInterface;
-  final bool isAbstract;
-
-  DataClass(
-    this.element,
-    this.generatedClassName,
-    this.templateClassName,
-    this.baseClassName,
-    this.classGenerics,
-    this.supertype,
-    this.supertypes,
-    this.interfaces,
-    this.mixins,
-    this.nonComputedFields,
-    this.computedFields,
-    this.nonDefaultedFields,
-    this.defaultedFields,
-    this.allFields,
-    this.isFinal,
-    this.isInterface,
-    this.isAbstract,
-  );
-}
-
-Iterable<Field> _defaultedFields(ClassElement e) =>
-    e.accessors.where((m) => !m.isAbstract && !isComputed(m)).map(_toField);
-
-Iterable<Field> _nonDefaultedFields(ClassElement e) =>
-    e.accessors.where((m) => m.isAbstract).map(_toField);
-
-Iterable<Field> _computedFields(ClassElement e) =>
-    e.accessors.where((m) => !m.isAbstract && isComputed(m)).map(_toField);
-
-Iterable<Field> _nonComputedFields(ClassElement e) =>
-    e.accessors.where((m) => !(!m.isAbstract && isComputed(m))).map(_toField);
-
-Field _toField(PropertyAccessorElement element) => new Field(
-      element.displayName,
-      element.returnType,
+    return Data(
+      name: element.name.replaceAll('\$', ''),
+      // isConst:
+      //     element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
+      isFinal: annotation.getField('isFinal').toBoolValue(),
+      isInterface: annotation.getField('isInterface').toBoolValue(),
+      interfaces: interfaces,
+      fields: fields,
     );
+  }
+}

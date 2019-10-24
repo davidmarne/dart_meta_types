@@ -10,8 +10,9 @@ class DCM extends DataClassMixin {
   const DCM();
 }
 
-abstract class DataClassMixinBaseDCM implements _DataClassMixinBaseBase {
-  void mixinFunction() {
-    print('successfully mixed in ${implementor}');
+mixin DataClassMixinBaseDCM on DataClassMixinBase {
+  static DataClassMixinBase create() => new DataClassMixinBase();
+  void printFoo() {
+    print("foo");
   }
 }

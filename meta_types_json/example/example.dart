@@ -12,6 +12,52 @@ abstract class $MyEnum {
 
 @MetaJson()
 @SealedClass()
+abstract class _MyDataClass implements MyDataClassBase {
+  String get string;
+}
+
+mixin _MyDataClassJson {
+  static MyDataClass json(Map json) => new MyDataClass();
+}
+
+// gener
+
+class MyDataClass extends _MyDataClass with _MyDataClassJson {
+  String get string => "SDF";
+  MyDataClass();
+
+  factory MyDataClass.json(Map json) => _MyDataClassJson.json(json);
+
+  T when<T>(String s, int i) {
+    return null;
+  }
+}
+
+abstract class MyDataClassBase {
+  T when<T>(String s, int i);
+}
+
+@MetaJson()
+@SealedClass()
+mixin _MySealedClass implements MySealedClassBase {
+  String get string;
+  int get integer;
+}
+
+// gener
+
+abstract class MySealedClass {
+  T when<T>(String s, int i) {
+    return null;
+  }
+}
+
+abstract class MySealedClassBase {
+  T when<T>(String s, int i);
+}
+
+@MetaJson()
+@SealedClass()
 abstract class $MySealedClass {
   String get string;
   int get integer;

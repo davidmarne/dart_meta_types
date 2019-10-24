@@ -6,35 +6,35 @@ part of models;
 @SealedClass()
 abstract class $BinaryTree<T> {
   T get leaf;
-  $Branch<T> get branch;
+  Branch<T> get branch;
 }
 
 @DataClass()
 abstract class $Branch<T> {
   T get value;
-  $BinaryTree<T> get left;
-  $BinaryTree<T> get right;
+  BinaryTree<T> get left;
+  BinaryTree<T> get right;
 }
 
 String preorderTraversal(BinaryTree<int> tree) => tree.when(
       leaf: (val) => '$val',
       branch: (b) => [
-            '${b.value}',
-            preorderTraversal(b.left),
-            preorderTraversal(b.right),
-          ].join(','),
+        '${b.value}',
+        preorderTraversal(b.left),
+        preorderTraversal(b.right),
+      ].join(','),
     );
 
-final testTree = BinaryTree<int>.branchFactory(
+final testTree = BinaryTree<int>.branch(
   Branch(
     value: 1,
-    left: BinaryTree.branchFactory(
+    left: BinaryTree.branch(
       Branch(
         value: 2,
-        left: BinaryTree.leafFactory(3),
-        right: BinaryTree.leafFactory(4),
+        left: BinaryTree.leaf(3),
+        right: BinaryTree.leaf(4),
       ),
     ),
-    right: BinaryTree.leafFactory(5),
+    right: BinaryTree.leaf(5),
   ),
 );

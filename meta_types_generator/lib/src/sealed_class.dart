@@ -1,106 +1,129 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'generator_util.dart';
+import 'package:analyzer/dart/constant/value.dart';
+import 'meta_class.dart';
+import 'meta_class_cache.dart';
+import 'util.dart';
 
-final sealedClassCache = <ClassElement, SealedClass>{};
+class SealedClassField {
+  final String returnTypeName;
+  final String propertyName;
+  final bool isComputedField;
 
-SealedClass getSealedClass(Element element) {
-  if (element is! ClassElement) {
-    throw new Exception(
-        'SealedClass annotation should only be used on classes');
-  }
-
-  final classElement = element as ClassElement;
-  final genClassName = classElement.name.replaceAll('\$', '');
-  final genClassGenerics = classGenerics(classElement);
-
-  // if the data class has already been computed return it
-  if (sealedClassCache[classElement] != null)
-    return sealedClassCache[classElement];
-
-  final mixins = classElement.metadata
-      .map((m) => m.computeConstantValue())
-      .where((c) => c.type.element is ClassElement)
-      .where((c) => (c.type.element as ClassElement).allSupertypes.any(
-          (s) => s.name == 'MetaTypeMixin' || s.name == 'SealedClassMixin'))
-      .map((c) => new MetaMixin(c, '${genClassName}${c.type.element.name}',
-          baseClassName(genClassName) + genClassGenerics));
-
-  if (classElement.accessors
-      .any((a) => !a.isGetter || !a.isAbstract || !a.isPublic)) {
-    throw new Exception(
-        'SealedClass accessors should all be public abstract getters');
-  }
-
-  if (classElement.supertype.name != 'Object') {
-    throw new Exception(
-        'SealedClasses cannot extend anything other than Object');
-  }
-
-  if (classElement.methods.isNotEmpty) {
-    throw new Exception('No methods should exist.');
-  }
-
-  // raise if there are any interfaces for now
-  // additional work is required in the template for interface support
-  if (classElement.interfaces.isNotEmpty) {
-    throw new Exception('Interfaces not supported for SealedClasses');
-  }
-
-  Iterable<SealedClass> interfaces;
-  try {
-    interfaces = classElement.interfaces.map((i) => getSealedClass(i.element));
-  } catch (e) {
-    throw new Exception(
-        'Interfaces must be SealedClasses. Validating interface raised $e');
-  }
-
-  final sealedClass = new SealedClass(
-    classElement,
-    genClassName,
-    classElement.name,
-    baseClassName(genClassName),
-    genClassGenerics,
-    mixins,
-    interfaces,
-    _computedFields(classElement),
-    _unionFields(classElement).toSet()
-      ..addAll(interfaces.expand((i) => i.unionFields)),
-  );
-
-  sealedClassCache[classElement] = sealedClass;
-  return sealedClass;
+  SealedClassField({
+    this.propertyName,
+    this.returnTypeName,
+    this.isComputedField,
+  });
 }
 
-class SealedClass {
-  final ClassElement element;
-  final String generatedClassName;
-  final String templateClassName;
-  final String baseClassName;
-  final String genClassGenerics;
-  final Iterable<MetaMixin> mixins;
-  final Iterable<SealedClass> interfaces;
-  final Iterable<Field> computedFields;
-  final Iterable<Field> unionFields;
-  SealedClass(
-    this.element,
-    this.generatedClassName,
-    this.templateClassName,
-    this.baseClassName,
-    this.genClassGenerics,
-    this.mixins,
-    this.interfaces,
+class SealedClass implements MetaClass {
+  final MetaClassReference metaClassReference;
+  final bool isFinal;
+  final bool isInterface;
+  final bool isConst;
+  final Iterable<SealedClass> allInterfaces;
+  final Iterable<SealedClassField> fields;
+  final Iterable<SealedClassField> computedFields;
+  final Iterable<SealedClassField> nonComputedFields;
+  final Iterable<SealedClassField> allNonComputedFields;
+  final Iterable<String> mixins;
+
+  SealedClass._({
+    this.metaClassReference,
+    this.isFinal,
+    this.isInterface,
+    this.isConst,
+    this.allInterfaces,
+    this.fields,
     this.computedFields,
-    this.unionFields,
-  );
-}
+    this.nonComputedFields,
+    this.allNonComputedFields,
+    this.mixins,
+  });
 
-Iterable<Field> _unionFields(ClassElement e) =>
-    e.accessors.where((m) => m.isAbstract && !isComputed(m)).map(_toField);
-
-Iterable<Field> _computedFields(ClassElement e) =>
-    e.accessors.where((m) => !m.isAbstract && isComputed(m)).map(_toField);
-
-Field _toField(PropertyAccessorElement element) => new Field(
-      element.displayName,
-      element.returnType,
+  factory SealedClass.fromClassElement(
+    ClassElement element,
+    DartObject annotation,
+    MetaClassCache cache,
+  ) {
+    final metaClassReference = MetaClassReference(
+      element.name.replaceAll('\$', ''),
+      element.source.uri.toString(),
+      generics: element.typeParameters.map(
+        (p) => MetaClassReference(p.name, ''),
+      ),
     );
+
+    if (element.accessors.isNotEmpty &&
+        element.fields.every((f) => !f.isSynthetic)) {
+      // isSynthetic?
+      throw new TemplateException(
+          'sealed class should have no fields. see ${metaClassReference.symbol}');
+    }
+
+    final fields = element.accessors.map((accessor) {
+      if (!accessor.isGetter) {
+        throw new TemplateException(
+            'sealed class accessors should be getters. see ${accessor.name} on class ${metaClassReference.symbol}');
+      }
+
+      return SealedClassField(
+        propertyName: accessor.name,
+        returnTypeName: resolveFieldReturnTypeName(cache, accessor), // TODO:
+        isComputedField: isComputed(accessor.metadata),
+      );
+    });
+
+    if (element.supertype.name != 'Object') {
+      throw TemplateException(
+          'sealed classes cannot have super types. see ${element.name}');
+    }
+
+    final interfaces = element.interfaces.map((e) {
+      return cache.find(e.name).when(
+        none: () {
+          throw TemplateException(
+              'interfaces must be sealed classes. see ${e.name}');
+        },
+        some: (interface) {
+          return interface.whenDef(
+            sealed: (sealed) {
+              if (sealed.isFinal) {
+                throw TemplateException(
+                    'interfaces cannot be final. see: ${interface.metaClassReference.symbol}');
+              }
+              return sealed;
+            },
+            def: () {
+              throw TemplateException(
+                  'interfaces must be sealed classes. see ${interface.metaClassReference.symbol}');
+            },
+          );
+        },
+      );
+    });
+
+    final mixins = parseMixins(element, 'SealedClass');
+
+    final computedFields = fields.where((f) => f.isComputedField);
+
+    final nonComputedFields = fields.where((f) => !f.isComputedField);
+
+    final allNonComputedFields = nonComputedFields.toList()
+      ..addAll(interfaces.expand((i) => i.allNonComputedFields));
+
+    return SealedClass._(
+      metaClassReference: metaClassReference,
+      isFinal: false, //annotation.getField('isFinal').toBoolValue(),
+      isInterface: false, //annotation.getField('isInterface').toBoolValue(),
+      isConst:
+          element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
+      allInterfaces: interfaces,
+      fields: fields,
+      computedFields: computedFields,
+      nonComputedFields: nonComputedFields,
+      allNonComputedFields: allNonComputedFields,
+      mixins: mixins,
+    );
+  }
+}

@@ -1,85 +1,68 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
-import 'generator_util.dart';
+import 'package:analyzer/dart/constant/value.dart';
+import 'meta_class.dart';
+import 'meta_class_cache.dart';
+import 'util.dart';
 
-final enumClassCache = <ClassElement, EnumClass>{};
+class EnumClassField {
+  final String returnTypeName;
+  final String propertyName;
+  final bool isComputedField;
 
-EnumClass getEnumClass(Element element) {
-  if (element is! ClassElement) {
-    throw Exception('EnumClass annotation should only be used on classes');
-  }
-
-  final classElement = element as ClassElement;
-  final generatedClassName = classElement.name.replaceAll('\$', '');
-
-  // if the enum class has already been computed return it
-  if (enumClassCache[classElement] != null) return enumClassCache[classElement];
-
-  if (classElement.accessors.any((a) => !a.isStatic)) {
-    throw Exception('Enum class should only contain static fields');
-  }
-
-  final staticFields = classElement.fields.where((a) => a.isStatic);
-  if (staticFields.isEmpty) {
-    throw Exception('Enum class should contain at least one static field');
-  }
-
-  final enumType = getElementMetaAnnotation(classElement)
-      .computeConstantValue()
-      .getField('type')
-      .toTypeValue();
-
-  if (!staticFields.every((f) => f.type.isSubtypeOf(enumType))) {
-    throw Exception('Enum class static fields should all be of the same type');
-  }
-
-  if (enumType.name != 'int' &&
-      enumType.name != 'String' &&
-      staticFields.any((f) => f.initializer == null)) {
-    throw Exception(
-        'Non int/String enum class fields should all be intialized');
-  }
-
-  final mixins = classElement.metadata
-      .map((m) => m.computeConstantValue())
-      .where((c) => c.type.element is ClassElement)
-      .where((c) => (c.type.element as ClassElement).allSupertypes.any(
-          (s) => s.name == 'MetaTypeMixin' || s.name == 'SealedClassMixin'))
-      .map((c) => new MetaMixin(
-          c,
-          '${generatedClassName}${c.type.element.name}',
-          baseClassName(generatedClassName)));
-
-  return EnumClass(
-    classElement,
-    generatedClassName,
-    classElement.name,
-    baseClassName(generatedClassName),
-    mixins,
-    enumType,
-    enumType.name.toString(),
-    staticFields.map((f) => Field(f.name, f.type)),
-  );
+  EnumClassField({
+    this.propertyName,
+    this.returnTypeName,
+    this.isComputedField,
+  });
 }
 
-class EnumClass {
-  final ClassElement element;
-  final String generatedClassName;
-  final String templateClassName;
-  final String baseClassName;
-  final Iterable<MetaMixin> mixins;
-  final DartType type;
-  final String typeString;
-  final Iterable<Field> fields;
+class EnumClass implements MetaClass {
+  final MetaClassReference metaClassReference;
+  final MetaClassReference enumMetaClassReference;
+  final Iterable<EnumClassField> fields;
+  final Iterable<EnumClassField> computedFields;
 
-  EnumClass(
-    this.element,
-    this.generatedClassName,
-    this.templateClassName,
-    this.baseClassName,
-    this.mixins,
-    this.type,
-    this.typeString,
+  EnumClass._({
+    this.metaClassReference,
+    this.enumMetaClassReference,
     this.fields,
-  );
+    this.computedFields,
+  });
+
+  factory EnumClass.fromClassElement(
+    ClassElement element,
+    DartObject annotation,
+    MetaClassCache cache,
+  ) {
+    final metaClassReference = MetaClassReference(
+        element.name.replaceAll('\$', ''), element.source.uri.toString());
+
+    final fields = element.fields.map((field) {
+      if (!field.isConst || !field.isStatic || field.initializer == null) {
+        throw new TemplateException(
+            'enum class fields should be initialized static const. see ${field.name} on class ${metaClassReference.symbol}');
+      }
+
+      return EnumClassField(
+        propertyName: field.name,
+        returnTypeName: field.type.displayName, // TODO:
+        isComputedField: isComputed(field.metadata),
+      );
+    });
+
+    if (element.supertype.name != 'Object' || element.interfaces.isNotEmpty) {
+      throw TemplateException(
+          'enum classes cannot have super type or implement interfaces. see ${element.name}');
+    }
+
+    // final DartType enumType = null; //annotation.getField('type').toTypeValue();
+    final computedFields = fields.where((f) => f.isComputedField); //
+
+    return EnumClass._(
+      metaClassReference: metaClassReference,
+      enumMetaClassReference: MetaClassReference('', ''),
+      fields: fields,
+      computedFields: computedFields,
+    );
+  }
 }
