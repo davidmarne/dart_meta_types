@@ -73,7 +73,10 @@ Data dataFromClassElement(
           type: p.name,
           extension: p.bound == null
               ? Option.none()
-              : Option.some(p.bound.toString())),
+              : p.bound.toString() == 'dynamic'
+                  ? Option.some(resolveFieldExtensionName(
+                      p)) // TODO YIKES not always data
+                  : Option.some(p.bound.toString())),
     ),
   );
 }

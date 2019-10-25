@@ -29,6 +29,23 @@ String resolveFieldReturnTypeName(
       .trim();
 }
 
+String resolveFieldExtensionName(Element a) {
+  // f this right here
+  final beforeField = a.source.contents.data.replaceRange(0, a.nameOffset, '');
+
+  final afterExtends =
+      beforeField.replaceRange(0, beforeField.indexOf('extends') + 7, '');
+
+  final indexOfComma = afterExtends.indexOf(',');
+
+  return afterExtends
+      .replaceRange(
+          indexOfComma == -1 ? afterExtends.indexOf('> ') : indexOfComma,
+          afterExtends.length,
+          '')
+      .trim();
+}
+
 String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
 Iterable<String> parseMixins(
