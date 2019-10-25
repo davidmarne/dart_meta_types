@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:meta_types/meta_types.dart' show computed;
+import 'package:build/build.dart';
 import 'package:meta_types/meta_types_models.dart'
     show Data, DataField, Option, Generic;
 import 'meta_class_cache.dart';
@@ -36,14 +37,26 @@ String resolveFieldExtensionName(Element a) {
   final afterExtends =
       beforeField.replaceRange(0, beforeField.indexOf('extends') + 7, '');
 
-  final indexOfComma = afterExtends.indexOf(',');
+  var lowest = 3920840928349203;
+  var indexOfComma = afterExtends.indexOf(',');
+  if (indexOfComma != -1 && indexOfComma < lowest) lowest = indexOfComma;
 
-  return afterExtends
-      .replaceRange(
-          indexOfComma == -1 ? afterExtends.indexOf('> ') : indexOfComma,
-          afterExtends.length,
-          '')
-      .trim();
+  final indexOfBracketSpace = afterExtends.indexOf('> ');
+  if (indexOfBracketSpace != -1 && indexOfBracketSpace < lowest)
+    lowest = indexOfBracketSpace;
+  final indexOfBracketNewLine = afterExtends.indexOf('>\n');
+  if (indexOfBracketNewLine != -1 && indexOfBracketNewLine < lowest)
+    lowest = indexOfBracketNewLine;
+
+  String x;
+  try {
+    x = afterExtends.replaceRange(lowest, afterExtends.length, '').trim();
+  } catch (e, s) {
+    log.severe('ame $afterExtends', e, s);
+  }
+  // log.severe(
+  //     '$x $indexOfComma $indexOfBracketSpace $indexOfBracketNewLine $lowest');
+  return x;
 }
 
 String capitalize(String s) => s[0].toUpperCase() + s.substring(1);

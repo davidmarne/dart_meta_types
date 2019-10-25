@@ -40,6 +40,16 @@ class SealedClass {
   const SealedClass();
 }
 
+/// [sum] can be used to annotate classes to generate sum
+/// class boilerplate
+const sum = const Sum();
+
+/// [Sum] can be used to annotate classes to generate sum
+/// class boilerplate
+class Sum {
+  const Sum();
+}
+
 /// For use by generated code in calculating hash codes. Do not use directly.
 int $jc(int hash, int value) {
   // Jenkins hash "combine".

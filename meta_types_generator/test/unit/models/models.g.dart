@@ -111,8 +111,6 @@ class BinaryTree<T> extends $BinaryTree<T> {
 }
 
 abstract class IBinaryTree<T> {
-  Option<T> get leafOption;
-  Option<Branch<T>> get branchOption;
   void whenLeaf(void Function(T) handler);
   void whenBranch(void Function(Branch<T>) handler);
   WHEN when<WHEN>({WHEN Function(T) leaf, WHEN Function(Branch<T>) branch});
@@ -630,8 +628,6 @@ class TestSealedClass extends $TestSealedClass {
 }
 
 abstract class ITestSealedClass {
-  Option<int> get integerOption;
-  Option<String> get stringOption;
   void whenInteger(void Function(int) handler);
   void whenString(void Function(String) handler);
   WHEN when<WHEN>({WHEN Function(int) integer, WHEN Function(String) string});
@@ -746,8 +742,6 @@ class Generic1SealedClass<T> extends $Generic1SealedClass<T> {
 }
 
 abstract class IGeneric1SealedClass<T> {
-  Option<T> get tOption;
-  Option<String> get stringOption;
   void whenT(void Function(T) handler);
   void whenString(void Function(String) handler);
   WHEN when<WHEN>({WHEN Function(T) t, WHEN Function(String) string});
@@ -862,8 +856,6 @@ class GenericSealedClass<T1, T2> extends $GenericSealedClass<T1, T2> {
 }
 
 abstract class IGenericSealedClass<T1, T2> {
-  Option<T1> get t1Option;
-  Option<T2> get t2Option;
   void whenT1(void Function(T1) handler);
   void whenT2(void Function(T2) handler);
   WHEN when<WHEN>({WHEN Function(T1) t1, WHEN Function(T2) t2});
@@ -979,8 +971,6 @@ class NestingSealedClass extends $NestingSealedClass {
 }
 
 abstract class INestingSealedClass {
-  Option<int> get integerOption;
-  Option<$NestedSealedClass> get nestedOption;
   void whenInteger(void Function(int) handler);
   void whenNested(void Function($NestedSealedClass) handler);
   WHEN when<WHEN>(
@@ -1096,8 +1086,6 @@ class NestedSealedClass extends $NestedSealedClass {
 }
 
 abstract class INestedSealedClass {
-  Option<int> get integerOption;
-  Option<String> get stringOption;
   void whenInteger(void Function(int) handler);
   void whenString(void Function(String) handler);
   WHEN when<WHEN>({WHEN Function(int) integer, WHEN Function(String) string});

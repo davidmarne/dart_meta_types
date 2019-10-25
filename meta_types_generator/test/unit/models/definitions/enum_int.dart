@@ -1,7 +1,7 @@
 part of models;
 
-@EnumClass(int)
+@EnumClass()
 abstract class $IntEnum {
-  static int a = 7000;
-  static int b;
+  static const int a = 7000;
+  static const int b;
 }

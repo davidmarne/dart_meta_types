@@ -79,21 +79,105 @@ class SealedField extends $SealedField {
   }
 }
 
-class Sealed<T extends SealedField> extends $Sealed<T> {
+class SealedValue extends $SealedValue {
+  SealedValue(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _returnTypeGenerics = returnTypeGenerics,
+        assert(returnTypeGenerics != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _value = value,
+        assert(value != null);
+
+  final String _returnType;
+
+  final Option<List<String>> _returnTypeGenerics;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  final Object _value;
+
+  SealedValue clone(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value}) {
+    return SealedValue(
+      returnType: returnType ?? _returnType,
+      returnTypeGenerics: returnTypeGenerics ?? _returnTypeGenerics,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      value: value ?? _value,
+    );
+  }
+
+  String get returnType {
+    return _returnType;
+  }
+
+  Option<List<String>> get returnTypeGenerics {
+    return _returnTypeGenerics;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  Object get value {
+    return _value;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc(
+            $jc($jc($jc(0, returnType.hashCode), returnTypeGenerics.hashCode),
+                name.hashCode),
+            isComputed.hashCode),
+        value.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SealedValue) return false;
+    return returnType == other.returnType &&
+        returnTypeGenerics == other.returnTypeGenerics &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        value == other.value;
+  }
+
+  String toString() {
+    return "SealedValue (returnType: $returnType, returnTypeGenerics: $returnTypeGenerics, name: $name, isComputed: $isComputed, value: $value)";
+  }
+}
+
+class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
   Sealed(
-      {bool isFinal,
-      bool isInterface,
-      Iterable<Sealed<T>> interfaces,
+      {bool isConst,
+      Iterable<Data<D>> dataInterfaces,
       String name,
       bool isPrivate,
       Iterable<Generic> generics,
       Iterable<T> fields})
-      : _isFinal = isFinal,
-        assert(isFinal != null),
-        _isInterface = isInterface,
-        assert(isInterface != null),
-        _interfaces = interfaces,
-        assert(interfaces != null),
+      : _isConst = isConst,
+        assert(isConst != null),
+        _dataInterfaces = dataInterfaces,
+        assert(dataInterfaces != null),
         _name = name,
         assert(name != null),
         _isPrivate = isPrivate,
@@ -107,13 +191,11 @@ class Sealed<T extends SealedField> extends $Sealed<T> {
 
   Iterable<T> _nonComputedFields;
 
-  Iterable<T> _localNonComputedFields;
+  Iterable<D> _dataFields;
 
-  final bool _isFinal;
+  final bool _isConst;
 
-  final bool _isInterface;
-
-  final Iterable<Sealed<T>> _interfaces;
+  final Iterable<Data<D>> _dataInterfaces;
 
   final String _name;
 
@@ -123,18 +205,16 @@ class Sealed<T extends SealedField> extends $Sealed<T> {
 
   final Iterable<T> _fields;
 
-  Sealed<T> clone(
-      {bool isFinal,
-      bool isInterface,
-      Iterable<Sealed<T>> interfaces,
+  Sealed<T, D> clone(
+      {bool isConst,
+      Iterable<Data<D>> dataInterfaces,
       String name,
       bool isPrivate,
       Iterable<Generic> generics,
       Iterable<T> fields}) {
     return Sealed(
-      isFinal: isFinal ?? _isFinal,
-      isInterface: isInterface ?? _isInterface,
-      interfaces: interfaces ?? _interfaces,
+      isConst: isConst ?? _isConst,
+      dataInterfaces: dataInterfaces ?? _dataInterfaces,
       name: name ?? _name,
       isPrivate: isPrivate ?? _isPrivate,
       generics: generics ?? _generics,
@@ -142,12 +222,12 @@ class Sealed<T extends SealedField> extends $Sealed<T> {
     );
   }
 
-  bool get isFinal {
-    return _isFinal;
+  bool get isConst {
+    return _isConst;
   }
 
-  bool get isInterface {
-    return _isInterface;
+  Iterable<Data<D>> get dataInterfaces {
+    return _dataInterfaces;
   }
 
   String get name {
@@ -166,10 +246,6 @@ class Sealed<T extends SealedField> extends $Sealed<T> {
     return _fields;
   }
 
-  Iterable<Sealed<T>> get interfaces {
-    return _interfaces ?? super.interfaces;
-  }
-
   Iterable<T> get computedFields {
     return _computedFields ??= super.computedFields;
   }
@@ -178,17 +254,15 @@ class Sealed<T extends SealedField> extends $Sealed<T> {
     return _nonComputedFields ??= super.nonComputedFields;
   }
 
-  Iterable<T> get localNonComputedFields {
-    return _localNonComputedFields ??= super.localNonComputedFields;
+  Iterable<D> get dataFields {
+    return _dataFields ??= super.dataFields;
   }
 
   int get hashCode {
     return $jf($jc(
         $jc(
             $jc(
-                $jc(
-                    $jc($jc($jc(0, isFinal.hashCode), isInterface.hashCode),
-                        interfaces.hashCode),
+                $jc($jc($jc(0, isConst.hashCode), dataInterfaces.hashCode),
                     name.hashCode),
                 isPrivate.hashCode),
             generics.hashCode),
@@ -198,9 +272,8 @@ class Sealed<T extends SealedField> extends $Sealed<T> {
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Sealed) return false;
-    return isFinal == other.isFinal &&
-        isInterface == other.isInterface &&
-        interfaces == other.interfaces &&
+    return isConst == other.isConst &&
+        dataInterfaces == other.dataInterfaces &&
         name == other.name &&
         isPrivate == other.isPrivate &&
         generics == other.generics &&
@@ -208,7 +281,252 @@ class Sealed<T extends SealedField> extends $Sealed<T> {
   }
 
   String toString() {
-    return "Sealed (isFinal: $isFinal, isInterface: $isInterface, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+    return "Sealed (isConst: $isConst, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+  }
+}
+
+class EnumField extends $EnumField {
+  EnumField(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _returnTypeGenerics = returnTypeGenerics,
+        assert(returnTypeGenerics != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null);
+
+  final String _returnType;
+
+  final Option<List<String>> _returnTypeGenerics;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  EnumField clone(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed}) {
+    return EnumField(
+      returnType: returnType ?? _returnType,
+      returnTypeGenerics: returnTypeGenerics ?? _returnTypeGenerics,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+    );
+  }
+
+  String get returnType {
+    return _returnType;
+  }
+
+  Option<List<String>> get returnTypeGenerics {
+    return _returnTypeGenerics;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc($jc($jc(0, returnType.hashCode), returnTypeGenerics.hashCode),
+            name.hashCode),
+        isComputed.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! EnumField) return false;
+    return returnType == other.returnType &&
+        returnTypeGenerics == other.returnTypeGenerics &&
+        name == other.name &&
+        isComputed == other.isComputed;
+  }
+
+  String toString() {
+    return "EnumField (returnType: $returnType, returnTypeGenerics: $returnTypeGenerics, name: $name, isComputed: $isComputed)";
+  }
+}
+
+class EnumsValue extends $EnumsValue {
+  EnumsValue(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _returnTypeGenerics = returnTypeGenerics,
+        assert(returnTypeGenerics != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _value = value,
+        assert(value != null);
+
+  final String _returnType;
+
+  final Option<List<String>> _returnTypeGenerics;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  final Object _value;
+
+  EnumsValue clone(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value}) {
+    return EnumsValue(
+      returnType: returnType ?? _returnType,
+      returnTypeGenerics: returnTypeGenerics ?? _returnTypeGenerics,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      value: value ?? _value,
+    );
+  }
+
+  String get returnType {
+    return _returnType;
+  }
+
+  Option<List<String>> get returnTypeGenerics {
+    return _returnTypeGenerics;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  Object get value {
+    return _value;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc(
+            $jc($jc($jc(0, returnType.hashCode), returnTypeGenerics.hashCode),
+                name.hashCode),
+            isComputed.hashCode),
+        value.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! EnumsValue) return false;
+    return returnType == other.returnType &&
+        returnTypeGenerics == other.returnTypeGenerics &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        value == other.value;
+  }
+
+  String toString() {
+    return "EnumsValue (returnType: $returnType, returnTypeGenerics: $returnTypeGenerics, name: $name, isComputed: $isComputed, value: $value)";
+  }
+}
+
+class Enum<T extends EnumField> extends $Enum<T> {
+  Enum(
+      {String type,
+      String name,
+      bool isPrivate,
+      Iterable<Generic> generics,
+      Iterable<T> fields})
+      : _type = type,
+        assert(type != null),
+        _name = name,
+        assert(name != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _generics = generics,
+        assert(generics != null),
+        _fields = fields,
+        assert(fields != null);
+
+  final String _type;
+
+  final String _name;
+
+  final bool _isPrivate;
+
+  final Iterable<Generic> _generics;
+
+  final Iterable<T> _fields;
+
+  Enum<T> clone(
+      {String type,
+      String name,
+      bool isPrivate,
+      Iterable<Generic> generics,
+      Iterable<T> fields}) {
+    return Enum(
+      type: type ?? _type,
+      name: name ?? _name,
+      isPrivate: isPrivate ?? _isPrivate,
+      generics: generics ?? _generics,
+      fields: fields ?? _fields,
+    );
+  }
+
+  String get type {
+    return _type;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isPrivate {
+    return _isPrivate;
+  }
+
+  Iterable<Generic> get generics {
+    return _generics;
+  }
+
+  Iterable<T> get fields {
+    return _fields;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc($jc($jc($jc(0, type.hashCode), name.hashCode), isPrivate.hashCode),
+            generics.hashCode),
+        fields.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! Enum) return false;
+    return type == other.type &&
+        name == other.name &&
+        isPrivate == other.isPrivate &&
+        generics == other.generics &&
+        fields == other.fields;
+  }
+
+  String toString() {
+    return "Enum (type: $type, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
   }
 }
 
@@ -313,10 +631,126 @@ class DataField extends $DataField {
   }
 }
 
+class DataValue extends $DataValue {
+  DataValue(
+      {bool isAbstract,
+      bool isDefaulted,
+      String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value})
+      : _isAbstract = isAbstract,
+        assert(isAbstract != null),
+        _isDefaulted = isDefaulted,
+        assert(isDefaulted != null),
+        _returnType = returnType,
+        assert(returnType != null),
+        _returnTypeGenerics = returnTypeGenerics,
+        assert(returnTypeGenerics != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _value = value,
+        assert(value != null);
+
+  final bool _isAbstract;
+
+  final bool _isDefaulted;
+
+  final String _returnType;
+
+  final Option<List<String>> _returnTypeGenerics;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  final Object _value;
+
+  DataValue clone(
+      {bool isAbstract,
+      bool isDefaulted,
+      String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value}) {
+    return DataValue(
+      isAbstract: isAbstract ?? _isAbstract,
+      isDefaulted: isDefaulted ?? _isDefaulted,
+      returnType: returnType ?? _returnType,
+      returnTypeGenerics: returnTypeGenerics ?? _returnTypeGenerics,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      value: value ?? _value,
+    );
+  }
+
+  bool get isAbstract {
+    return _isAbstract;
+  }
+
+  bool get isDefaulted {
+    return _isDefaulted;
+  }
+
+  String get returnType {
+    return _returnType;
+  }
+
+  Option<List<String>> get returnTypeGenerics {
+    return _returnTypeGenerics;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  Object get value {
+    return _value;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc(
+            $jc(
+                $jc(
+                    $jc($jc($jc(0, isAbstract.hashCode), isDefaulted.hashCode),
+                        returnType.hashCode),
+                    returnTypeGenerics.hashCode),
+                name.hashCode),
+            isComputed.hashCode),
+        value.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! DataValue) return false;
+    return isAbstract == other.isAbstract &&
+        isDefaulted == other.isDefaulted &&
+        returnType == other.returnType &&
+        returnTypeGenerics == other.returnTypeGenerics &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        value == other.value;
+  }
+
+  String toString() {
+    return "DataValue (isAbstract: $isAbstract, isDefaulted: $isDefaulted, returnType: $returnType, returnTypeGenerics: $returnTypeGenerics, name: $name, isComputed: $isComputed, value: $value)";
+  }
+}
+
 class Data<T extends DataField> extends $Data<T> {
   Data(
       {bool isFinal,
       bool isInterface,
+      bool isConst,
       Iterable<Data<T>> interfaces,
       String name,
       bool isPrivate,
@@ -326,6 +760,8 @@ class Data<T extends DataField> extends $Data<T> {
         assert(isFinal != null),
         _isInterface = isInterface,
         assert(isInterface != null),
+        _isConst = isConst,
+        assert(isConst != null),
         _interfaces = interfaces,
         assert(interfaces != null),
         _name = name,
@@ -355,6 +791,8 @@ class Data<T extends DataField> extends $Data<T> {
 
   final bool _isInterface;
 
+  final bool _isConst;
+
   final Iterable<Data<T>> _interfaces;
 
   final String _name;
@@ -368,6 +806,7 @@ class Data<T extends DataField> extends $Data<T> {
   Data<T> clone(
       {bool isFinal,
       bool isInterface,
+      bool isConst,
       Iterable<Data<T>> interfaces,
       String name,
       bool isPrivate,
@@ -376,6 +815,7 @@ class Data<T extends DataField> extends $Data<T> {
     return Data(
       isFinal: isFinal ?? _isFinal,
       isInterface: isInterface ?? _isInterface,
+      isConst: isConst ?? _isConst,
       interfaces: interfaces ?? _interfaces,
       name: name ?? _name,
       isPrivate: isPrivate ?? _isPrivate,
@@ -392,6 +832,14 @@ class Data<T extends DataField> extends $Data<T> {
     return _isInterface;
   }
 
+  bool get isConst {
+    return _isConst;
+  }
+
+  Iterable<Data<T>> get interfaces {
+    return _interfaces;
+  }
+
   String get name {
     return _name;
   }
@@ -406,10 +854,6 @@ class Data<T extends DataField> extends $Data<T> {
 
   Iterable<T> get fields {
     return _fields;
-  }
-
-  Iterable<Data<T>> get interfaces {
-    return _interfaces ?? super.interfaces;
   }
 
   Iterable<T> get computedFields {
@@ -445,7 +889,9 @@ class Data<T extends DataField> extends $Data<T> {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, isFinal.hashCode), isInterface.hashCode),
+                    $jc(
+                        $jc($jc($jc(0, isFinal.hashCode), isInterface.hashCode),
+                            isConst.hashCode),
                         interfaces.hashCode),
                     name.hashCode),
                 isPrivate.hashCode),
@@ -458,6 +904,7 @@ class Data<T extends DataField> extends $Data<T> {
     if (other is! Data) return false;
     return isFinal == other.isFinal &&
         isInterface == other.isInterface &&
+        isConst == other.isConst &&
         interfaces == other.interfaces &&
         name == other.name &&
         isPrivate == other.isPrivate &&
@@ -466,7 +913,7 @@ class Data<T extends DataField> extends $Data<T> {
   }
 
   String toString() {
-    return "Data (isFinal: $isFinal, isInterface: $isInterface, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+    return "Data (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
   }
 }
 
@@ -474,16 +921,25 @@ class MetaUnion extends $MetaUnion {
   MetaUnion.data(Data data)
       : assert(data != null),
         _data = data,
-        _sealed = null;
+        _sealed = null,
+        _sum = null;
 
   MetaUnion.sealed(Sealed sealed)
       : _data = null,
         assert(sealed != null),
-        _sealed = sealed;
+        _sealed = sealed,
+        _sum = null;
 
-  MetaUnion({Data data, Sealed sealed})
+  MetaUnion.sum(Sum sum)
+      : _data = null,
+        _sealed = null,
+        assert(sum != null),
+        _sum = sum;
+
+  MetaUnion({Data data, Sealed sealed, Sum sum})
       : _data = data,
-        _sealed = sealed {
+        _sealed = sealed,
+        _sum = sum {
     var found = false;
     if (data != null) {
       if (found) throw Exception("todo");
@@ -493,12 +949,18 @@ class MetaUnion extends $MetaUnion {
       if (found) throw Exception("todo");
       found = true;
     }
+    if (sum != null) {
+      if (found) throw Exception("todo");
+      found = true;
+    }
     throw Exception("TODO");
   }
 
   final Data _data;
 
   final Sealed _sealed;
+
+  final Sum _sum;
 
   Data get data {
     if (_data != null) return _data;
@@ -510,12 +972,21 @@ class MetaUnion extends $MetaUnion {
     throw Exception('TODO name htis');
   }
 
+  Sum get sum {
+    if (_sum != null) return _sum;
+    throw Exception('TODO name htis');
+  }
+
   bool get isData {
     return _data != null;
   }
 
   bool get isSealed {
     return _sealed != null;
+  }
+
+  bool get isSum {
+    return _sum != null;
   }
 
   void whenData(void Function(Data) handler) {
@@ -526,12 +997,22 @@ class MetaUnion extends $MetaUnion {
     if (_sealed != null) handler(_sealed);
   }
 
-  WHEN when<WHEN>({WHEN Function(Data) data, WHEN Function(Sealed) sealed}) {
+  void whenSum(void Function(Sum) handler) {
+    if (_sum != null) handler(_sum);
+  }
+
+  WHEN when<WHEN>(
+      {WHEN Function(Data) data,
+      WHEN Function(Sealed) sealed,
+      WHEN Function(Sum) sum}) {
     if (_data != null) {
       return data(_data);
     }
     if (_sealed != null) {
       return sealed(_sealed);
+    }
+    if (_sum != null) {
+      return sum(_sum);
     }
     throw FallThroughError();
   }
@@ -539,7 +1020,8 @@ class MetaUnion extends $MetaUnion {
   WHENO wheno<WHENO>(
       {WHENO Function() otherwise,
       WHENO Function(Data) data,
-      WHENO Function(Sealed) sealed}) {
+      WHENO Function(Sealed) sealed,
+      WHENO Function(Sum) sum}) {
     if (_data != null) {
       if (data != null)
         return data(_data);
@@ -552,38 +1034,51 @@ class MetaUnion extends $MetaUnion {
       else
         return otherwise();
     }
+    if (_sum != null) {
+      if (sum != null)
+        return sum(_sum);
+      else
+        return otherwise();
+    }
     return otherwise();
   }
 
   int get hashCode {
-    return $jf($jc($jc(0, _data.hashCode), _sealed.hashCode));
+    return $jf(
+        $jc($jc($jc(0, _data.hashCode), _sealed.hashCode), _sum.hashCode));
   }
 
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! MetaUnion) return false;
-    return _data == other._data && _sealed == other._sealed;
+    return _data == other._data &&
+        _sealed == other._sealed &&
+        _sum == other._sum;
   }
 
   String toString() {
     final value = when(
       data: (data) => 'data $data',
       sealed: (sealed) => 'sealed $sealed',
+      sum: (sum) => 'sum $sum',
     );
     return 'MetaUnion( $value )';
   }
 }
 
 abstract class IMetaUnion {
-  Option<Data> get dataOption;
-  Option<Sealed> get sealedOption;
   void whenData(void Function(Data) handler);
   void whenSealed(void Function(Sealed) handler);
-  WHEN when<WHEN>({WHEN Function(Data) data, WHEN Function(Sealed) sealed});
+  void whenSum(void Function(Sum) handler);
+  WHEN when<WHEN>(
+      {WHEN Function(Data) data,
+      WHEN Function(Sealed) sealed,
+      WHEN Function(Sum) sum});
   WHENO wheno<WHENO>(
       {WHENO Function() otherwise,
       WHENO Function(Data) data,
-      WHENO Function(Sealed) sealed});
+      WHENO Function(Sealed) sealed,
+      WHENO Function(Sum) sum});
 }
 
 class Generic extends $Generic {
@@ -731,8 +1226,6 @@ class Option<T> extends $Option<T> {
 }
 
 abstract class IOption<T> {
-  Option<T> get someOption;
-  Option<void> get noneOption;
   void whenSome(void Function(T) handler);
   void whenNone(void Function() handler);
   WHEN when<WHEN>({WHEN Function(T) some, WHEN Function() none});
@@ -740,4 +1233,311 @@ abstract class IOption<T> {
       {WHENO Function() otherwise,
       WHENO Function(T) some,
       WHENO Function() none});
+}
+
+class SumField extends $SumField {
+  SumField(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _returnTypeGenerics = returnTypeGenerics,
+        assert(returnTypeGenerics != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null);
+
+  final String _returnType;
+
+  final Option<List<String>> _returnTypeGenerics;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  SumField clone(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed}) {
+    return SumField(
+      returnType: returnType ?? _returnType,
+      returnTypeGenerics: returnTypeGenerics ?? _returnTypeGenerics,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+    );
+  }
+
+  String get returnType {
+    return _returnType;
+  }
+
+  Option<List<String>> get returnTypeGenerics {
+    return _returnTypeGenerics;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc($jc($jc(0, returnType.hashCode), returnTypeGenerics.hashCode),
+            name.hashCode),
+        isComputed.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SumField) return false;
+    return returnType == other.returnType &&
+        returnTypeGenerics == other.returnTypeGenerics &&
+        name == other.name &&
+        isComputed == other.isComputed;
+  }
+
+  String toString() {
+    return "SumField (returnType: $returnType, returnTypeGenerics: $returnTypeGenerics, name: $name, isComputed: $isComputed)";
+  }
+}
+
+class SumValue extends $SumValue {
+  SumValue(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _returnTypeGenerics = returnTypeGenerics,
+        assert(returnTypeGenerics != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _value = value,
+        assert(value != null);
+
+  final String _returnType;
+
+  final Option<List<String>> _returnTypeGenerics;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  final Object _value;
+
+  SumValue clone(
+      {String returnType,
+      Option<List<String>> returnTypeGenerics,
+      String name,
+      bool isComputed,
+      Object value}) {
+    return SumValue(
+      returnType: returnType ?? _returnType,
+      returnTypeGenerics: returnTypeGenerics ?? _returnTypeGenerics,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      value: value ?? _value,
+    );
+  }
+
+  String get returnType {
+    return _returnType;
+  }
+
+  Option<List<String>> get returnTypeGenerics {
+    return _returnTypeGenerics;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  Object get value {
+    return _value;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc(
+            $jc($jc($jc(0, returnType.hashCode), returnTypeGenerics.hashCode),
+                name.hashCode),
+            isComputed.hashCode),
+        value.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SumValue) return false;
+    return returnType == other.returnType &&
+        returnTypeGenerics == other.returnTypeGenerics &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        value == other.value;
+  }
+
+  String toString() {
+    return "SumValue (returnType: $returnType, returnTypeGenerics: $returnTypeGenerics, name: $name, isComputed: $isComputed, value: $value)";
+  }
+}
+
+class Sum<T extends SumField> extends $Sum<T> {
+  Sum(
+      {bool isFinal,
+      bool isInterface,
+      bool isConst,
+      Iterable<Sum<T>> interfaces,
+      String name,
+      bool isPrivate,
+      Iterable<Generic> generics,
+      Iterable<T> fields})
+      : _isFinal = isFinal,
+        assert(isFinal != null),
+        _isInterface = isInterface,
+        assert(isInterface != null),
+        _isConst = isConst,
+        assert(isConst != null),
+        _interfaces = interfaces,
+        assert(interfaces != null),
+        _name = name,
+        assert(name != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _generics = generics,
+        assert(generics != null),
+        _fields = fields,
+        assert(fields != null);
+
+  Iterable<T> _computedFields;
+
+  Iterable<T> _nonComputedFields;
+
+  Iterable<T> _localNonComputedFields;
+
+  final bool _isFinal;
+
+  final bool _isInterface;
+
+  final bool _isConst;
+
+  final Iterable<Sum<T>> _interfaces;
+
+  final String _name;
+
+  final bool _isPrivate;
+
+  final Iterable<Generic> _generics;
+
+  final Iterable<T> _fields;
+
+  Sum<T> clone(
+      {bool isFinal,
+      bool isInterface,
+      bool isConst,
+      Iterable<Sum<T>> interfaces,
+      String name,
+      bool isPrivate,
+      Iterable<Generic> generics,
+      Iterable<T> fields}) {
+    return Sum(
+      isFinal: isFinal ?? _isFinal,
+      isInterface: isInterface ?? _isInterface,
+      isConst: isConst ?? _isConst,
+      interfaces: interfaces ?? _interfaces,
+      name: name ?? _name,
+      isPrivate: isPrivate ?? _isPrivate,
+      generics: generics ?? _generics,
+      fields: fields ?? _fields,
+    );
+  }
+
+  bool get isFinal {
+    return _isFinal;
+  }
+
+  bool get isInterface {
+    return _isInterface;
+  }
+
+  bool get isConst {
+    return _isConst;
+  }
+
+  Iterable<Sum<T>> get interfaces {
+    return _interfaces;
+  }
+
+  String get name {
+    return _name;
+  }
+
+  bool get isPrivate {
+    return _isPrivate;
+  }
+
+  Iterable<Generic> get generics {
+    return _generics;
+  }
+
+  Iterable<T> get fields {
+    return _fields;
+  }
+
+  Iterable<T> get computedFields {
+    return _computedFields ??= super.computedFields;
+  }
+
+  Iterable<T> get nonComputedFields {
+    return _nonComputedFields ??= super.nonComputedFields;
+  }
+
+  Iterable<T> get localNonComputedFields {
+    return _localNonComputedFields ??= super.localNonComputedFields;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc(
+            $jc(
+                $jc(
+                    $jc(
+                        $jc($jc($jc(0, isFinal.hashCode), isInterface.hashCode),
+                            isConst.hashCode),
+                        interfaces.hashCode),
+                    name.hashCode),
+                isPrivate.hashCode),
+            generics.hashCode),
+        fields.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! Sum) return false;
+    return isFinal == other.isFinal &&
+        isInterface == other.isInterface &&
+        isConst == other.isConst &&
+        interfaces == other.interfaces &&
+        name == other.name &&
+        isPrivate == other.isPrivate &&
+        generics == other.generics &&
+        fields == other.fields;
+  }
+
+  String toString() {
+    return "Sum (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+  }
 }

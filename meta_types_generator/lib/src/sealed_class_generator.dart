@@ -41,7 +41,7 @@ Class generateSealedBase(Sealed sealedClass) => Class((b) => b
   ..name = 'I' + sealedClass.name
   // ..extend = Reference('Sealed')
   ..methods.addAll([
-    ..._genNonCumputedFieldsOption(sealedClass, isAbstract: true),
+    // ..._genNonCumputedFieldsOption(sealedClass, isAbstract: true),
     ..._genNonCumputedFieldsWhen(sealedClass, isAbstract: true),
     _when(sealedClass, isAbstract: true),
     _wheno(sealedClass, isAbstract: true),

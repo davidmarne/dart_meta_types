@@ -151,8 +151,6 @@ class Option<T> extends $Option<T> {
 }
 
 abstract class IOption<T> {
-  Option<T> get someOption;
-  Option<void> get noneOption;
   void whenSome(void Function(T) handler);
   void whenNone(void Function() handler);
   WHEN when<WHEN>({WHEN Function(T) some, WHEN Function() none});
@@ -265,8 +263,6 @@ class Either<A, B> extends $Either<A, B> {
 }
 
 abstract class IEither<A, B> {
-  Option<A> get aOption;
-  Option<B> get bOption;
   void whenA(void Function(A) handler);
   void whenB(void Function(B) handler);
   WHEN when<WHEN>({WHEN Function(A) a, WHEN Function(B) b});
@@ -379,8 +375,6 @@ class Result<S, F> extends $Result<S, F> {
 }
 
 abstract class IResult<S, F> {
-  Option<S> get successOption;
-  Option<F> get failureOption;
   void whenSuccess(void Function(S) handler);
   void whenFailure(void Function(F) handler);
   WHEN when<WHEN>({WHEN Function(S) success, WHEN Function(F) failure});
@@ -687,12 +681,6 @@ class Json extends $Json {
 }
 
 abstract class IJson {
-  Option<int> get integerOption;
-  Option<String> get stringOption;
-  Option<bool> get booleanOption;
-  Option<double> get floatOption;
-  Option<List<Json>> get listOption;
-  Option<Map<String, Json>> get mapOption;
   void whenInteger(void Function(int) handler);
   void whenString(void Function(String) handler);
   void whenBoolean(void Function(bool) handler);

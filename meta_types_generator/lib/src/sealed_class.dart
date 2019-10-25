@@ -69,7 +69,18 @@ Sealed sealedFromClassElement(
 
   final sealedInterfaces =
       interfaces.where((i) => i.isSealed).map((u) => u.sealed);
-  final dataInterfaces = interfaces.where((i) => i.isData).map((u) => u.data);
+  final dataInterfaces = interfaces.where((i) => i.isData).map((u) {
+    fields.where((f) => !f.isComputed).forEach((f) {
+      cache.find(f.returnType).when(some: (s) {
+        if (!s.data.interfaces.any((ifc) => ifc == u.data)) {
+          throw TemplateException('fields should implement ${u.data.name}');
+        }
+      }, none: () {
+        throw TemplateException('fields should implement ${u.data.name}');
+      });
+    });
+    return u.data;
+  });
 
   return Sealed(
     name: element.name.replaceAll('\$', ''),
@@ -80,7 +91,8 @@ Sealed sealedFromClassElement(
     isInterface: false, //annotation.getField('isInterface').toBoolValue(),
     // isConst:
     //     element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
-    interfaces: sealedInterfaces,
+    dataInterfaces: dataInterfaces,
+    sealedInterfaces: sealedInterfaces,
     fields: fields,
   );
 }

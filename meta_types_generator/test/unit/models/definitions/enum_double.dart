@@ -1,7 +1,7 @@
 part of models;
 
-@EnumClass(double)
+@EnumClass()
 abstract class $DoubleEnum {
-  static double a = 0.1;
-  static double b = 0.2;
+  static const double a = 0.1;
+  static const double b = 0.2;
 }

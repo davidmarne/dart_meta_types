@@ -1,10 +1,13 @@
 set -e
 
-cp meta_types/lib/meta_types_models.dart test/unit/meta_types_models.dart
-cp -r meta_types/lib/src/models test/unit/src/models
+mkdir -p meta_types_generator/test/unit/src
+cd  meta_types_generator/test/unit/src
+rm -rf models
+cd ../../../../
+cp -r meta_types/lib/src/models meta_types_generator/test/unit/src/models
 
-pushd meta_types_generator
+cd meta_types_generator
 pub run build_runner build
-popd
+cd ..
 
-cp -r test/unit/src/models meta_types/lib/src/models 
+# cp -r meta_types_generator/test/unit/meta_types_models.g.dart meta_types/lib/meta_types_models.g.dart 
