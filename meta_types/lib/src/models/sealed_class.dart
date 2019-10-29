@@ -17,7 +17,7 @@ abstract class $Sealed<T extends SealedField, D extends DataField>
 
   bool get isConst;
 
-  Iterable<Data<D>> get dataInterfaces;
+  Iterable<MetaInterfaceType<Data<D>>> get dataInterfaces;
 
   @computed
   Iterable<T> get computedFields => fields.where((f) => f.isComputed);
@@ -27,5 +27,5 @@ abstract class $Sealed<T extends SealedField, D extends DataField>
 
   @computed
   Iterable<D> get dataFields =>
-      dataInterfaces.map((i) => i.nonComputedFields).expand((i) => i);
+      dataInterfaces.map((i) => i.meta.nonComputedFields).expand((i) => i);
 }

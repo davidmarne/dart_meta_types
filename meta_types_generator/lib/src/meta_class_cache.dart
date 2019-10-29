@@ -4,19 +4,19 @@ import 'package:analyzer/dart/constant/value.dart';
 
 import 'package:meta_types/meta_types_models.dart';
 import 'data_class.dart';
-import 'enum_class.dart';
+import 'sum_class.dart';
 // import 'meta_class.dart';
 import 'sealed_class.dart';
 // import 'option.dart';
 
 class MetaClassCache {
   final LibraryReader _library;
-  final _cache = <String, MetaUnion>{};
+  final _cache = <String, MetaSeal>{};
 
   MetaClassCache(this._library);
 
   // name should be MetaClassReference?
-  Option<MetaUnion> find(String name) {
+  Option<MetaSeal> find(String name) {
     if (_cache.containsKey(name)) {
       return Option.some(_cache[name]);
     }
@@ -52,6 +52,7 @@ class MetaClassCache {
           (w) => const [
             'DataClass',
             'SealedClass',
+            'SumClass',
           ] //'EnumClass']
               .contains(w.type.name),
           orElse: () => null,
@@ -60,19 +61,23 @@ class MetaClassCache {
     return anno == null ? Option.none() : Option.some(anno);
   }
 
-  Option<MetaUnion> _toMetaClass(ClassElement e) => _toMetaAnnotation(e).map(
+  Option<MetaSeal> _toMetaClass(ClassElement e) => _toMetaAnnotation(e).map(
         (annotation) {
           switch (annotation.type.name) {
             case 'DataClass':
-              return MetaUnion.data(
+              return MetaSeal.data(
                 dataFromClassElement(e, annotation, this),
               );
             case 'SealedClass':
-              return MetaUnion.sealed(
+              return MetaSeal.sealed(
                 sealedFromClassElement(e, annotation, this),
               );
+            case 'SumClass':
+              return MetaSeal.sum(
+                sumFromClassElement(e, annotation, this),
+              );
             // case 'EnumClass':
-            // return MetaUnion.enumeration(
+            // return MetaSeal.enumeration(
             //   EnumClass.fromClassElement(e, annotation, this),
             // );
             default:

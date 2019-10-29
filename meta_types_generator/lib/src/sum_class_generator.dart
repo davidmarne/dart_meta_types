@@ -1,57 +1,56 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
-    show Sealed, SealedField, Option, Generic, DataField;
+    show Sum, SumField, Option, Generic;
 import 'util.dart';
 
 //// TODO: mixin
 // TODO: fix $story
 // Fix field type generics
-Class generateSealed(Sealed sealedClass) => Class((b) => b
+Class generateSum(Sum sumClass) => Class((b) => b
   ..abstract = false
-  ..types.addAll(sealedClass.generics.map((g) => Reference(g.type)))
-  ..constructors.addAll(_constructors(sealedClass))
-  ..constructors.add(_defaultConstructor(sealedClass))
-  ..name = sealedClass.name
-  // ..mixins = _mixins(sealedClass)
+  ..types.addAll(sumClass.generics.map((g) => Reference(g.type)))
+  ..constructors.addAll(_constructors(sumClass))
+  ..constructors.add(_defaultConstructor(sumClass))
+  ..name = sumClass.name
+  // ..mixins = _mixins(sumClass)
   ..types.addAll([])
   ..extend = Reference(
-    '\$${sealedClass.name}' + extendedClassGenerics(sealedClass.generics),
+    '\$${sumClass.name}' + extendedClassGenerics(sumClass.generics),
     '',
   )
   ..fields.addAll([
-    ..._genComputedFields(sealedClass),
-    ..._genNonComputedFields(sealedClass),
+    ..._genComputedFields(sumClass),
+    ..._genNonComputedFields(sumClass),
   ])
   ..methods.addAll([
-    ..._genDataInterfaceFields(sealedClass),
-    ..._genComputedFieldsGetter(sealedClass),
-    ..._genNonCumputedFieldsGetter(sealedClass),
-    ..._genNonCumputedFieldsCheck(sealedClass),
-    // ..._genNonCumputedFieldsOption(sealedClass),
-    ..._genNonCumputedFieldsWhen(sealedClass),
-    _when(sealedClass),
-    _wheno(sealedClass),
-    _hashCode(sealedClass),
-    _equality(sealedClass),
-    _toString(sealedClass),
+    ..._genComputedFieldsGetter(sumClass),
+    ..._genNonCumputedFieldsGetter(sumClass),
+    ..._genNonCumputedFieldsCheck(sumClass),
+    // ..._genNonCumputedFieldsOption(sumClass),
+    ..._genNonCumputedFieldsWhen(sumClass),
+    _when(sumClass),
+    _wheno(sumClass),
+    _hashCode(sumClass),
+    _equality(sumClass),
+    _toString(sumClass),
   ]));
 
-Class generateSealedBase(Sealed sealedClass) => Class((b) => b
+Class generateSumBase(Sum sumClass) => Class((b) => b
   ..abstract = true
-  ..types.addAll(sealedClass.generics.map((g) => Reference(g.type)))
-  ..name = 'I' + sealedClass.name
-  // ..extend = Reference('Sealed')
+  ..types.addAll(sumClass.generics.map((g) => Reference(g.type)))
+  ..name = 'I' + sumClass.name
+  // ..extend = Reference('Sum')
   ..methods.addAll([
-    // ..._genNonCumputedFieldsOption(sealedClass, isAbstract: true),
-    ..._genNonCumputedFieldsWhen(sealedClass, isAbstract: true),
-    _when(sealedClass, isAbstract: true),
-    _wheno(sealedClass, isAbstract: true),
+    // ..._genNonCumputedFieldsOption(sumClass, isAbstract: true),
+    ..._genNonCumputedFieldsWhen(sumClass, isAbstract: true),
+    _when(sumClass, isAbstract: true),
+    _wheno(sumClass, isAbstract: true),
   ]));
 
-Constructor _defaultConstructor(Sealed sealedClass) => new Constructor(
+Constructor _defaultConstructor(Sum sumClass) => new Constructor(
       (b) => b
         ..optionalParameters.addAll(
-          sealedClass.nonComputedFields.map(
+          sumClass.nonComputedFields.map(
             (f) => Parameter(
               (b) => b
                 ..named = true
@@ -60,39 +59,39 @@ Constructor _defaultConstructor(Sealed sealedClass) => new Constructor(
             ),
           ),
         )
-        ..initializers.addAll(_initializers(sealedClass.nonComputedFields))
+        ..initializers.addAll(_initializers(sumClass.nonComputedFields))
         ..body = Code('''
         var found = false;
-        ${_initializer(sealedClass.nonComputedFields)}
+        ${_initializer(sumClass.nonComputedFields)}
         throw Exception("TODO");
         '''),
     );
 
-String _initializer(Iterable<SealedField> fields) => fields.fold(
+String _initializer(Iterable<SumField> fields) => fields.fold(
     '',
     (comb, field) =>
         '$comb if (${field.name} != null) { if (found) throw Exception("todo"); found = true; }');
 
-Iterable<Code> _initializers(Iterable<SealedField> fields) =>
+Iterable<Code> _initializers(Iterable<SumField> fields) =>
     fields.map((field) => Code('_${field.name} = ${field.name}'));
 
-Method _when(Sealed sealedClass, {bool isAbstract = false}) => Method(
+Method _when(Sum sumClass, {bool isAbstract = false}) => Method(
       (b) => b
         ..name = 'when'
         ..types.add(Reference('WHEN'))
         ..returns = Reference('WHEN')
-        ..optionalParameters.addAll(sealedClass.nonComputedFields.map((f) =>
+        ..optionalParameters.addAll(sumClass.nonComputedFields.map((f) =>
             Parameter((b) => b
               ..named = true
               ..name = f.name
               ..type =
                   Reference('WHEN Function(${_removeReturnTypeVoid(f)})'))))
         ..body = isAbstract ? null : Code('''
-          ${_cloneWhen(sealedClass)}
+          ${_cloneWhen(sumClass)}
           throw FallThroughError();'''),
     );
 
-Method _wheno(Sealed sealedClass, {bool isAbstract = false}) => Method(
+Method _wheno(Sum sumClass, {bool isAbstract = false}) => Method(
       (b) => b
         ..name = 'wheno'
         ..types.add(Reference('WHENO'))
@@ -102,7 +101,7 @@ Method _wheno(Sealed sealedClass, {bool isAbstract = false}) => Method(
           ..name = 'otherwise'
           ..type = Reference('WHENO Function()')))
         ..optionalParameters.addAll(
-          sealedClass.nonComputedFields.map(
+          sumClass.nonComputedFields.map(
             (f) => Parameter(
               (b) => b
                 ..named = true
@@ -113,18 +112,18 @@ Method _wheno(Sealed sealedClass, {bool isAbstract = false}) => Method(
           ),
         )
         ..body = isAbstract ? null : Code('''
-          ${_cloneWhenO(sealedClass)}
+          ${_cloneWhenO(sumClass)}
           return otherwise();'''),
     );
 
-Iterable<Constructor> _constructors(Sealed sealedClass) =>
-    sealedClass.nonComputedFields.map(
+Iterable<Constructor> _constructors(Sum sumClass) =>
+    sumClass.nonComputedFields.map(
       (f) => Constructor(
         (b) => b
-          // ..constant = sealedClass.computedFields.isEmpty && sealedClass.isConst
+          // ..constant = sumClass.computedFields.isEmpty && sumClass.isConst
           ..name = f.name
           ..requiredParameters.addAll([
-            if (f.returnType != 'void')
+            if (!_isVoid(f))
               Parameter(
                 (b) => b
                   ..name = f.name
@@ -132,10 +131,10 @@ Iterable<Constructor> _constructors(Sealed sealedClass) =>
               ),
           ])
           ..initializers.addAll(
-            sealedClass.nonComputedFields.map(
+            sumClass.nonComputedFields.map(
               (ifield) => Code(
                 ifield == f
-                    ? (f.returnType == 'void'
+                    ? (_isVoid(f)
                         ? '_${ifield.name} = true'
                         : 'assert(${ifield.name} != null), _${ifield.name} = ${ifield.name}')
                     : '_${ifield.name} = null',
@@ -145,17 +144,17 @@ Iterable<Constructor> _constructors(Sealed sealedClass) =>
       ),
     );
 
-String _cloneWhen(Sealed sealedClass) => sealedClass.nonComputedFields.fold(
+String _cloneWhen(Sum sumClass) => sumClass.nonComputedFields.fold(
     '',
     (comb, field) =>
         '$comb if (_${field.name} != null) { return ${field.name}(${_removeVoidPropertyPrivate(field)}); }');
 
-String _cloneWhenO(Sealed sealedClass) => sealedClass.nonComputedFields.fold(
+String _cloneWhenO(Sum sumClass) => sumClass.nonComputedFields.fold(
     '',
     (comb, field) =>
         '$comb if (_${field.name} != null) { if (${field.name} != null) return ${field.name}(${_removeVoidPropertyPrivate(field)}); else return otherwise(); }');
 
-Method _equality(Sealed sealedClass) => Method(
+Method _equality(Sum sumClass) => Method(
       (b) => b
         ..name = 'operator =='
         ..returns = TypeReference((b) => b..symbol = 'bool')
@@ -164,42 +163,42 @@ Method _equality(Sealed sealedClass) => Method(
           ..type = Reference('dynamic')))
         ..body = Code('''
           if (identical(other, this)) return true;
-          if (other is! ${sealedClass.name}) return false;
-          return ${_equalityFold(sealedClass.nonComputedFields)};'''),
+          if (other is! ${sumClass.name}) return false;
+          return ${_equalityFold(sumClass.nonComputedFields)};'''),
     );
 
-String _equalityFold(Iterable<SealedField> e) =>
+String _equalityFold(Iterable<SumField> e) =>
     e.map((field) => '_${field.name} == other._${field.name}').join('&&');
 
-Method _hashCode(Sealed sealedClass) => Method(
+Method _hashCode(Sum sumClass) => Method(
       (b) => b
         ..name = 'hashCode'
         ..type = MethodType.getter
         ..returns = TypeReference((b) => b..symbol = 'int')
         ..body = Code('''
-          return \$jf(${_hashFold(sealedClass.nonComputedFields)});'''),
+          return \$jf(${_hashFold(sumClass.nonComputedFields)});'''),
     );
 
-String _hashFold(Iterable<SealedField> e) => e.fold(
+String _hashFold(Iterable<SumField> e) => e.fold(
     '',
     (params, field) =>
         '\$jc(${params.isNotEmpty ? params : 0}, _${field.name}.hashCode)');
 
-Method _toString(Sealed sealedClass) => Method(
+Method _toString(Sum sumClass) => Method(
       (b) => b
         ..name = 'toString'
         ..returns = TypeReference((b) => b..symbol = 'String')
         ..body = Code('''
-          final value = when(${_toStringWhen(sealedClass.nonComputedFields)});
-          return \'${sealedClass.name}( \$value )\';'''),
+          final value = when(${_toStringWhen(sumClass.nonComputedFields)});
+          return \'${sumClass.name}( \$value )\';'''),
     );
 
-String _toStringWhen(Iterable<SealedField> e) => e.fold(
+String _toStringWhen(Iterable<SumField> e) => e.fold(
     '',
     (comb, field) =>
         '$comb${field.name}: (${_removeVoidProperty(field)}) => \'${field.name}${_isVoid(field) ? "" : " \$"}${_removeVoidProperty(field)}\',');
 
-Iterable<Field> _genNonComputedFields(Sealed e) => e.nonComputedFields.map(
+Iterable<Field> _genNonComputedFields(Sum e) => e.nonComputedFields.map(
       (field) => Field(
         (b) => b
           ..modifier = FieldModifier.final$
@@ -210,7 +209,7 @@ Iterable<Field> _genNonComputedFields(Sealed e) => e.nonComputedFields.map(
       ),
     );
 
-Iterable<Field> _genComputedFields(Sealed e) => e.computedFields.map(
+Iterable<Field> _genComputedFields(Sum e) => e.computedFields.map(
       (field) => Field(
         (b) => b
           ..name = '_${field.name}'
@@ -218,8 +217,7 @@ Iterable<Field> _genComputedFields(Sealed e) => e.computedFields.map(
       ),
     );
 
-Iterable<Method> _genNonCumputedFieldsGetter(Sealed e) =>
-    e.nonComputedFields.map(
+Iterable<Method> _genNonCumputedFieldsGetter(Sum e) => e.nonComputedFields.map(
       (field) => Method(
         (b) => b
           ..name = field.name
@@ -231,8 +229,7 @@ Iterable<Method> _genNonCumputedFieldsGetter(Sealed e) =>
       ),
     );
 
-Iterable<Method> _genNonCumputedFieldsCheck(Sealed e,
-        {bool isAbstract = false}) =>
+Iterable<Method> _genNonCumputedFieldsCheck(Sum e, {bool isAbstract = false}) =>
     e.nonComputedFields.map(
       (field) => Method(
         (b) => b
@@ -244,14 +241,14 @@ Iterable<Method> _genNonCumputedFieldsCheck(Sealed e,
       ),
     );
 
-Iterable<Method> _genNonCumputedFieldsOption(Sealed e,
+Iterable<Method> _genNonCumputedFieldsOption(Sum e,
         {bool isAbstract = false}) =>
     e.nonComputedFields.map(
       (field) => Method(
         (b) => b
           ..name = field.name + 'Option'
           ..type = MethodType.getter
-          ..returns = Reference('Option<${field.returnType.typeStr}>')
+          ..returns = Reference('Option<${field.returnType}>')
           ..body = isAbstract
               ? null
               : Code(
@@ -260,7 +257,7 @@ Iterable<Method> _genNonCumputedFieldsOption(Sealed e,
     );
 
 Iterable<Method> _genNonCumputedFieldsWhen(
-  Sealed e, {
+  Sum e, {
   bool isAbstract = false,
 }) =>
     e.nonComputedFields.map(
@@ -283,24 +280,7 @@ Iterable<Method> _genNonCumputedFieldsWhen(
       ),
     );
 
-Iterable<Method> _genDataInterfaceFields(Sealed e) => e.dataFields.map(
-      (field) => Method(
-        (b) => b
-          ..name = field.name
-          ..returns = Reference(field.returnType.typeStr)
-          ..type = MethodType.getter
-          ..body =
-              Code('''return when(${_genDataInterfaceFieldBody(e, field)});'''),
-      ),
-    );
-
-String _genDataInterfaceFieldBody(Sealed e, DataField field) =>
-    e.nonComputedFields.fold(
-        '',
-        (comb, sfield) =>
-            '$comb${sfield.name}: (${sfield.name}) => ${sfield.name}.${field.name},');
-
-Iterable<Method> _genComputedFieldsGetter(Sealed e) => e.computedFields.map(
+Iterable<Method> _genComputedFieldsGetter(Sum e) => e.computedFields.map(
       (field) => Method(
         (b) => b
           ..name = field.name
@@ -310,12 +290,11 @@ Iterable<Method> _genComputedFieldsGetter(Sealed e) => e.computedFields.map(
       ),
     );
 
-String _replaceVoidReturnTypeWithBool(SealedField field) =>
+String _replaceVoidReturnTypeWithBool(SumField field) =>
     _isVoid(field) ? 'bool' : field.returnType.typeStr;
-String _removeReturnTypeVoid(SealedField field) =>
+String _removeReturnTypeVoid(SumField field) =>
     _isVoid(field) ? '' : field.returnType.typeStr;
-String _removeVoidProperty(SealedField field) =>
-    _isVoid(field) ? '' : field.name;
-String _removeVoidPropertyPrivate(SealedField field) =>
+String _removeVoidProperty(SumField field) => _isVoid(field) ? '' : field.name;
+String _removeVoidPropertyPrivate(SumField field) =>
     _isVoid(field) ? '' : '_' + field.name;
-bool _isVoid(SealedField field) => field.returnType.typeStr == 'void';
+bool _isVoid(SumField field) => field.returnType.typeStr == 'void';

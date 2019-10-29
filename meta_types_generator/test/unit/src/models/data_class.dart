@@ -23,28 +23,28 @@ abstract class $Data<T extends DataField> implements Meta<T> {
 
   bool get isConst;
 
-  Iterable<Data<T>> get interfaces;
+  Iterable<MetaInterfaceType<Data<T>>> get interfaces;
 
   @computed
   Iterable<T> get computedFields => fields.where((f) => f.isComputed);
 
   @computed
   Iterable<T> get nonComputedFields => localNonComputedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.localNonComputedFields));
+    ..addAll(interfaces.expand((i) => i.meta.localNonComputedFields));
 
   @computed
   Iterable<T> get localNonComputedFields => fields.where((f) => !f.isComputed);
 
   @computed
   Iterable<T> get nonDefaultedFields => localNonDefaultedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.localNonDefaultedFields));
+    ..addAll(interfaces.expand((i) => i.meta.localNonDefaultedFields));
 
   @computed
   Iterable<T> get localNonDefaultedFields => fields.where((f) => f.isAbstract);
 
   @computed
   Iterable<T> get defaultedFields => localDefaultedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.localDefaultedFields));
+    ..addAll(interfaces.expand((i) => i.meta.localDefaultedFields));
 
   @computed
   Iterable<T> get localDefaultedFields => fields.where((f) => f.isDefaulted);

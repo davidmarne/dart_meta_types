@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:meta_types/meta_types_models.dart'
-    show Data, DataField, Option, Generic;
+    show Data, DataField, Option, FieldType, MetaInterfaceType;
 import 'meta_class.dart' show TemplateException;
 import 'meta_class_cache.dart';
 import 'util.dart';
@@ -28,8 +28,7 @@ Data dataFromClassElement(
       isAbstract: accessor.isAbstract,
       isDefaulted: !accessor.isAbstract && !isComputed(accessor.metadata),
       name: accessor.name,
-      returnType: resolveFieldReturnTypeName(cache, accessor), // TODO:
-      returnTypeGenerics: Option<List<String>>.none(),
+      returnType: resolveFieldReturnTypeFromPropertyAccessorElement(accessor),
     );
   });
 
@@ -47,7 +46,10 @@ Data dataFromClassElement(
                   throw TemplateException(
                       'interfaces cannot be final. see: ${element.name}');
                 }
-                return data;
+                return MetaInterfaceType(
+                    meta: data,
+                    generics: e.typeArguments
+                        .map((a) => FieldType(type: a.displayName)));
               },
               otherwise: () {
                 throw TemplateException(
@@ -57,7 +59,7 @@ Data dataFromClassElement(
           },
         );
       })
-      .expand((e) => [e, ...e.interfaces])
+      .expand((e) => [e, ...e.meta.interfaces])
       .toSet();
 
   return Data(
@@ -68,15 +70,6 @@ Data dataFromClassElement(
     isInterface: annotation.getField('isInterface').toBoolValue(),
     interfaces: interfaces,
     fields: fields,
-    generics: element.typeParameters.map(
-      (p) => Generic(
-          type: p.name,
-          extension: p.bound == null
-              ? Option.none()
-              : p.bound.toString() == 'dynamic'
-                  ? Option.some(resolveFieldExtensionName(
-                      p)) // TODO YIKES not always data
-                  : Option.some(p.bound.toString())),
-    ),
+    generics: resolveTypeParameterDeclaration(element),
   );
 }

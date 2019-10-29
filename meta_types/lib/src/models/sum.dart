@@ -20,14 +20,14 @@ abstract class $Sum<T extends SumField> implements Meta<T> {
 
   bool get isConst;
 
-  Iterable<Sum<T>> get interfaces;
+  Iterable<MetaInterfaceType<Sum<T>>> get interfaces;
 
   @computed
   Iterable<T> get computedFields => fields.where((f) => f.isComputed);
 
   @computed
   Iterable<T> get nonComputedFields => localNonComputedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.localNonComputedFields));
+    ..addAll(interfaces.expand((i) => i.meta.localNonComputedFields));
 
   @computed
   Iterable<T> get localNonComputedFields => fields.where((f) => !f.isComputed);

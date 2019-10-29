@@ -10,6 +10,7 @@ import 'package:meta_types/meta_types_models.dart'
     show Data, DataField, Option, Generic;
 import 'data_class_generator.dart';
 import 'sealed_class_generator.dart';
+import 'sum_class_generator.dart';
 
 final emitter = DartEmitter();
 final formatter = DartFormatter();
@@ -26,9 +27,10 @@ class MetaTypesGenerator extends Generator {
         return metaClassOption.map(
           (metaClass) => metaClass.wheno(
             data: (d) => d.isInterface ? <Class>[] : [generateData(d)],
-            sealed: (d) => d.isInterface
+            sealed: (d) => [generateSealed(d), generateSealedBase(d)],
+            sum: (d) => d.isInterface
                 ? <Class>[]
-                : [generateSealed(d), generateSealedBase(d)],
+                : [generateSum(d), generateSumBase(d)],
             otherwise: () => <Class>[],
           ),
         );

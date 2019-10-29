@@ -8,13 +8,7 @@ Class generateData(Data dataClass) => Class((b) => b
   // ..mixins.addAll(_mixins(dataClass))
   ..types.addAll(
     dataClass.generics.map(
-      (g) => Reference(
-        g.type +
-            g.extension.when(
-              some: (s) => ' extends $s',
-              none: () => '',
-            ),
-      ),
+      (g) => Reference(g.typeParameterStr),
     ),
   )
   ..constructors.add(new Constructor(
@@ -29,7 +23,7 @@ Class generateData(Data dataClass) => Class((b) => b
             (b) => b
               ..named = true
               ..name = f.name
-              ..type = Reference(f.returnType),
+              ..type = Reference(f.returnType.typeStr),
           ),
         ),
       ),
@@ -38,7 +32,7 @@ Class generateData(Data dataClass) => Class((b) => b
   ..types.addAll([])
   ..extend = Reference(
     '\$${dataClass.name}' +
-        classGenerics(
+        extendedClassGenerics(
           dataClass.generics,
         ),
     '',
@@ -62,13 +56,13 @@ Iterable<Code> _initializer(DataField field) => [
 Method _clone(Data dataClass) => Method((b) => b
   ..name = 'clone'
   ..returns = Reference(
-    dataClass.name + classGenerics(dataClass.generics),
+    dataClass.name + extendedClassGenerics(dataClass.generics),
   )
   ..optionalParameters
       .addAll(dataClass.nonComputedFields.map((f) => Parameter((b) => b
         ..named = true
         ..name = f.name
-        ..type = Reference(f.returnType))))
+        ..type = Reference(f.returnType.typeStr))))
   ..body = Code('''
   return ${dataClass.name}(${_cloneParams(dataClass)});
   '''));
@@ -118,17 +112,17 @@ Iterable<Field> _genNonComputedFields(Data e) =>
     e.nonComputedFields.map((field) => Field((b) => b
       ..modifier = FieldModifier.final$
       ..name = '_${field.name}'
-      ..type = Reference(field.returnType)));
+      ..type = Reference(field.returnType.typeStr)));
 
 Iterable<Field> _genComputedFields(Data e) =>
     e.computedFields.map((field) => Field((b) => b
       ..name = '_${field.name}'
-      ..type = Reference(field.returnType)));
+      ..type = Reference(field.returnType.typeStr)));
 
 Iterable<Method> _nonDefaultedFieldsGetter(Data e) =>
     e.nonDefaultedFields.map((field) => Method((b) => b
       ..name = field.name
-      ..returns = Reference(field.returnType)
+      ..returns = Reference(field.returnType.typeStr)
       ..type = MethodType.getter
       ..body = Code('''
         return _${field.name};
@@ -137,7 +131,7 @@ Iterable<Method> _nonDefaultedFieldsGetter(Data e) =>
 Iterable<Method> _defaultedFieldsGetter(Data e) =>
     e.defaultedFields.map((field) => Method((b) => b
       ..name = field.name
-      ..returns = Reference(field.returnType)
+      ..returns = Reference(field.returnType.typeStr)
       ..type = MethodType.getter
       ..body = Code('''
         return _${field.name} ?? super.${field.name};
@@ -146,7 +140,7 @@ Iterable<Method> _defaultedFieldsGetter(Data e) =>
 Iterable<Method> _genComputedFieldsGetter(Data e) =>
     e.computedFields.map((field) => Method((b) => b
       ..name = field.name
-      ..returns = Reference(field.returnType)
+      ..returns = Reference(field.returnType.typeStr)
       ..type = MethodType.getter
       ..body = Code('''
         return _${field.name} ??= super.${field.name};

@@ -14,8 +14,7 @@ class BinaryTree<T> extends $BinaryTree<T> {
 
   BinaryTree.branch(Branch<T> branch)
       : _leaf = null,
-        assert(branch != null),
-        _branch = branch;
+        _branch = null;
 
   BinaryTree({T leaf, Branch<T> branch})
       : _leaf = leaf,

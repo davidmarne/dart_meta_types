@@ -42,12 +42,12 @@ class SealedClass {
 
 /// [sum] can be used to annotate classes to generate sum
 /// class boilerplate
-const sum = const Sum();
+const sum = const SumClass();
 
-/// [Sum] can be used to annotate classes to generate sum
+/// [SumClass] can be used to annotate classes to generate sumClass
 /// class boilerplate
-class Sum {
-  const Sum();
+class SumClass {
+  const SumClass();
 }
 
 /// For use by generated code in calculating hash codes. Do not use directly.

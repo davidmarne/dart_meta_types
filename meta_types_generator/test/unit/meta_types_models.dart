@@ -1,7 +1,7 @@
 library meta_types_models;
 
 import 'package:meta_types/meta_types.dart'
-    show DataClass, SealedClass, computed, $jc, $jf;
+    show DataClass, SealedClass, computed, $jc, $jf, SumClass;
 
 part 'src/models/sealed_class.dart';
 part 'src/models/enum_class.dart';

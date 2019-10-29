@@ -53,9 +53,10 @@ class Option<T> extends $Option<T> {
         _some = some,
         _none = null;
 
-  Option.none()
+  Option.none(void none)
       : _some = null,
-        _none = true;
+        assert(none != null),
+        _none = none;
 
   Option({T some, bool none})
       : _some = some,
@@ -426,8 +427,7 @@ class Json extends $Json {
         _string = null,
         _boolean = null,
         _float = null,
-        assert(list != null),
-        _list = list,
+        _list = null,
         _map = null;
 
   Json.map(Map<String, Json> map)
@@ -436,8 +436,7 @@ class Json extends $Json {
         _boolean = null,
         _float = null,
         _list = null,
-        assert(map != null),
-        _map = map;
+        _map = null;
 
   Json(
       {int integer,

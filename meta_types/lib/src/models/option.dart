@@ -1,6 +1,6 @@
 part of meta_types_models;
 
-@SealedClass()
+@SumClass()
 abstract class $Option<T> implements IOption<T> {
   const $Option();
 
