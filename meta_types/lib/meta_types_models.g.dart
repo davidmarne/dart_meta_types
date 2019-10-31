@@ -851,28 +851,28 @@ class MetaInterfaceType<T extends Meta<Field>> extends $MetaInterfaceType<T> {
 
 class MetaSeal extends $MetaSeal {
   MetaSeal.data(Data<DataField> data)
-      : _data = null,
+      : _data = data,
         _sealed = null,
         _sum = null,
         _enumeration = null;
 
   MetaSeal.sealed(Sealed<SealedField, DataField> sealed)
       : _data = null,
-        _sealed = null,
+        _sealed = sealed,
         _sum = null,
         _enumeration = null;
 
   MetaSeal.sum(Sum<SumField> sum)
       : _data = null,
         _sealed = null,
-        _sum = null,
+        _sum = sum,
         _enumeration = null;
 
   MetaSeal.enumeration(Enum<EnumField> enumeration)
       : _data = null,
         _sealed = null,
         _sum = null,
-        _enumeration = null;
+        _enumeration = enumeration;
 
   MetaSeal(
       {Data<DataField> data,

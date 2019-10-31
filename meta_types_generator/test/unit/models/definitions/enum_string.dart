@@ -1,7 +1,8 @@
 part of models;
 
-@EnumClass(String)
+@EnumClass()
 abstract class $StringEnum {
-  static String a = 'a';
-  static String b;
+  const $StringEnum();
+  static const String a = 'a';
+  static const String b = 'c';
 }

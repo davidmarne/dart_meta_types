@@ -128,11 +128,21 @@ class Branch<T> extends $Branch<T> {
         _right = right,
         assert(right != null);
 
+  factory Branch.load(Iterable<DataLoader> loaders) => Branch(
+        value: loaders.firstWhere((l) => l.name == 'value').value as T,
+        left:
+            loaders.firstWhere((l) => l.name == 'left').value as BinaryTree<T>,
+        right:
+            loaders.firstWhere((l) => l.name == 'right').value as BinaryTree<T>,
+      );
+
   final T _value;
 
   final BinaryTree<T> _left;
 
   final BinaryTree<T> _right;
+
+  Data<DataValue> _meta$;
 
   Branch<T> clone({T value, BinaryTree<T> left, BinaryTree<T> right}) {
     return Branch(
@@ -142,6 +152,47 @@ class Branch<T> extends $Branch<T> {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'Branch',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'value',
+            returnType: FieldType(
+              type: 'T',
+            ),
+            isComputed: false,
+            value: _value,
+            isAbstract: true,
+            isDefaulted: false,
+          ),
+          DataValue(
+            name: 'left',
+            returnType: FieldType(
+              type: 'BinaryTree',
+            ),
+            isComputed: false,
+            value: _left,
+            isAbstract: true,
+            isDefaulted: false,
+          ),
+          DataValue(
+            name: 'right',
+            returnType: FieldType(
+              type: 'BinaryTree',
+            ),
+            isComputed: false,
+            value: _right,
+            isAbstract: true,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [],
+        generics: [],
+      );
   T get value {
     return _value;
   }
@@ -176,9 +227,17 @@ class GenericDataClass<T> extends $GenericDataClass<T> {
         _bar = bar,
         assert(bar != null);
 
+  factory GenericDataClass.load(Iterable<DataLoader> loaders) =>
+      GenericDataClass(
+        foo: loaders.firstWhere((l) => l.name == 'foo').value as int,
+        bar: loaders.firstWhere((l) => l.name == 'bar').value as T,
+      );
+
   final int _foo;
 
   final T _bar;
+
+  Data<DataValue> _meta$;
 
   GenericDataClass<T> clone({int foo, T bar}) {
     return GenericDataClass(
@@ -187,6 +246,37 @@ class GenericDataClass<T> extends $GenericDataClass<T> {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'GenericDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'foo',
+            returnType: FieldType(
+              type: 'int',
+            ),
+            isComputed: false,
+            value: _foo,
+            isAbstract: true,
+            isDefaulted: false,
+          ),
+          DataValue(
+            name: 'bar',
+            returnType: FieldType(
+              type: 'T',
+            ),
+            isComputed: false,
+            value: _bar,
+            isAbstract: true,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [],
+        generics: [],
+      );
   int get foo {
     return _foo;
   }
@@ -219,11 +309,20 @@ class GenericsDataClass<T, P> extends $GenericsDataClass<T, P> {
         _baz = baz,
         assert(baz != null);
 
+  factory GenericsDataClass.load(Iterable<DataLoader> loaders) =>
+      GenericsDataClass(
+        foo: loaders.firstWhere((l) => l.name == 'foo').value as int,
+        bar: loaders.firstWhere((l) => l.name == 'bar').value as T,
+        baz: loaders.firstWhere((l) => l.name == 'baz').value as P,
+      );
+
   final int _foo;
 
   final T _bar;
 
   final P _baz;
+
+  Data<DataValue> _meta$;
 
   GenericsDataClass<T, P> clone({int foo, T bar, P baz}) {
     return GenericsDataClass(
@@ -233,6 +332,47 @@ class GenericsDataClass<T, P> extends $GenericsDataClass<T, P> {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'GenericsDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'foo',
+            returnType: FieldType(
+              type: 'int',
+            ),
+            isComputed: false,
+            value: _foo,
+            isAbstract: true,
+            isDefaulted: false,
+          ),
+          DataValue(
+            name: 'bar',
+            returnType: FieldType(
+              type: 'T',
+            ),
+            isComputed: false,
+            value: _bar,
+            isAbstract: true,
+            isDefaulted: false,
+          ),
+          DataValue(
+            name: 'baz',
+            returnType: FieldType(
+              type: 'P',
+            ),
+            isComputed: false,
+            value: _baz,
+            isAbstract: true,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [],
+        generics: [],
+      );
   int get foo {
     return _foo;
   }
@@ -271,6 +411,15 @@ class ImplementorDataClass extends $ImplementorDataClass {
         _three = three,
         assert(three != null);
 
+  factory ImplementorDataClass.load(Iterable<DataLoader> loaders) =>
+      ImplementorDataClass(
+        implementor:
+            loaders.firstWhere((l) => l.name == 'implementor').value as int,
+        one: loaders.firstWhere((l) => l.name == 'one').value as int,
+        two: loaders.firstWhere((l) => l.name == 'two').value as String,
+        three: loaders.firstWhere((l) => l.name == 'three').value as int,
+      );
+
   final int _implementor;
 
   final int _one;
@@ -278,6 +427,8 @@ class ImplementorDataClass extends $ImplementorDataClass {
   final String _two;
 
   final int _three;
+
+  Data<DataValue> _meta$;
 
   ImplementorDataClass clone(
       {int implementor, int one, String two, int three}) {
@@ -289,6 +440,125 @@ class ImplementorDataClass extends $ImplementorDataClass {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'ImplementorDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'implementor',
+            returnType: FieldType(
+              type: 'int',
+            ),
+            isComputed: false,
+            value: _implementor,
+            isAbstract: true,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [
+          MetaInterfaceType<Data<DataValue>>(
+            meta: Data<DataValue>(
+              isFinal: false,
+              isInterface: true,
+              isConst: null,
+              name: 'InterfaceOne',
+              isPrivate: null,
+              fields: [
+                DataValue(
+                  name: 'one',
+                  returnType: FieldType(
+                    type: 'int',
+                  ),
+                  isComputed: false,
+                  value: _one,
+                  isAbstract: true,
+                  isDefaulted: false,
+                )
+              ],
+              interfaces: [
+                MetaInterfaceType<Data<DataValue>>(
+                  meta: Data<DataValue>(
+                    isFinal: false,
+                    isInterface: true,
+                    isConst: null,
+                    name: 'InterfaceTwo',
+                    isPrivate: null,
+                    fields: [
+                      DataValue(
+                        name: 'two',
+                        returnType: FieldType(
+                          type: 'String',
+                        ),
+                        isComputed: false,
+                        value: _two,
+                        isAbstract: true,
+                        isDefaulted: false,
+                      )
+                    ],
+                    interfaces: [],
+                    generics: [],
+                  ),
+                  generics: [],
+                )
+              ],
+              generics: [],
+            ),
+            generics: [],
+          ),
+          MetaInterfaceType<Data<DataValue>>(
+            meta: Data<DataValue>(
+              isFinal: false,
+              isInterface: true,
+              isConst: null,
+              name: 'InterfaceTwo',
+              isPrivate: null,
+              fields: [
+                DataValue(
+                  name: 'two',
+                  returnType: FieldType(
+                    type: 'String',
+                  ),
+                  isComputed: false,
+                  value: _two,
+                  isAbstract: true,
+                  isDefaulted: false,
+                )
+              ],
+              interfaces: [],
+              generics: [],
+            ),
+            generics: [],
+          ),
+          MetaInterfaceType<Data<DataValue>>(
+            meta: Data<DataValue>(
+              isFinal: false,
+              isInterface: true,
+              isConst: null,
+              name: 'InterfaceThree',
+              isPrivate: null,
+              fields: [
+                DataValue(
+                  name: 'three',
+                  returnType: FieldType(
+                    type: 'int',
+                  ),
+                  isComputed: false,
+                  value: _three,
+                  isAbstract: true,
+                  isDefaulted: false,
+                )
+              ],
+              interfaces: [],
+              generics: [],
+            ),
+            generics: [],
+          )
+        ],
+        generics: [],
+      );
   int get implementor {
     return _implementor;
   }
@@ -332,9 +602,17 @@ class FinalDataClass extends $FinalDataClass {
         _bar = bar,
         assert(bar != null);
 
+  factory FinalDataClass.load(Iterable<DataLoader> loaders) => FinalDataClass(
+        foo:
+            loaders.firstWhere((l) => l.name == 'foo').value as IMPORTDataClass,
+        bar: loaders.firstWhere((l) => l.name == 'bar').value as String,
+      );
+
   final IMPORTDataClass _foo;
 
   final String _bar;
+
+  Data<DataValue> _meta$;
 
   FinalDataClass clone({IMPORTDataClass foo, String bar}) {
     return FinalDataClass(
@@ -343,6 +621,52 @@ class FinalDataClass extends $FinalDataClass {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: true,
+        isInterface: false,
+        isConst: null,
+        name: 'FinalDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'foo',
+            returnType: FieldType(
+              type: 'IMPORTDataClass',
+            ),
+            isComputed: false,
+            value: _foo,
+            isAbstract: true,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [
+          MetaInterfaceType<Data<DataValue>>(
+            meta: Data<DataValue>(
+              isFinal: false,
+              isInterface: true,
+              isConst: null,
+              name: 'NonFinalInterfaceDataClass',
+              isPrivate: null,
+              fields: [
+                DataValue(
+                  name: 'bar',
+                  returnType: FieldType(
+                    type: 'String',
+                  ),
+                  isComputed: false,
+                  value: _bar,
+                  isAbstract: true,
+                  isDefaulted: false,
+                )
+              ],
+              interfaces: [],
+              generics: [],
+            ),
+            generics: [],
+          )
+        ],
+        generics: [],
+      );
   IMPORTDataClass get foo {
     return _foo;
   }
@@ -374,9 +698,20 @@ class NestingDataClass<T> extends $NestingDataClass<T> {
         _genericNested = genericNested,
         assert(genericNested != null);
 
+  factory NestingDataClass.load(Iterable<DataLoader> loaders) =>
+      NestingDataClass(
+        nested: loaders.firstWhere((l) => l.name == 'nested').value
+            as $NestedDataClass,
+        genericNested: loaders
+            .firstWhere((l) => l.name == 'genericNested')
+            .value as $GenericNestedDataClass<T>,
+      );
+
   final $NestedDataClass _nested;
 
   final $GenericNestedDataClass<T> _genericNested;
+
+  Data<DataValue> _meta$;
 
   NestingDataClass<T> clone(
       {$NestedDataClass nested, $GenericNestedDataClass<T> genericNested}) {
@@ -386,6 +721,37 @@ class NestingDataClass<T> extends $NestingDataClass<T> {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'NestingDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'nested',
+            returnType: FieldType(
+              type: '$NestedDataClass',
+            ),
+            isComputed: false,
+            value: _nested,
+            isAbstract: true,
+            isDefaulted: false,
+          ),
+          DataValue(
+            name: 'genericNested',
+            returnType: FieldType(
+              type: '$GenericNestedDataClass',
+            ),
+            isComputed: false,
+            value: _genericNested,
+            isAbstract: true,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [],
+        generics: [],
+      );
   $NestedDataClass get nested {
     return _nested;
   }
@@ -414,7 +780,13 @@ class NestedDataClass extends $NestedDataClass {
       : _baz = baz,
         assert(baz != null);
 
+  factory NestedDataClass.load(Iterable<DataLoader> loaders) => NestedDataClass(
+        baz: loaders.firstWhere((l) => l.name == 'baz').value as String,
+      );
+
   final String _baz;
+
+  Data<DataValue> _meta$;
 
   NestedDataClass clone({String baz}) {
     return NestedDataClass(
@@ -422,6 +794,27 @@ class NestedDataClass extends $NestedDataClass {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'NestedDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'baz',
+            returnType: FieldType(
+              type: 'String',
+            ),
+            isComputed: false,
+            value: _baz,
+            isAbstract: false,
+            isDefaulted: true,
+          )
+        ],
+        interfaces: [],
+        generics: [],
+      );
   String get baz {
     return _baz ?? super.baz;
   }
@@ -446,7 +839,14 @@ class GenericNestedDataClass<T> extends $GenericNestedDataClass<T> {
       : _nested = nested,
         assert(nested != null);
 
+  factory GenericNestedDataClass.load(Iterable<DataLoader> loaders) =>
+      GenericNestedDataClass(
+        nested: loaders.firstWhere((l) => l.name == 'nested').value as T,
+      );
+
   final T _nested;
+
+  Data<DataValue> _meta$;
 
   GenericNestedDataClass<T> clone({T nested}) {
     return GenericNestedDataClass(
@@ -454,6 +854,27 @@ class GenericNestedDataClass<T> extends $GenericNestedDataClass<T> {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'GenericNestedDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'nested',
+            returnType: FieldType(
+              type: 'T',
+            ),
+            isComputed: false,
+            value: _nested,
+            isAbstract: true,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [],
+        generics: [],
+      );
   T get nested {
     return _nested;
   }
@@ -480,11 +901,22 @@ class TestDataClass extends $TestDataClass {
         _fieldWithDefault = fieldWithDefault,
         assert(fieldWithDefault != null);
 
+  factory TestDataClass.load(Iterable<DataLoader> loaders) => TestDataClass(
+        fieldWithNoDefault: loaders
+            .firstWhere((l) => l.name == 'fieldWithNoDefault')
+            .value as int,
+        fieldWithDefault: loaders
+            .firstWhere((l) => l.name == 'fieldWithDefault')
+            .value as int,
+      );
+
   int _computedField;
 
   final int _fieldWithNoDefault;
 
   final int _fieldWithDefault;
+
+  Data<DataValue> _meta$;
 
   TestDataClass clone({int fieldWithNoDefault, int fieldWithDefault}) {
     return TestDataClass(
@@ -493,6 +925,47 @@ class TestDataClass extends $TestDataClass {
     );
   }
 
+  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
+        isFinal: false,
+        isInterface: false,
+        isConst: null,
+        name: 'TestDataClass',
+        isPrivate: null,
+        fields: [
+          DataValue(
+            name: 'fieldWithNoDefault',
+            returnType: FieldType(
+              type: 'int',
+            ),
+            isComputed: false,
+            value: _fieldWithNoDefault,
+            isAbstract: true,
+            isDefaulted: false,
+          ),
+          DataValue(
+            name: 'fieldWithDefault',
+            returnType: FieldType(
+              type: 'int',
+            ),
+            isComputed: false,
+            value: _fieldWithDefault,
+            isAbstract: false,
+            isDefaulted: true,
+          ),
+          DataValue(
+            name: 'computedField',
+            returnType: FieldType(
+              type: 'int',
+            ),
+            isComputed: true,
+            value: _computedField,
+            isAbstract: false,
+            isDefaulted: false,
+          )
+        ],
+        interfaces: [],
+        generics: [],
+      );
   int get fieldWithNoDefault {
     return _fieldWithNoDefault;
   }
@@ -519,6 +992,75 @@ class TestDataClass extends $TestDataClass {
 
   String toString() {
     return "TestDataClass (fieldWithNoDefault: $fieldWithNoDefault)";
+  }
+}
+
+class StringEnum extends $StringEnum {
+  const StringEnum._(this._value) : assert(_value != null);
+
+  final Object _value;
+
+  static const StringEnum a = const StringEnum._($StringEnum.a);
+
+  static const StringEnum b = const StringEnum._($StringEnum.b);
+
+  bool get isA {
+    return a != null;
+  }
+
+  bool get isB {
+    return b != null;
+  }
+
+  void whenA(void Function(String) handler) {
+    if (a == this) handler(StringEnum.a._value as String);
+  }
+
+  void whenB(void Function(String) handler) {
+    if (b == this) handler(StringEnum.b._value as String);
+  }
+
+  WHEN when<WHEN>({WHEN Function(String) a, WHEN Function(String) b}) {
+    if (this == a) {
+      return a(StringEnum.a._value as String);
+    }
+    if (this == b) {
+      return b(StringEnum.b._value as String);
+    }
+    throw FallThroughError();
+  }
+
+  WHENO wheno<WHENO>(
+      {WHENO Function() otherwise,
+      WHENO Function(String) a,
+      WHENO Function(String) b}) {
+    if (this == a) {
+      if (a != null)
+        return a(StringEnum.a._value as String);
+      else
+        return otherwise();
+    }
+    if (this == b) {
+      if (b != null)
+        return b(StringEnum.b._value as String);
+      else
+        return otherwise();
+    }
+    return otherwise();
+  }
+
+  int get hashCode {
+    return $jf($jc(_value.hashCode, 'StringEnum'.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! StringEnum) return false;
+    return _value == other._value;
+  }
+
+  String toString() {
+    return 'StringEnum( $_value )';
   }
 }
 

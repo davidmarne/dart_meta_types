@@ -1,15 +1,17 @@
 import 'package:meta_types/meta_types.dart';
 
+import 'path.dart';
+
 part 'model.g.dart';
 
-@SealedClass()
+@SumClass()
 abstract class $Resolution<T extends Doc> {
-  Null get fetching;
+  void get fetching;
   T get creating;
   T get dirty;
   T get resolved;
-  Null get denied;
-  Null get unknown;
+  void get denied;
+  void get unknown;
 }
 
 @DataClass(isInterface: true)

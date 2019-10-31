@@ -68,5 +68,20 @@ abstract class Field {
 
 @DataClass(isInterface: true)
 abstract class Value {
+  ValueKinds get value;
+}
+
+@SumClass()
+abstract class $ValueKinds {
+  int get integer;
+  double get double$;
+  bool get boolean;
+  List<ValueKinds> get list;
+  Set<ValueKinds> get set$;
+  Map<ValueKinds, ValueKinds> get map;
+  List<DataValue> data;
+  SealedValue sealed;
+  SumValue sum;
+  // EnumValue enumeration;
   Object get value;
 }

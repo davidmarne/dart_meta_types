@@ -25,8 +25,7 @@ Sealed sealedFromClassElement(
 
     return SealedField(
       name: accessor.name,
-      returnType:
-          resolveFieldReturnTypeFromPropertyAccessorElement(accessor), // TODO:
+      returnType: resolveFieldReturnTypeFromPropertyAccessorElement(accessor),
       isComputed: isComputed(accessor.metadata),
     );
   });

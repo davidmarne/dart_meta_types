@@ -15,4 +15,10 @@ abstract class $Enum<T extends EnumField> implements Meta<T> {
   const $Enum();
 
   String get type;
+
+  @computed
+  Iterable<T> get computedFields => fields.where((f) => f.isComputed);
+
+  @computed
+  Iterable<T> get nonComputedFields => fields.where((f) => !f.isComputed);
 }

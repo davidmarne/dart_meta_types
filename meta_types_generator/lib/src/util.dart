@@ -54,6 +54,21 @@ FieldType resolveFieldReturnTypeFromPropertyAccessorElement(
   return resolveFieldReturnType(returnTypeStr);
 }
 
+// for enums only
+FieldType resolveFieldReturnTypeFromFieldElement(FieldElement e) {
+  // f this right here
+  final beforeField = e.source.contents.data
+      .replaceRange(e.nameOffset - 1, e.source.contents.data.length, '');
+  try {
+    final returnTypeStr = beforeField
+        .replaceRange(0, beforeField.lastIndexOf('const ') + 6, '')
+        .trim();
+    return resolveFieldReturnType(returnTypeStr);
+  } catch (e) {
+    throw Exception(beforeField);
+  }
+}
+
 FieldType resolveFieldReturnType(String returnTypeStr) {
   // f this right here
   final indexOfCaret = returnTypeStr.indexOf('<');

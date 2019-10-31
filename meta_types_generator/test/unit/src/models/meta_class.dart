@@ -70,3 +70,19 @@ abstract class Field {
 abstract class Value {
   Object get value;
 }
+
+// @SumClass()
+// abstract class $Values {
+//   int get integer;
+//   String get string;
+//   bool get boolean;
+//   double get float;
+//   DateTime get date;
+//   List<Values> get list;
+//   Set<Values> get set$;
+//   Map<Values, Values> get map;
+//   Data get data;
+//   Sealed get sealed;
+//   Sum get sum;
+//   Enum get enumeration;
+// }

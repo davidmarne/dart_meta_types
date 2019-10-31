@@ -15,4 +15,17 @@ abstract class $Enum<T extends EnumField> implements Meta<T> {
   const $Enum();
 
   String get type;
+
+  // Iterable<MetaInterfaceType<Data<D>>> get dataInterfaces;
+
+  // @computed
+  // Iterable<D> get dataFields =>
+  //     dataInterfaces.map((i) => i.meta.nonComputedFields).expand((i) => i);
+}
+
+@DataClass()
+abstract class $EnumLoader {
+  const $EnumLoader();
+  String get name;
+  Object get value;
 }

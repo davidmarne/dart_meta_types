@@ -53,7 +53,7 @@ Data dataFromClassElement(
               },
               otherwise: () {
                 throw TemplateException(
-                    'interfaces must be data classes. see ${element.name}');
+                    'interfaces must be data classes2. see ${element.name} ${interface}');
               },
             );
           },

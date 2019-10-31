@@ -14,7 +14,7 @@ abstract class $DataValue implements $DataField, Value {
 }
 
 @DataClass()
-abstract class $Data<T extends DataField> implements Meta<T> {
+abstract class $Data<T extends $DataField> implements Meta<T> {
   const $Data();
 
   bool get isFinal;
@@ -48,4 +48,11 @@ abstract class $Data<T extends DataField> implements Meta<T> {
 
   @computed
   Iterable<T> get localDefaultedFields => fields.where((f) => f.isDefaulted);
+}
+
+@DataClass()
+abstract class $DataLoader {
+  const $DataLoader();
+  String get name;
+  Object get value;
 }

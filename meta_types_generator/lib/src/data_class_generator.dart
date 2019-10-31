@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
     show Data, DataField, Option, Generic;
+import 'data_class_meta_generator.dart';
 import 'util.dart';
 
 Class generateData(Data dataClass) => Class((b) => b
@@ -28,6 +29,24 @@ Class generateData(Data dataClass) => Class((b) => b
         ),
       ),
   ))
+  ..constructors.add(
+    Constructor(
+      (b) => b
+        ..factory = true
+        ..name = 'load'
+        ..lambda = true
+        ..requiredParameters.add(
+          Parameter(
+            (b) => b
+              ..name = 'loaders'
+              ..type = Reference('Iterable<DataLoader>'),
+          ),
+        )
+        ..body = Code('''
+          ${dataClass.name}(${_loaderFields(dataClass)})
+        '''),
+    ),
+  )
   ..name = dataClass.name
   ..types.addAll([])
   ..extend = Reference(
@@ -41,6 +60,8 @@ Class generateData(Data dataClass) => Class((b) => b
   ..methods.add(_clone(dataClass))
   ..fields.addAll(_genComputedFields(dataClass))
   ..fields.addAll(_genNonComputedFields(dataClass))
+  ..fields.add(genDataField(dataClass))
+  ..methods.add(genDataGetter(dataClass))
   ..methods.addAll(_nonDefaultedFieldsGetter(dataClass))
   ..methods.addAll(_defaultedFieldsGetter(dataClass))
   ..methods.addAll(_genComputedFieldsGetter(dataClass))
@@ -66,6 +87,11 @@ Method _clone(Data dataClass) => Method((b) => b
   ..body = Code('''
   return ${dataClass.name}(${_cloneParams(dataClass)});
   '''));
+
+String _loaderFields(Data dataClass) => dataClass.nonComputedFields.fold(
+    '',
+    (comb, field) =>
+        '$comb${field.name}: loaders.firstWhere((l) => l.name == \'${field.name}\').value as ${field.returnType.typeStr},');
 
 String _cloneParams(Data dataClass) => dataClass.nonComputedFields.fold('',
     (comb, field) => '$comb${field.name}: ${field.name} ?? _${field.name},');

@@ -5,7 +5,7 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:meta_types/meta_types_models.dart';
 import 'data_class.dart';
 import 'sum_class.dart';
-// import 'meta_class.dart';
+import 'enum_class.dart';
 import 'sealed_class.dart';
 // import 'option.dart';
 
@@ -49,11 +49,7 @@ class MetaClassCache {
           (a) => a.computeConstantValue(),
         )
         .singleWhere(
-          (w) => const [
-            'DataClass',
-            'SealedClass',
-            'SumClass',
-          ] //'EnumClass']
+          (w) => const ['DataClass', 'SealedClass', 'SumClass', 'EnumClass']
               .contains(w.type.name),
           orElse: () => null,
         );
@@ -76,10 +72,10 @@ class MetaClassCache {
               return MetaSeal.sum(
                 sumFromClassElement(e, annotation, this),
               );
-            // case 'EnumClass':
-            // return MetaSeal.enumeration(
-            //   EnumClass.fromClassElement(e, annotation, this),
-            // );
+            case 'EnumClass':
+              return MetaSeal.enumeration(
+                enumFromClassElement(e, annotation, this),
+              );
             default:
               throw FallThroughError();
           }
