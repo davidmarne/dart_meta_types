@@ -49,3 +49,10 @@ abstract class $Data<T extends DataField> implements Meta<T> {
   @computed
   Iterable<T> get localDefaultedFields => fields.where((f) => f.isDefaulted);
 }
+
+@DataClass()
+abstract class $DataLoader {
+  const $DataLoader();
+  String get name;
+  Object get value;
+}

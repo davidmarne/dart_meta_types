@@ -6,7 +6,7 @@ import 'meta_class.dart' show TemplateException;
 import 'meta_class_cache.dart';
 import 'util.dart';
 
-Data dataFromClassElement(
+Data<DataField> dataFromClassElement(
   ClassElement element,
   DartObject annotation,
   MetaClassCache cache,
@@ -53,7 +53,7 @@ Data dataFromClassElement(
               },
               otherwise: () {
                 throw TemplateException(
-                    'interfaces must be data classes2. see ${element.name} ${interface}');
+                    'interfaces must be data classes. see ${element.name} ${e.name} ${cache.find(e.name)}');
               },
             );
           },
@@ -64,8 +64,8 @@ Data dataFromClassElement(
 
   return Data(
     name: element.name.replaceAll('\$', ''),
-    // isConst:
-    //     element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
+    isConst:
+        element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
     isFinal: annotation.getField('isFinal').toBoolValue(),
     isInterface: annotation.getField('isInterface').toBoolValue(),
     interfaces: interfaces,

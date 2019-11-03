@@ -68,20 +68,43 @@ abstract class Field {
 
 @DataClass(isInterface: true)
 abstract class Value {
-  ValueKinds get value;
-}
-
-@SumClass()
-abstract class $ValueKinds {
-  int get integer;
-  double get double$;
-  bool get boolean;
-  List<ValueKinds> get list;
-  Set<ValueKinds> get set$;
-  Map<ValueKinds, ValueKinds> get map;
-  List<DataValue> data;
-  SealedValue sealed;
-  SumValue sum;
-  // EnumValue enumeration;
   Object get value;
 }
+
+// @SumClass()
+// abstract class $ValueKinds {
+//   int get integer;
+//   double get double_;
+//   bool get boolean;
+//   List<ValueKinds> get list;
+//   Set<ValueKinds> get set_;
+//   Map<ValueKinds, ValueKinds> get map;
+//   List<DataValue> get data;
+//   SealedValue get sealed;
+//   SumValue get sum;
+//   // EnumValue enumeration;
+//   Object get value;
+// }
+
+// class JsonSerializer implements Serializer {
+//   final json = <String, dynamic>{};
+
+//   void write(String name, Object data) {
+//     json[name] = _write(data);
+//   }
+
+//   void _write(Object data) {
+//     if (Object is Data)
+//       return data.serialize(this);
+//     else
+//       return data;
+//   }
+// }
+
+// class JsonDeserializer implements Deserializer {
+//   final json = <String, dynamic>{};
+
+//   void read(String name, Type type) {
+//     return json[name];
+//   }
+// }

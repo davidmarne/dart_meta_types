@@ -14,7 +14,7 @@ abstract class $DataValue implements $DataField, Value {
 }
 
 @DataClass()
-abstract class $Data<T extends $DataField> implements Meta<T> {
+abstract class $Data<T extends DataField> implements Meta<T> {
   const $Data();
 
   bool get isFinal;

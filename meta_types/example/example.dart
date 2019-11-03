@@ -66,48 +66,48 @@ abstract class $ExampleSealedClass {
   String get string;
 }
 
-// enum class with int will using incrementing integers as values
-// unless a nother value is specified
+// // enum class with int will using incrementing integers as values
+// // unless a nother value is specified
 
-@EnumClass(int)
-abstract class $ExampleEnumInteger {
-  static int a; // 0
-  static int b; // 1
-  static int c = 1000; // 1000
-  static int d; // 3
-}
+// @EnumClass(int)
+// abstract class $ExampleEnumInteger {
+//   static int a; // 0
+//   static int b; // 1
+//   static int c = 1000; // 1000
+//   static int d; // 3
+// }
 
 // enum class with strings will use field name as value
 // unless a nother value is specified
 
-@EnumClass(String)
-abstract class $ExampleEnumString {
-  static String a;
-  static String b;
-  static String c = 'custom';
-}
+// @EnumClass(String)
+// abstract class $ExampleEnumString {
+//   static String a;
+//   static String b;
+//   static String c = 'custom';
+// }
 
-// enum class with custom type.
+// // enum class with custom type.
 
-@EnumClass(Signal)
-abstract class $ProtocolState {
-  static const Waiting waiting = Waiting();
-  static const Talking talking = Talking();
-}
+// @EnumClass(Signal)
+// abstract class $ProtocolState {
+//   static const Waiting waiting = Waiting();
+//   static const Talking talking = Talking();
+// }
 
-abstract class Signal {
-  ProtocolState get signal;
-}
+// abstract class Signal {
+//   ProtocolState get signal;
+// }
 
-class Waiting implements Signal {
-  const Waiting();
-  ProtocolState get signal => ProtocolState.talking;
-}
+// class Waiting implements Signal {
+//   const Waiting();
+//   ProtocolState get signal => ProtocolState.talking;
+// }
 
-class Talking implements Signal {
-  const Talking();
-  ProtocolState get signal => ProtocolState.waiting;
-}
+// class Talking implements Signal {
+//   const Talking();
+//   ProtocolState get signal => ProtocolState.waiting;
+// }
 
 // Binary tree is an example of an algebreic data type
 // It is the combination of two unions

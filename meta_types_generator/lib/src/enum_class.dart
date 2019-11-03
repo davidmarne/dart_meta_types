@@ -29,32 +29,32 @@ Enum enumFromClassElement(
         'sealed classes cannot have super types. see ${element.name}');
   }
 
-  // final interfaces = element.interfaces.map((e) {
-  //   return cache.find(e.name).when(
-  //     none: () {
-  //       throw TemplateException(
-  //           'interfaces must be sealed classes. see ${e.name}');
-  //     },
-  //     some: (interface) {
-  //       return interface.wheno(
-  //         data: (data) {
-  //           if (data.isFinal) {
-  //             throw TemplateException(
-  //                 'interfaces cannot be final. see: ${element.name}');
-  //           }
-  //           return MetaInterfaceType(
-  //               meta: data,
-  //               generics:
-  //                   e.typeArguments.map((a) => FieldType(type: a.displayName)));
-  //         },
-  //         otherwise: () {
-  //           throw TemplateException(
-  //               'interfaces must be sealed classes. see ${element.name}');
-  //         },
-  //       );
-  //     },
-  //   );
-  // });
+  final interfaces = element.interfaces.map((e) {
+    return cache.find(e.name).when(
+      none: () {
+        throw TemplateException(
+            'interfaces must be sealed classes. see ${e.name}');
+      },
+      some: (interface) {
+        return interface.wheno(
+          data: (data) {
+            if (data.isFinal) {
+              throw TemplateException(
+                  'interfaces cannot be final. see: ${element.name}');
+            }
+            return MetaInterfaceType(
+                meta: data,
+                generics:
+                    e.typeArguments.map((a) => FieldType(type: a.displayName)));
+          },
+          otherwise: () {
+            throw TemplateException(
+                'interfaces must be sealed classes. see ${element.name}');
+          },
+        );
+      },
+    );
+  });
 
   return Enum(
     name: element.name.replaceAll('\$', ''),
@@ -62,5 +62,6 @@ Enum enumFromClassElement(
     isPrivate: false,
     fields: fields,
     generics: resolveTypeParameterDeclaration(element),
+    interfaces: interfaces,
   );
 }

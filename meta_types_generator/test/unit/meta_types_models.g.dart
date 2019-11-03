@@ -7,7 +7,7 @@ part of meta_types_models;
 // **************************************************************************
 
 class SealedField extends $SealedField {
-  SealedField({FieldType returnType, String name, bool isComputed})
+  const SealedField({FieldType returnType, String name, bool isComputed})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -15,21 +15,11 @@ class SealedField extends $SealedField {
         _isComputed = isComputed,
         assert(isComputed != null);
 
-  factory SealedField.load(Iterable<DataLoader> loaders) => SealedField(
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-      );
-
   final FieldType _returnType;
 
   final String _name;
 
   final bool _isComputed;
-
-  Data<DataValue> _meta$;
 
   SealedField clone({FieldType returnType, String name, bool isComputed}) {
     return SealedField(
@@ -39,61 +29,6 @@ class SealedField extends $SealedField {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'SealedField',
-        isPrivate: null,
-        fields: [],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   FieldType get returnType {
     return _returnType;
   }
@@ -125,7 +60,7 @@ class SealedField extends $SealedField {
 }
 
 class SealedValue extends $SealedValue {
-  SealedValue(
+  const SealedValue(
       {FieldType returnType, String name, bool isComputed, Object value})
       : _returnType = returnType,
         assert(returnType != null),
@@ -136,15 +71,6 @@ class SealedValue extends $SealedValue {
         _value = value,
         assert(value != null);
 
-  factory SealedValue.load(Iterable<DataLoader> loaders) => SealedValue(
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final FieldType _returnType;
 
   final String _name;
@@ -152,8 +78,6 @@ class SealedValue extends $SealedValue {
   final bool _isComputed;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   SealedValue clone(
       {FieldType returnType, String name, bool isComputed, Object value}) {
@@ -165,143 +89,6 @@ class SealedValue extends $SealedValue {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'SealedValue',
-        isPrivate: null,
-        fields: [],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: false,
-              isConst: null,
-              name: 'SealedField',
-              isPrivate: null,
-              fields: [],
-              interfaces: [
-                MetaInterfaceType<Data<DataValue>>(
-                  meta: Data<DataValue>(
-                    isFinal: false,
-                    isInterface: true,
-                    isConst: null,
-                    name: 'Field',
-                    isPrivate: null,
-                    fields: [
-                      DataValue(
-                        name: 'returnType',
-                        returnType: FieldType(
-                          type: 'FieldType',
-                        ),
-                        isComputed: false,
-                        value: _returnType,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'name',
-                        returnType: FieldType(
-                          type: 'String',
-                        ),
-                        isComputed: false,
-                        value: _name,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'isComputed',
-                        returnType: FieldType(
-                          type: 'bool',
-                        ),
-                        isComputed: false,
-                        value: _isComputed,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      )
-                    ],
-                    interfaces: [],
-                    generics: [],
-                  ),
-                  generics: [],
-                )
-              ],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Value',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'value',
-                  returnType: FieldType(
-                    type: 'Object',
-                  ),
-                  isComputed: false,
-                  value: _value,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   FieldType get returnType {
     return _returnType;
   }
@@ -340,7 +127,7 @@ class SealedValue extends $SealedValue {
 }
 
 class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
-  Sealed(
+  const Sealed(
       {bool isConst,
       Iterable<MetaInterfaceType<Data<D>>> dataInterfaces,
       String name,
@@ -360,20 +147,6 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
         _fields = fields,
         assert(fields != null);
 
-  factory Sealed.load(Iterable<DataLoader> loaders) => Sealed(
-        isConst: loaders.firstWhere((l) => l.name == 'isConst').value as bool,
-        dataInterfaces: loaders
-            .firstWhere((l) => l.name == 'dataInterfaces')
-            .value as Iterable<MetaInterfaceType<Data<D>>>,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isPrivate:
-            loaders.firstWhere((l) => l.name == 'isPrivate').value as bool,
-        generics: loaders.firstWhere((l) => l.name == 'generics').value
-            as Iterable<TypeParameterDeclaration>,
-        fields:
-            loaders.firstWhere((l) => l.name == 'fields').value as Iterable<T>,
-      );
-
   Iterable<T> _computedFields;
 
   Iterable<T> _nonComputedFields;
@@ -392,8 +165,6 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
 
   final Iterable<T> _fields;
 
-  Data<DataValue> _meta$;
-
   Sealed<T, D> clone(
       {bool isConst,
       Iterable<MetaInterfaceType<Data<D>>> dataInterfaces,
@@ -411,122 +182,6 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'Sealed',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'isConst',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isConst,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'dataInterfaces',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: false,
-            value: _dataInterfaces,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'computedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _computedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'nonComputedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _nonComputedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'dataFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _dataFields,
-            isAbstract: false,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Meta',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isPrivate',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isPrivate,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'generics',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _generics,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'fields',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _fields,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   bool get isConst {
     return _isConst;
   }
@@ -591,22 +246,15 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
 }
 
 class SealedLoader extends $SealedLoader {
-  SealedLoader({String name, Object value})
+  const SealedLoader({String name, Object value})
       : _name = name,
         assert(name != null),
         _value = value,
         assert(value != null);
 
-  factory SealedLoader.load(Iterable<DataLoader> loaders) => SealedLoader(
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final String _name;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   SealedLoader clone({String name, Object value}) {
     return SealedLoader(
@@ -615,37 +263,6 @@ class SealedLoader extends $SealedLoader {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'SealedLoader',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'name',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _name,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'value',
-            returnType: FieldType(
-              type: 'Object',
-            ),
-            isComputed: false,
-            value: _value,
-            isAbstract: true,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   String get name {
     return _name;
   }
@@ -670,7 +287,7 @@ class SealedLoader extends $SealedLoader {
 }
 
 class EnumField extends $EnumField {
-  EnumField({FieldType returnType, String name, bool isComputed})
+  const EnumField({FieldType returnType, String name, bool isComputed})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -678,21 +295,11 @@ class EnumField extends $EnumField {
         _isComputed = isComputed,
         assert(isComputed != null);
 
-  factory EnumField.load(Iterable<DataLoader> loaders) => EnumField(
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-      );
-
   final FieldType _returnType;
 
   final String _name;
 
   final bool _isComputed;
-
-  Data<DataValue> _meta$;
 
   EnumField clone({FieldType returnType, String name, bool isComputed}) {
     return EnumField(
@@ -702,61 +309,6 @@ class EnumField extends $EnumField {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'EnumField',
-        isPrivate: null,
-        fields: [],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   FieldType get returnType {
     return _returnType;
   }
@@ -788,7 +340,8 @@ class EnumField extends $EnumField {
 }
 
 class EnumsValue extends $EnumsValue {
-  EnumsValue({FieldType returnType, String name, bool isComputed, Object value})
+  const EnumsValue(
+      {FieldType returnType, String name, bool isComputed, Object value})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -798,15 +351,6 @@ class EnumsValue extends $EnumsValue {
         _value = value,
         assert(value != null);
 
-  factory EnumsValue.load(Iterable<DataLoader> loaders) => EnumsValue(
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final FieldType _returnType;
 
   final String _name;
@@ -814,8 +358,6 @@ class EnumsValue extends $EnumsValue {
   final bool _isComputed;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   EnumsValue clone(
       {FieldType returnType, String name, bool isComputed, Object value}) {
@@ -827,143 +369,6 @@ class EnumsValue extends $EnumsValue {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'EnumsValue',
-        isPrivate: null,
-        fields: [],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: false,
-              isConst: null,
-              name: 'EnumField',
-              isPrivate: null,
-              fields: [],
-              interfaces: [
-                MetaInterfaceType<Data<DataValue>>(
-                  meta: Data<DataValue>(
-                    isFinal: false,
-                    isInterface: true,
-                    isConst: null,
-                    name: 'Field',
-                    isPrivate: null,
-                    fields: [
-                      DataValue(
-                        name: 'returnType',
-                        returnType: FieldType(
-                          type: 'FieldType',
-                        ),
-                        isComputed: false,
-                        value: _returnType,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'name',
-                        returnType: FieldType(
-                          type: 'String',
-                        ),
-                        isComputed: false,
-                        value: _name,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'isComputed',
-                        returnType: FieldType(
-                          type: 'bool',
-                        ),
-                        isComputed: false,
-                        value: _isComputed,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      )
-                    ],
-                    interfaces: [],
-                    generics: [],
-                  ),
-                  generics: [],
-                )
-              ],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Value',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'value',
-                  returnType: FieldType(
-                    type: 'Object',
-                  ),
-                  isComputed: false,
-                  value: _value,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   FieldType get returnType {
     return _returnType;
   }
@@ -1002,7 +407,7 @@ class EnumsValue extends $EnumsValue {
 }
 
 class Enum<T extends EnumField> extends $Enum<T> {
-  Enum(
+  const Enum(
       {String type,
       String name,
       bool isPrivate,
@@ -1019,17 +424,6 @@ class Enum<T extends EnumField> extends $Enum<T> {
         _fields = fields,
         assert(fields != null);
 
-  factory Enum.load(Iterable<DataLoader> loaders) => Enum(
-        type: loaders.firstWhere((l) => l.name == 'type').value as String,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isPrivate:
-            loaders.firstWhere((l) => l.name == 'isPrivate').value as bool,
-        generics: loaders.firstWhere((l) => l.name == 'generics').value
-            as Iterable<TypeParameterDeclaration>,
-        fields:
-            loaders.firstWhere((l) => l.name == 'fields').value as Iterable<T>,
-      );
-
   final String _type;
 
   final String _name;
@@ -1039,8 +433,6 @@ class Enum<T extends EnumField> extends $Enum<T> {
   final Iterable<TypeParameterDeclaration> _generics;
 
   final Iterable<T> _fields;
-
-  Data<DataValue> _meta$;
 
   Enum<T> clone(
       {String type,
@@ -1057,82 +449,6 @@ class Enum<T extends EnumField> extends $Enum<T> {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'Enum',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'type',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _type,
-            isAbstract: true,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Meta',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isPrivate',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isPrivate,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'generics',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _generics,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'fields',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _fields,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   String get type {
     return _type;
   }
@@ -1176,22 +492,15 @@ class Enum<T extends EnumField> extends $Enum<T> {
 }
 
 class EnumLoader extends $EnumLoader {
-  EnumLoader({String name, Object value})
+  const EnumLoader({String name, Object value})
       : _name = name,
         assert(name != null),
         _value = value,
         assert(value != null);
 
-  factory EnumLoader.load(Iterable<DataLoader> loaders) => EnumLoader(
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final String _name;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   EnumLoader clone({String name, Object value}) {
     return EnumLoader(
@@ -1200,37 +509,6 @@ class EnumLoader extends $EnumLoader {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'EnumLoader',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'name',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _name,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'value',
-            returnType: FieldType(
-              type: 'Object',
-            ),
-            isComputed: false,
-            value: _value,
-            isAbstract: true,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   String get name {
     return _name;
   }
@@ -1255,7 +533,7 @@ class EnumLoader extends $EnumLoader {
 }
 
 class DataField extends $DataField {
-  DataField(
+  const DataField(
       {bool isAbstract,
       bool isDefaulted,
       FieldType returnType,
@@ -1272,18 +550,6 @@ class DataField extends $DataField {
         _isComputed = isComputed,
         assert(isComputed != null);
 
-  factory DataField.load(Iterable<DataLoader> loaders) => DataField(
-        isAbstract:
-            loaders.firstWhere((l) => l.name == 'isAbstract').value as bool,
-        isDefaulted:
-            loaders.firstWhere((l) => l.name == 'isDefaulted').value as bool,
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-      );
-
   final bool _isAbstract;
 
   final bool _isDefaulted;
@@ -1293,8 +559,6 @@ class DataField extends $DataField {
   final String _name;
 
   final bool _isComputed;
-
-  Data<DataValue> _meta$;
 
   DataField clone(
       {bool isAbstract,
@@ -1311,82 +575,6 @@ class DataField extends $DataField {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'DataField',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'isAbstract',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isAbstract,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'isDefaulted',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isDefaulted,
-            isAbstract: true,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   bool get isAbstract {
     return _isAbstract;
   }
@@ -1432,7 +620,7 @@ class DataField extends $DataField {
 }
 
 class DataValue extends $DataValue {
-  DataValue(
+  const DataValue(
       {bool isAbstract,
       bool isDefaulted,
       FieldType returnType,
@@ -1452,19 +640,6 @@ class DataValue extends $DataValue {
         _value = value,
         assert(value != null);
 
-  factory DataValue.load(Iterable<DataLoader> loaders) => DataValue(
-        isAbstract:
-            loaders.firstWhere((l) => l.name == 'isAbstract').value as bool,
-        isDefaulted:
-            loaders.firstWhere((l) => l.name == 'isDefaulted').value as bool,
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final bool _isAbstract;
 
   final bool _isDefaulted;
@@ -1476,8 +651,6 @@ class DataValue extends $DataValue {
   final bool _isComputed;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   DataValue clone(
       {bool isAbstract,
@@ -1496,164 +669,6 @@ class DataValue extends $DataValue {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'DataValue',
-        isPrivate: null,
-        fields: [],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: false,
-              isConst: null,
-              name: 'DataField',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'isAbstract',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isAbstract,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isDefaulted',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isDefaulted,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [
-                MetaInterfaceType<Data<DataValue>>(
-                  meta: Data<DataValue>(
-                    isFinal: false,
-                    isInterface: true,
-                    isConst: null,
-                    name: 'Field',
-                    isPrivate: null,
-                    fields: [
-                      DataValue(
-                        name: 'returnType',
-                        returnType: FieldType(
-                          type: 'FieldType',
-                        ),
-                        isComputed: false,
-                        value: _returnType,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'name',
-                        returnType: FieldType(
-                          type: 'String',
-                        ),
-                        isComputed: false,
-                        value: _name,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'isComputed',
-                        returnType: FieldType(
-                          type: 'bool',
-                        ),
-                        isComputed: false,
-                        value: _isComputed,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      )
-                    ],
-                    interfaces: [],
-                    generics: [],
-                  ),
-                  generics: [],
-                )
-              ],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Value',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'value',
-                  returnType: FieldType(
-                    type: 'Object',
-                  ),
-                  isComputed: false,
-                  value: _value,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   bool get isAbstract {
     return _isAbstract;
   }
@@ -1705,8 +720,8 @@ class DataValue extends $DataValue {
   }
 }
 
-class Data<T extends $DataField> extends $Data<T> {
-  Data(
+class Data<T extends DataField> extends $Data<T> {
+  const Data(
       {bool isFinal,
       bool isInterface,
       bool isConst,
@@ -1731,22 +746,6 @@ class Data<T extends $DataField> extends $Data<T> {
         assert(generics != null),
         _fields = fields,
         assert(fields != null);
-
-  factory Data.load(Iterable<DataLoader> loaders) => Data(
-        isFinal: loaders.firstWhere((l) => l.name == 'isFinal').value as bool,
-        isInterface:
-            loaders.firstWhere((l) => l.name == 'isInterface').value as bool,
-        isConst: loaders.firstWhere((l) => l.name == 'isConst').value as bool,
-        interfaces: loaders.firstWhere((l) => l.name == 'interfaces').value
-            as Iterable<MetaInterfaceType<Data<T>>>,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isPrivate:
-            loaders.firstWhere((l) => l.name == 'isPrivate').value as bool,
-        generics: loaders.firstWhere((l) => l.name == 'generics').value
-            as Iterable<TypeParameterDeclaration>,
-        fields:
-            loaders.firstWhere((l) => l.name == 'fields').value as Iterable<T>,
-      );
 
   Iterable<T> _computedFields;
 
@@ -1778,8 +777,6 @@ class Data<T extends $DataField> extends $Data<T> {
 
   final Iterable<T> _fields;
 
-  Data<DataValue> _meta$;
-
   Data<T> clone(
       {bool isFinal,
       bool isInterface,
@@ -1801,182 +798,6 @@ class Data<T extends $DataField> extends $Data<T> {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'Data',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'isFinal',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isFinal,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'isInterface',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isInterface,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'isConst',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isConst,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'interfaces',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: false,
-            value: _interfaces,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'computedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _computedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'nonComputedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _nonComputedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'localNonComputedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _localNonComputedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'nonDefaultedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _nonDefaultedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'localNonDefaultedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _localNonDefaultedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'defaultedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _defaultedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'localDefaultedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _localDefaultedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Meta',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isPrivate',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isPrivate,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'generics',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _generics,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'fields',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _fields,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   bool get isFinal {
     return _isFinal;
   }
@@ -2071,22 +892,15 @@ class Data<T extends $DataField> extends $Data<T> {
 }
 
 class DataLoader extends $DataLoader {
-  DataLoader({String name, Object value})
+  const DataLoader({String name, Object value})
       : _name = name,
         assert(name != null),
         _value = value,
         assert(value != null);
 
-  factory DataLoader.load(Iterable<DataLoader> loaders) => DataLoader(
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final String _name;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   DataLoader clone({String name, Object value}) {
     return DataLoader(
@@ -2095,37 +909,6 @@ class DataLoader extends $DataLoader {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'DataLoader',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'name',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _name,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'value',
-            returnType: FieldType(
-              type: 'Object',
-            ),
-            isComputed: false,
-            value: _value,
-            isAbstract: true,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   String get name {
     return _name;
   }
@@ -2156,18 +939,9 @@ class MetaInterfaceType<T extends Meta<Field>> extends $MetaInterfaceType<T> {
         _generics = generics,
         assert(generics != null);
 
-  factory MetaInterfaceType.load(Iterable<DataLoader> loaders) =>
-      MetaInterfaceType(
-        meta: loaders.firstWhere((l) => l.name == 'meta').value as T,
-        generics: loaders.firstWhere((l) => l.name == 'generics').value
-            as Iterable<FieldType>,
-      );
-
   final T _meta;
 
   final Iterable<FieldType> _generics;
-
-  Data<DataValue> _meta$;
 
   MetaInterfaceType<T> clone({T meta, Iterable<FieldType> generics}) {
     return MetaInterfaceType(
@@ -2176,37 +950,6 @@ class MetaInterfaceType<T extends Meta<Field>> extends $MetaInterfaceType<T> {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'MetaInterfaceType',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'meta',
-            returnType: FieldType(
-              type: 'T',
-            ),
-            isComputed: false,
-            value: _meta,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'generics',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: false,
-            value: _generics,
-            isAbstract: true,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   T get meta {
     return _meta;
   }
@@ -2596,7 +1339,7 @@ abstract class IGeneric {
 }
 
 class TypeParameterDeclaration extends $TypeParameterDeclaration {
-  TypeParameterDeclaration(
+  const TypeParameterDeclaration(
       {String type, Option<FieldType> extension, String genericsStr})
       : _type = type,
         assert(type != null),
@@ -2605,15 +1348,6 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
         _genericsStr = genericsStr,
         assert(genericsStr != null);
 
-  factory TypeParameterDeclaration.load(Iterable<DataLoader> loaders) =>
-      TypeParameterDeclaration(
-        type: loaders.firstWhere((l) => l.name == 'type').value as String,
-        extension: loaders.firstWhere((l) => l.name == 'extension').value
-            as Option<FieldType>,
-        genericsStr:
-            loaders.firstWhere((l) => l.name == 'genericsStr').value as String,
-      );
-
   String _typeParameterStr;
 
   final String _type;
@@ -2621,8 +1355,6 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
   final Option<FieldType> _extension;
 
   final String _genericsStr;
-
-  Data<DataValue> _meta$;
 
   TypeParameterDeclaration clone(
       {String type, Option<FieldType> extension, String genericsStr}) {
@@ -2633,57 +1365,6 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'TypeParameterDeclaration',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'type',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _type,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'extension',
-            returnType: FieldType(
-              type: 'Option',
-            ),
-            isComputed: false,
-            value: _extension,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'typeParameterStr',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: true,
-            value: _typeParameterStr,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'genericsStr',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _genericsStr,
-            isAbstract: false,
-            isDefaulted: true,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   String get type {
     return _type;
   }
@@ -2719,7 +1400,7 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
 }
 
 class FieldType extends $FieldType {
-  FieldType(
+  const FieldType(
       {String type, Option<Iterable<FieldType>> generics, String genericsStr})
       : _type = type,
         assert(type != null),
@@ -2728,14 +1409,6 @@ class FieldType extends $FieldType {
         _genericsStr = genericsStr,
         assert(genericsStr != null);
 
-  factory FieldType.load(Iterable<DataLoader> loaders) => FieldType(
-        type: loaders.firstWhere((l) => l.name == 'type').value as String,
-        generics: loaders.firstWhere((l) => l.name == 'generics').value
-            as Option<Iterable<FieldType>>,
-        genericsStr:
-            loaders.firstWhere((l) => l.name == 'genericsStr').value as String,
-      );
-
   String _typeStr;
 
   final String _type;
@@ -2743,8 +1416,6 @@ class FieldType extends $FieldType {
   final Option<Iterable<FieldType>> _generics;
 
   final String _genericsStr;
-
-  Data<DataValue> _meta$;
 
   FieldType clone(
       {String type, Option<Iterable<FieldType>> generics, String genericsStr}) {
@@ -2755,57 +1426,6 @@ class FieldType extends $FieldType {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'FieldType',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'type',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _type,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'generics',
-            returnType: FieldType(
-              type: 'Option',
-            ),
-            isComputed: false,
-            value: _generics,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'typeStr',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: true,
-            value: _typeStr,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'genericsStr',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _genericsStr,
-            isAbstract: false,
-            isDefaulted: true,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   String get type {
     return _type;
   }
@@ -2954,7 +1574,7 @@ abstract class IOption<T> {
 }
 
 class SumField extends $SumField {
-  SumField({FieldType returnType, String name, bool isComputed})
+  const SumField({FieldType returnType, String name, bool isComputed})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -2962,21 +1582,11 @@ class SumField extends $SumField {
         _isComputed = isComputed,
         assert(isComputed != null);
 
-  factory SumField.load(Iterable<DataLoader> loaders) => SumField(
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-      );
-
   final FieldType _returnType;
 
   final String _name;
 
   final bool _isComputed;
-
-  Data<DataValue> _meta$;
 
   SumField clone({FieldType returnType, String name, bool isComputed}) {
     return SumField(
@@ -2986,61 +1596,6 @@ class SumField extends $SumField {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'SumField',
-        isPrivate: null,
-        fields: [],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   FieldType get returnType {
     return _returnType;
   }
@@ -3072,7 +1627,8 @@ class SumField extends $SumField {
 }
 
 class SumValue extends $SumValue {
-  SumValue({FieldType returnType, String name, bool isComputed, Object value})
+  const SumValue(
+      {FieldType returnType, String name, bool isComputed, Object value})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -3082,15 +1638,6 @@ class SumValue extends $SumValue {
         _value = value,
         assert(value != null);
 
-  factory SumValue.load(Iterable<DataLoader> loaders) => SumValue(
-        returnType: loaders.firstWhere((l) => l.name == 'returnType').value
-            as FieldType,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isComputed:
-            loaders.firstWhere((l) => l.name == 'isComputed').value as bool,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final FieldType _returnType;
 
   final String _name;
@@ -3098,8 +1645,6 @@ class SumValue extends $SumValue {
   final bool _isComputed;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   SumValue clone(
       {FieldType returnType, String name, bool isComputed, Object value}) {
@@ -3111,143 +1656,6 @@ class SumValue extends $SumValue {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'SumValue',
-        isPrivate: null,
-        fields: [],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: false,
-              isConst: null,
-              name: 'SumField',
-              isPrivate: null,
-              fields: [],
-              interfaces: [
-                MetaInterfaceType<Data<DataValue>>(
-                  meta: Data<DataValue>(
-                    isFinal: false,
-                    isInterface: true,
-                    isConst: null,
-                    name: 'Field',
-                    isPrivate: null,
-                    fields: [
-                      DataValue(
-                        name: 'returnType',
-                        returnType: FieldType(
-                          type: 'FieldType',
-                        ),
-                        isComputed: false,
-                        value: _returnType,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'name',
-                        returnType: FieldType(
-                          type: 'String',
-                        ),
-                        isComputed: false,
-                        value: _name,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      ),
-                      DataValue(
-                        name: 'isComputed',
-                        returnType: FieldType(
-                          type: 'bool',
-                        ),
-                        isComputed: false,
-                        value: _isComputed,
-                        isAbstract: true,
-                        isDefaulted: false,
-                      )
-                    ],
-                    interfaces: [],
-                    generics: [],
-                  ),
-                  generics: [],
-                )
-              ],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Field',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'returnType',
-                  returnType: FieldType(
-                    type: 'FieldType',
-                  ),
-                  isComputed: false,
-                  value: _returnType,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isComputed',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isComputed,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          ),
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Value',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'value',
-                  returnType: FieldType(
-                    type: 'Object',
-                  ),
-                  isComputed: false,
-                  value: _value,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   FieldType get returnType {
     return _returnType;
   }
@@ -3286,7 +1694,7 @@ class SumValue extends $SumValue {
 }
 
 class Sum<T extends SumField> extends $Sum<T> {
-  Sum(
+  const Sum(
       {bool isFinal,
       bool isInterface,
       bool isConst,
@@ -3312,22 +1720,6 @@ class Sum<T extends SumField> extends $Sum<T> {
         _fields = fields,
         assert(fields != null);
 
-  factory Sum.load(Iterable<DataLoader> loaders) => Sum(
-        isFinal: loaders.firstWhere((l) => l.name == 'isFinal').value as bool,
-        isInterface:
-            loaders.firstWhere((l) => l.name == 'isInterface').value as bool,
-        isConst: loaders.firstWhere((l) => l.name == 'isConst').value as bool,
-        interfaces: loaders.firstWhere((l) => l.name == 'interfaces').value
-            as Iterable<MetaInterfaceType<Sum<T>>>,
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        isPrivate:
-            loaders.firstWhere((l) => l.name == 'isPrivate').value as bool,
-        generics: loaders.firstWhere((l) => l.name == 'generics').value
-            as Iterable<TypeParameterDeclaration>,
-        fields:
-            loaders.firstWhere((l) => l.name == 'fields').value as Iterable<T>,
-      );
-
   Iterable<T> _computedFields;
 
   Iterable<T> _nonComputedFields;
@@ -3350,8 +1742,6 @@ class Sum<T extends SumField> extends $Sum<T> {
 
   final Iterable<T> _fields;
 
-  Data<DataValue> _meta$;
-
   Sum<T> clone(
       {bool isFinal,
       bool isInterface,
@@ -3373,142 +1763,6 @@ class Sum<T extends SumField> extends $Sum<T> {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'Sum',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'isFinal',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isFinal,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'isInterface',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isInterface,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'isConst',
-            returnType: FieldType(
-              type: 'bool',
-            ),
-            isComputed: false,
-            value: _isConst,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'interfaces',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: false,
-            value: _interfaces,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'computedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _computedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'nonComputedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _nonComputedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'localNonComputedFields',
-            returnType: FieldType(
-              type: 'Iterable',
-            ),
-            isComputed: true,
-            value: _localNonComputedFields,
-            isAbstract: false,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [
-          MetaInterfaceType<Data<DataValue>>(
-            meta: Data<DataValue>(
-              isFinal: false,
-              isInterface: true,
-              isConst: null,
-              name: 'Meta',
-              isPrivate: null,
-              fields: [
-                DataValue(
-                  name: 'name',
-                  returnType: FieldType(
-                    type: 'String',
-                  ),
-                  isComputed: false,
-                  value: _name,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'isPrivate',
-                  returnType: FieldType(
-                    type: 'bool',
-                  ),
-                  isComputed: false,
-                  value: _isPrivate,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'generics',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _generics,
-                  isAbstract: true,
-                  isDefaulted: false,
-                ),
-                DataValue(
-                  name: 'fields',
-                  returnType: FieldType(
-                    type: 'Iterable',
-                  ),
-                  isComputed: false,
-                  value: _fields,
-                  isAbstract: true,
-                  isDefaulted: false,
-                )
-              ],
-              interfaces: [],
-              generics: [],
-            ),
-            generics: [],
-          )
-        ],
-        generics: [],
-      );
   bool get isFinal {
     return _isFinal;
   }
@@ -3587,22 +1841,15 @@ class Sum<T extends SumField> extends $Sum<T> {
 }
 
 class SumLoader extends $SumLoader {
-  SumLoader({String name, Object value})
+  const SumLoader({String name, Object value})
       : _name = name,
         assert(name != null),
         _value = value,
         assert(value != null);
 
-  factory SumLoader.load(Iterable<DataLoader> loaders) => SumLoader(
-        name: loaders.firstWhere((l) => l.name == 'name').value as String,
-        value: loaders.firstWhere((l) => l.name == 'value').value as Object,
-      );
-
   final String _name;
 
   final Object _value;
-
-  Data<DataValue> _meta$;
 
   SumLoader clone({String name, Object value}) {
     return SumLoader(
@@ -3611,37 +1858,6 @@ class SumLoader extends $SumLoader {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: false,
-        isInterface: false,
-        isConst: null,
-        name: 'SumLoader',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'name',
-            returnType: FieldType(
-              type: 'String',
-            ),
-            isComputed: false,
-            value: _name,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'value',
-            returnType: FieldType(
-              type: 'Object',
-            ),
-            isComputed: false,
-            value: _value,
-            isAbstract: true,
-            isDefaulted: false,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   String get name {
     return _name;
   }

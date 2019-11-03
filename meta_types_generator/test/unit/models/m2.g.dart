@@ -13,16 +13,9 @@ class IMPORTDataClass extends $IMPORTDataClass {
         _ref = ref,
         assert(ref != null);
 
-  factory IMPORTDataClass.load(Iterable<DataLoader> loaders) => IMPORTDataClass(
-        foo: loaders.firstWhere((l) => l.name == 'foo').value as int,
-        ref: loaders.firstWhere((l) => l.name == 'ref').value as int,
-      );
-
   final int _foo;
 
   final int _ref;
-
-  Data<DataValue> _meta$;
 
   IMPORTDataClass clone({int foo, int ref}) {
     return IMPORTDataClass(
@@ -31,37 +24,6 @@ class IMPORTDataClass extends $IMPORTDataClass {
     );
   }
 
-  Data<DataValue> get meta$ => _meta$ ??= Data<DataValue>(
-        isFinal: true,
-        isInterface: false,
-        isConst: null,
-        name: 'IMPORTDataClass',
-        isPrivate: null,
-        fields: [
-          DataValue(
-            name: 'foo',
-            returnType: FieldType(
-              type: 'int',
-            ),
-            isComputed: false,
-            value: _foo,
-            isAbstract: true,
-            isDefaulted: false,
-          ),
-          DataValue(
-            name: 'ref',
-            returnType: FieldType(
-              type: 'int',
-            ),
-            isComputed: false,
-            value: _ref,
-            isAbstract: false,
-            isDefaulted: true,
-          )
-        ],
-        interfaces: [],
-        generics: [],
-      );
   int get foo {
     return _foo;
   }

@@ -4,7 +4,7 @@ import 'package:meta_types/meta_types_models.dart'
 import 'data_class_meta_generator.dart';
 import 'util.dart';
 
-Class generateData(Data dataClass) => Class((b) => b
+Class generateData(Data<DataField> dataClass) => Class((b) => b
   ..abstract = false
   // ..mixins.addAll(_mixins(dataClass))
   ..types.addAll(
@@ -14,7 +14,7 @@ Class generateData(Data dataClass) => Class((b) => b
   )
   ..constructors.add(new Constructor(
     (b) => b
-      // ..constant = dataClass.computedFields.isEmpty && dataClass.isConst
+      ..constant = dataClass.isConst
       ..initializers.addAll(
         dataClass.nonComputedFields.map(_initializer).expand((i) => i),
       )
@@ -23,30 +23,30 @@ Class generateData(Data dataClass) => Class((b) => b
           (f) => Parameter(
             (b) => b
               ..named = true
-              ..name = f.name
+              ..name = _removeUnderscore(f.name)
               ..type = Reference(f.returnType.typeStr),
           ),
         ),
       ),
   ))
-  ..constructors.add(
-    Constructor(
-      (b) => b
-        ..factory = true
-        ..name = 'load'
-        ..lambda = true
-        ..requiredParameters.add(
-          Parameter(
-            (b) => b
-              ..name = 'loaders'
-              ..type = Reference('Iterable<DataLoader>'),
-          ),
-        )
-        ..body = Code('''
-          ${dataClass.name}(${_loaderFields(dataClass)})
-        '''),
-    ),
-  )
+  // ..constructors.add(
+  //   Constructor(
+  //     (b) => b
+  //       ..factory = true
+  //       ..name = 'load'
+  //       ..lambda = true
+  //       ..requiredParameters.add(
+  //         Parameter(
+  //           (b) => b
+  //             ..name = 'loaders'
+  //             ..type = Reference('Iterable<DataLoader>'),
+  //         ),
+  //       )
+  //       ..body = Code('''
+  //         ${dataClass.name}(${_loaderFields(dataClass)})
+  //       '''),
+  //   ),
+  // )
   ..name = dataClass.name
   ..types.addAll([])
   ..extend = Reference(
@@ -58,23 +58,24 @@ Class generateData(Data dataClass) => Class((b) => b
   )
   // ..methods.addAll(_)
   ..methods.add(_clone(dataClass))
-  ..fields.addAll(_genComputedFields(dataClass))
+  ..fields.addAll([if (!dataClass.isConst) ..._genComputedFields(dataClass)])
   ..fields.addAll(_genNonComputedFields(dataClass))
-  ..fields.add(genDataField(dataClass))
-  ..methods.add(genDataGetter(dataClass))
+  // ..fields.add(genDataField(dataClass))
+  // ..methods.add(genDataGetter(dataClass))
   ..methods.addAll(_nonDefaultedFieldsGetter(dataClass))
   ..methods.addAll(_defaultedFieldsGetter(dataClass))
-  ..methods.addAll(_genComputedFieldsGetter(dataClass))
+  ..methods
+      .addAll([if (!dataClass.isConst) ..._genComputedFieldsGetter(dataClass)])
   ..methods.add(_hashCode(dataClass))
   ..methods.add(_equality(dataClass))
   ..methods.add(_toString(dataClass)));
 
 Iterable<Code> _initializer(DataField field) => [
-      Code('_${field.name} = ${field.name}'),
-      Code('assert(${field.name} != null)'),
+      Code('_${field.name} = ${_removeUnderscore(field.name)}'),
+      Code('assert(${_removeUnderscore(field.name)} != null)'),
     ];
 
-Method _clone(Data dataClass) => Method((b) => b
+Method _clone(Data<DataField> dataClass) => Method((b) => b
   ..name = 'clone'
   ..returns = Reference(
     dataClass.name + extendedClassGenerics(dataClass.generics),
@@ -82,21 +83,23 @@ Method _clone(Data dataClass) => Method((b) => b
   ..optionalParameters
       .addAll(dataClass.nonComputedFields.map((f) => Parameter((b) => b
         ..named = true
-        ..name = f.name
+        ..name = _removeUnderscore(f.name)
         ..type = Reference(f.returnType.typeStr))))
   ..body = Code('''
   return ${dataClass.name}(${_cloneParams(dataClass)});
   '''));
 
-String _loaderFields(Data dataClass) => dataClass.nonComputedFields.fold(
+String _loaderFields(Data<DataField> dataClass) => dataClass.nonComputedFields.fold(
     '',
     (comb, field) =>
         '$comb${field.name}: loaders.firstWhere((l) => l.name == \'${field.name}\').value as ${field.returnType.typeStr},');
 
-String _cloneParams(Data dataClass) => dataClass.nonComputedFields.fold('',
-    (comb, field) => '$comb${field.name}: ${field.name} ?? _${field.name},');
+String _cloneParams(Data<DataField> dataClass) => dataClass.nonComputedFields.fold(
+    '',
+    (comb, field) =>
+        '$comb${_removeUnderscore(field.name)}: ${_removeUnderscore(field.name)} ?? _${field.name},');
 
-Method _equality(Data dataClass) => Method((b) => b
+Method _equality(Data<DataField> dataClass) => Method((b) => b
   ..name = 'operator =='
   ..returns = TypeReference((b) => b..symbol = 'bool')
   ..requiredParameters.add(Parameter((b) => b
@@ -111,7 +114,7 @@ Method _equality(Data dataClass) => Method((b) => b
 String _equalityFold(Iterable<DataField> e) =>
     e.map((field) => '${field.name} == other.${field.name}').join('&&');
 
-Method _hashCode(Data dataClass) => Method((b) => b
+Method _hashCode(Data<DataField> dataClass) => Method((b) => b
   ..name = 'hashCode'
   ..type = MethodType.getter
   ..returns = TypeReference((b) => b..symbol = 'int')
@@ -124,7 +127,7 @@ String _hashFold(Iterable<DataField> e) => e.fold(
     (params, field) =>
         '\$jc(${params.isNotEmpty ? params : 0}, ${field.name}.hashCode)');
 
-Method _toString(Data dataClass) => Method((b) => b
+Method _toString(Data<DataField> dataClass) => Method((b) => b
   ..name = 'toString'
   ..returns = TypeReference((b) => b..symbol = 'String')
   ..body = Code('''
@@ -171,3 +174,6 @@ Iterable<Method> _genComputedFieldsGetter(Data e) =>
       ..body = Code('''
         return _${field.name} ??= super.${field.name};
       ''')));
+
+String _removeUnderscore(String field) =>
+    field.startsWith('_') ? field.substring(1) : field;
