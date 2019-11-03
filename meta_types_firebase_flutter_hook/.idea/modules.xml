@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/meta_types_firebase_flutter_hook.iml" filepath="$PROJECT_DIR$/meta_types_firebase_flutter_hook.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/meta_types_firebase_flutter_hook_android.iml" filepath="$PROJECT_DIR$/android/meta_types_firebase_flutter_hook_android.iml" />
+    </modules>
+  </component>
+</project>
