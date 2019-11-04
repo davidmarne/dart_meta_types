@@ -70,6 +70,7 @@ Data<DataField> dataFromClassElement(
     isInterface: annotation.getField('isInterface').toBoolValue(),
     interfaces: interfaces,
     fields: fields,
-    generics: resolveTypeParameterDeclaration(element),
+    generics: resolveTypeParameterDeclaration(element.typeParameters),
+    methods: element.methods.map(methodElementToMethod),
   );
 }

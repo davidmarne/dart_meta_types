@@ -66,11 +66,12 @@ Sum sumFromClassElement(
 
   return Sum(
     name: element.name.replaceAll('\$', ''),
-    generics: resolveTypeParameterDeclaration(element),
+    generics: resolveTypeParameterDeclaration(element.typeParameters),
+    methods: element.methods.map(methodElementToMethod),
     isFinal: false, //annotation.getField('isFinal').toBoolValue(),
     isInterface: false, //annotation.getField('isInterface').toBoolValue(),
-    // isConst:
-    //     element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
+    isConst:
+        element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
     interfaces: interfaces,
     fields: fields,
   );

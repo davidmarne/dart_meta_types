@@ -528,13 +528,54 @@ class StringEnum extends $StringEnum {
 
   final Object _value;
 
-  static var values = <StringEnum>{};
+  static const StringEnum a = StringEnum._($StringEnum.a);
 
-  WHEN when<WHEN>() {
+  static const StringEnum b = StringEnum._($StringEnum.b);
+
+  static var values = <StringEnum>{StringEnum.a, StringEnum.b};
+
+  bool get isA {
+    return a != null;
+  }
+
+  bool get isB {
+    return b != null;
+  }
+
+  void whenA(void Function(String) handler) {
+    if (StringEnum.a == this) handler(StringEnum.a._value as String);
+  }
+
+  void whenB(void Function(String) handler) {
+    if (StringEnum.b == this) handler(StringEnum.b._value as String);
+  }
+
+  WHEN when<WHEN>({WHEN Function(String) a, WHEN Function(String) b}) {
+    if (this == StringEnum.a) {
+      return a(StringEnum.a._value as String);
+    }
+    if (this == StringEnum.b) {
+      return b(StringEnum.b._value as String);
+    }
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>({WHENO Function() otherwise}) {
+  WHENO wheno<WHENO>(
+      {WHENO Function() otherwise,
+      WHENO Function(String) a,
+      WHENO Function(String) b}) {
+    if (this == StringEnum.a) {
+      if (a != null)
+        return a(StringEnum.a._value as String);
+      else
+        return otherwise();
+    }
+    if (this == StringEnum.b) {
+      if (b != null)
+        return b(StringEnum.b._value as String);
+      else
+        return otherwise();
+    }
     return otherwise();
   }
 

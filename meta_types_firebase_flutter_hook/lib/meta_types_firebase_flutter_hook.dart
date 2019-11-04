@@ -1,242 +1,522 @@
-import 'dart:async';
-import 'package:meta/meta.dart';
-import 'package:meta_types/meta_types.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+export 'src/client.dart';
+export 'src/client_hook.dart';
+export 'src/collection_hook.dart';
+export 'src/document_hook.dart';
 
-part 'meta_types_firebase_flutter_hook.g.dart';
+// import 'dart:async';
+// import 'package:meta/meta.dart';
+// import 'package:meta_types/meta_types.dart';
+// import 'package:meta_types/meta_types_models.dart';
+// import 'package:built_collection/built_collection.dart';
+// import 'package:flutter/widgets.dart';
+// import 'package:flutter_hooks/flutter_hooks.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:built_value/serializer.dart'
+//     show StructuredSerializer, Serializers;
 
-const creating = "creating";
+// part 'meta_types_firebase_flutter_hook.g.dart';
 
-typedef Deserialize = T Function<T>(Object);
+// @DataClass()
+// abstract class $Reference implements Path {}
 
-@DataClass()
-abstract class $Reference implements DocReference {}
+// @DataClass(isInterface: true)
+// abstract class Path {
+//   String get path;
+// }
 
-@DataClass(isInterface: true)
-abstract class DocReference {
-  String get path;
-}
+// @SealedClass()
+// abstract class $DocumentResolution<T extends Path> implements Path {
+//   Reference get fetching;
+//   T get creating;
+//   T get dirty;
+//   T get resolved;
+//   T get deleting;
+//   Reference get denied;
+//   Reference get notFound;
+// }
 
-@SealedClass()
-abstract class $Resolution<T extends DocReference> implements DocReference {
-  Reference get fetching;
-  T get creating;
-  T get dirty;
-  T get resolved;
-  T get deleting;
-  Reference get denied;
-  Reference get notFound;
-}
+// @SealedClass()
+// abstract class $CollectionResolution<T extends Path> implements Path {
+//   Reference get fetching;
+//   AppendingItem<T> get appendingItem;
+//   PrependingItem<T> get prependingItem;
+//   RemovingItem<T> get removingItem;
+//   Items<T> get resolved;
+//   Items<T> get deleting;
+//   Reference get denied;
+//   Reference get notFound;
+// }
 
-@DataClass()
-abstract class $Subscription {
-  int get id;
-  Reference get ref;
-}
+// @DataClass()
+// abstract class $Items<T extends Path> implements Path {
+//   BuiltList<T> get items;
+//   Option<T> get nextStart;
+// }
 
-abstract class FirebaseClient {
-  Future<void> create<T extends DocReference>(T data);
-  Future<void> update<T extends DocReference>(T data);
-  Future<void> delete<T extends DocReference>(T data);
-  factory FirebaseClient(Firestore store) => new _FirebaseClient(store);
-}
+// @DataClass()
+// abstract class $AppendingItem<T extends Path> implements $Items<T> {
+//   T get appending;
+// }
 
-class _FirebaseClient implements FirebaseClient {
-  Firestore _store;
-  final _deserializers = <Reference, Deserialize>{};
-  final _subs = <Reference, List<Subscription>>{};
-  final _data = <Reference, Object>{};
-  final _snapshots = <Reference, StreamSubscription>{};
-  final _changeController = StreamController<void>.broadcast();
+// @DataClass()
+// abstract class $PrependingItem<T extends Path> implements $Items<T> {
+//   T get prepending;
+// }
 
-  var _nextId = 0;
+// @DataClass()
+// abstract class $RemovingItem<T extends Path> implements $Items<T> {
+//   T get removing;
+// }
 
-  _FirebaseClient(this._store);
+// @DataClass()
+// abstract class $Receipt<T extends Path> {
+//   int get subscriptionId;
+//   T get resolution;
+// }
 
-  Subscription checkout<T extends DocReference>(
-      Reference ref, Deserialize deserializer) {
-    final sub = Subscription(id: _nextId++, ref: ref);
-    _deserializers[ref] = deserializer;
-    if (_subs.containsKey(ref)) {
-      _subs[ref].add(sub);
-    } else {
-      _data[ref] = Resolution.fetching(ref);
-      _subs[ref] = [sub];
-      _snapshots[ref] =
-          _store.document(ref.path).snapshots().listen(_onDoc(ref));
-      _store
-          .document(ref.path)
-          .get()
-          .then(_onNewDoc(ref))
-          .catchError(_onDocFail(ref));
-    }
-    return sub;
-  }
+// abstract class FirebaseClient {
+//   // Future<void> create<T extends Path>(T data);
+//   // Future<void> update<T extends Path>(T data);
+//   // Future<void> delete<T extends Path>(T data);
+//   factory FirebaseClient(Firestore store, Serializers serializers) =>
+//       new _FirebaseClient(store, serializers);
+// }
 
-  void Function(DocumentSnapshot) _onNewDoc(Reference ref) =>
-      (DocumentSnapshot snapshot) {
-        if (!_data.containsKey(ref)) {
-          _setData(ref, _deserializers[ref](snapshot.data));
-        }
-      };
+// class _FirebaseClient implements FirebaseClient {
+//   final Firestore _store;
+//   final Serializers _allSerializers;
 
-  void Function(DocumentSnapshot) _onDoc(Reference ref) =>
-      (DocumentSnapshot snapshot) {
-        _setData(ref, _deserializers[ref](snapshot.data));
-      };
+//   final _serializers = <int, StructuredSerializer>{};
 
-  void Function(Object error) _onDocFail(Reference ref) => (Object error) {
-        return _data[ref] = Resolution.notFound(ref);
-      };
+//   final _documentSubscriptionReferenceLookup = <int, Reference>{};
+//   final _documentSubscriptions = <Reference, List<int>>{};
+//   final _documentData = <Reference, DocumentResolution>{};
+//   final _documentSnapshotStreamSubscriptions =
+//       <Reference, StreamSubscription>{};
 
-  Resolution<T> read<T extends DocReference>(Subscription subscription) {
-    return _data[subscription.ref];
-  }
+//   final _collectionData = <int, CollectionResolution>{};
+//   final _collectionSnapshotStreamSubscriptions = <int, StreamSubscription>{};
 
-  void checkin<T extends DocReference>(Subscription subscription) {
-    _subs[subscription.ref].remove(subscription);
-    if (_subs[subscription.ref].isEmpty) {
-      _subs.remove(subscription.ref);
-      _data.remove(subscription.ref);
-    }
-  }
+//   var _nextId = 0;
 
-  Future<void> create<T extends DocReference>(T data) {
-    _setData(Reference(path: data.path), Resolution.creating(data));
-    return _store.document(data.path).setData(toJson(data));
-  }
+//   final _changeController = StreamController<void>.broadcast();
 
-  Future<void> update<T extends DocReference>(T data) {
-    _setData(Reference(path: data.path), Resolution.dirty(data));
-    return _store.document(data.path).updateData(toJson(data));
-  }
+//   _FirebaseClient(this._store, this._allSerializers);
 
-  Future<void> delete<T extends DocReference>(T data) {
-    _setData(Reference(path: data.path), Resolution.deleting(data));
-    return _store.document(data.path).delete();
-  }
+//   Stream<void> get change => _changeController.stream;
 
-  void _setData(Reference ref, Resolution resolution) {
-    _data[ref] = resolution;
-    _changeController.add(null);
-  }
+//   DocumentResolution readDocument(int subscriptionId) {
+//     return _documentData[_documentSnapshotStreamSubscriptions[subscriptionId]];
+//   }
 
-  Stream<void> get change => _changeController.stream;
+//   CollectionResolution readCollection(int subscriptionId) {
+//     return _collectionData[
+//         _collectionSnapshotStreamSubscriptions[subscriptionId]];
+//   }
 
-  void dispose() {
-    _changeController.close();
-  }
-}
+//   Receipt checkoutCollection<T extends Path>(
+//       Reference ref, StructuredSerializer serializer) {
+//     final subscriptionId = _nextId++;
 
-@DataClass()
-abstract class $FirebaseHookData<T extends DocReference> {
-  BuiltMap<Reference, Resolution<T>> get _data;
-  Resolution<T> operator [](Reference ref) => _data[ref];
-  Iterable<Resolution<T>> get datas => _data.values;
-}
+//     // save the serializer
+//     _serializers[subscriptionId] = serializer;
 
-Resolution<T> useFirebaseDoc<T extends DocReference>(
-    Reference ref, Deserialize deserializer) {
-  return useFirebaseDocs<T>([ref], deserializer)[ref];
-}
+//     // cache the current resolution
+//     final resolution = CollectionResolution.fetching(ref);
+//     _collectionData[subscriptionId] = resolution;
+//     _documentSubscriptionReferenceLookup[subscriptionId] = ref;
 
-FirebaseHookData<T> useFirebaseDocs<T extends DocReference>(
-    Iterable<Reference> refs, Deserialize deserializer) {
-  return Hook.use(_FirebaseHook(refs: refs, deserializer: deserializer));
-}
+//     // subscribe to changes
+//     _collectionSnapshotStreamSubscriptions[subscriptionId] = _store
+//         .collection(ref.path)
+//         .snapshots()
+//         .listen(_onQuerySnapshot(ref, subscriptionId));
 
-class _FirebaseHook<T extends DocReference> extends Hook<FirebaseHookData<T>> {
-  final Iterable<Reference> refs;
-  final Deserialize deserializer;
+//     // fetch the data
+//     _store
+//         .collection(ref.path)
+//         .getDocuments()
+//         .then(_onNewQuerySnapshot(ref, subscriptionId))
+//         .catchError(_onQueryFail(ref, subscriptionId));
 
-  const _FirebaseHook({this.refs, this.deserializer});
+//     return Receipt(
+//       resolution: resolution,
+//       subscriptionId: subscriptionId,
+//     );
+//   }
 
-  @override
-  _FirebaseHookState<T> createState() => _FirebaseHookState();
-}
+//   void checkinCollection(int subscriptionId) {
+//     _collectionData.remove(subscriptionId);
+//     _collectionSnapshotStreamSubscriptions.remove(subscriptionId).cancel();
+//     _serializers.remove(subscriptionId);
+//   }
 
-class _FirebaseHookState<T extends DocReference>
-    extends HookState<FirebaseHookData<T>, _FirebaseHook<T>> {
-  FirebaseHookData<T> _state;
-  Map<Reference, Subscription> _subs;
-  StreamSubscription _sub;
-  _FirebaseClient _client;
+//   Receipt checkoutDocument<T extends Path>(
+//       Reference ref, StructuredSerializer serializer) {
+//     final subscriptionId = _nextId++;
+//     // save the serializer
+//     _serializers[subscriptionId] = serializer;
 
-  @override
-  void initHook() {
-    super.initHook();
-    _state = _calcState();
-    _sub = _client.change.listen((_) {
-      final next = _calcState();
-      if (_state != next) {
-        _state = next;
-        setState(() {});
-      }
-    });
-  }
+//     // if this doc is already subscribed to save
+//     // off the new subscription and return the cached value.
+//     if (_documentSubscriptions.containsKey(ref)) {
+//       _documentSubscriptions[ref].add(subscriptionId);
+//       return Receipt(
+//         resolution: _documentData[ref],
+//         subscriptionId: subscriptionId,
+//       );
+//     }
 
-  @override
-  void didUpdateHook(_FirebaseHook<T> old) {
-    // unsub to old refs
-    final subsToRemove = _subs.entries.where((e) => !hook.refs.contains(e.key));
-    subsToRemove.forEach((e) {
-      _client.checkin(e.value);
-      _subs.remove(e.key);
-    });
+//     // save the subscription id
+//     _documentSubscriptions[ref] = [subscriptionId];
 
-    // sub to new refs
-    final subsToObtain = hook.refs.where((ref) => !_subs.containsKey(ref));
-    subsToObtain.forEach((ref) {
-      _subs[ref] = _client.checkout(ref, hook.deserializer);
-    });
-  }
+//     // cache the current resolution
+//     final resolution = DocumentResolution.fetching(ref);
+//     _documentData[ref] = resolution;
 
-  @override
-  void dispose() {
-    _sub.cancel();
-    _subs.values.forEach(_client.checkin);
-  }
+//     // subscribe to changes
+//     _documentSnapshotStreamSubscriptions[ref] = _store
+//         .document(ref.path)
+//         .snapshots()
+//         .listen(_onDocumentSnapshot(ref, subscriptionId));
 
-  @override
-  build(BuildContext context) {
-    return _state;
-  }
+//     // fetch the data
+//     _store
+//         .document(ref.path)
+//         .get()
+//         .then(_onNewDocumentSnapshot(ref, subscriptionId))
+//         .catchError(_onDocumentFail(ref));
 
-  FirebaseHookData<T> _calcState() => FirebaseHookData(
-        data: BuiltMap.build((b) {
-          hook.refs.forEach((ref) {
-            b[ref] = _client.read(_subs[ref]);
-          });
-        }),
-      );
-}
+//     return Receipt(
+//       resolution: resolution,
+//       subscriptionId: subscriptionId,
+//     );
+//   }
 
-FirebaseClient useFirebaseClient() {
-  return Hook.use(_FirebaseClientHook());
-}
+//   void checkinDocument<T extends Path>(int subscriptionId) {
+//     final ref = _documentSubscriptionReferenceLookup.remove(subscriptionId);
+//     _documentSubscriptions[ref].remove(subscriptionId);
+//     if (_documentSubscriptions[ref].isEmpty) {
+//       _documentSubscriptions.remove(ref);
+//       _documentSnapshotStreamSubscriptions.remove(ref).cancel();
+//       _documentData.remove(ref);
+//     }
+//   }
 
-class _FirebaseClientHook extends Hook<FirebaseClient> {
-  final Iterable<Reference> refs;
-  final Deserialize deserializer;
+//   Future<void> create<T extends Path>(T data, StructuredSerializer serializer) {
+//     _setDocumentData(
+//         Reference(path: data.path), DocumentResolution.creating(data));
+//     return _store
+//         .document(data.path)
+//         .setData(_allSerializers.serializeWith(serializer, data));
+//   }
 
-  const _FirebaseClientHook({this.refs, this.deserializer});
+//   Future<void> update<T extends Path>(T data, StructuredSerializer serializer) {
+//     _setDocumentData(
+//         Reference(path: data.path), DocumentResolution.dirty(data));
+//     return _store
+//         .document(data.path)
+//         .updateData(_allSerializers.serializeWith(serializer, data));
+//   }
 
-  @override
-  _FirebaseClientHookState createState() => _FirebaseClientHookState();
-}
+//   Future<void> delete<T extends Path>(T data) {
+//     _setDocumentData(
+//         Reference(path: data.path), DocumentResolution.deleting(data));
+//     return _store.document(data.path).delete();
+//   }
 
-class _FirebaseClientHookState
-    extends HookState<FirebaseClient, _FirebaseClientHook> {
-  _FirebaseClient _client;
+//   void _setDocumentData(Reference ref, DocumentResolution resolution) {
+//     _documentData[ref] = resolution;
+//     _changeController.add(null);
+//   }
 
-  @override
-  void initHook() {}
+//   void _setCollectionData(int subscriptionId, CollectionResolution resolution) {
+//     _collectionData[subscriptionId] = resolution;
+//     _changeController.add(null);
+//   }
 
-  @override
-  build(BuildContext context) {
-    return _client;
-  }
-}
+//   void dispose() {
+//     _changeController.close();
+//   }
+
+//   void Function(DocumentSnapshot) _onNewDocumentSnapshot(
+//           Reference ref, int subscriptionId) =>
+//       (DocumentSnapshot snapshot) {
+//         if (!_documentData.containsKey(ref)) {
+//           _setDocumentData(
+//             ref,
+//             _allSerializers.serializeWith(
+//                 _serializers[subscriptionId], snapshot.data),
+//           );
+//         }
+//       };
+
+//   void Function(DocumentSnapshot) _onDocumentSnapshot(
+//           Reference ref, int subscriptionId) =>
+//       (DocumentSnapshot snapshot) {
+//         _setDocumentData(
+//           ref,
+//           _allSerializers.serializeWith(
+//               _serializers[subscriptionId], snapshot.data),
+//         );
+//       };
+
+//   void Function(Object error) _onDocumentFail(Reference ref) => (Object error) {
+//         _documentData[ref] = DocumentResolution.notFound(ref);
+//       };
+
+//   void Function(QuerySnapshot) _onNewQuerySnapshot(
+//           Reference ref, int subscriptionId) =>
+//       (QuerySnapshot snapshot) {
+//         if (!_collectionData.containsKey(ref)) {
+//           final datas = snapshot.documents.map(
+//             (d) => _allSerializers.deserializeWith(
+//                 _serializers[subscriptionId], d),
+//           );
+
+//           _setCollectionData(
+//             subscriptionId,
+//             CollectionResolution.resolved(
+//               Items(
+//                 items: datas,
+//                 path: ref.path,
+//                 nextStart: Option.some(datas.last),
+//               ),
+//             ),
+//           );
+//         }
+//       };
+
+//   void Function(QuerySnapshot) _onQuerySnapshot(
+//           Reference ref, int subscriptionId) =>
+//       (QuerySnapshot snapshot) {
+//         final datas = snapshot.documents.map(
+//           (d) =>
+//               _allSerializers.deserializeWith(_serializers[subscriptionId], d),
+//         );
+
+//         _setCollectionData(
+//           subscriptionId,
+//           CollectionResolution.resolved(
+//             Items(
+//               items: datas,
+//               path: ref.path,
+//               nextStart: Option.some(datas.last),
+//             ),
+//           ),
+//         );
+//       };
+
+//   void Function(Object error) _onQueryFail(Reference ref, int subscriptionId) =>
+//       (Object error) {
+//         _collectionData[subscriptionId] = CollectionResolution.notFound(ref);
+//       };
+// }
+
+// @DataClass()
+// abstract class $Resolutions<T extends Path> {
+//   BuiltMap<Reference, T> get _data;
+//   T operator [](Reference ref) => _data[ref];
+
+//   @computed
+//   Iterable<T> get datas => _data.values;
+// }
+
+// DocumentResolution<T> useFirebaseDocument<T extends Path>(
+//     Reference ref, StructuredSerializer serializer) {
+//   return useFirebaseDocuments<T>([ref], serializer)[ref];
+// }
+
+// Resolutions<DocumentResolution<T>> useFirebaseDocuments<T extends Path>(
+//     Iterable<Reference> refs, StructuredSerializer serializer) {
+//   return Hook.use(_FirebaseDocumentHook(refs: refs, serializer: serializer));
+// }
+
+// class _FirebaseDocumentHook<T extends Path>
+//     extends Hook<Resolutions<DocumentResolution<T>>> {
+//   final Iterable<Reference> refs;
+//   final StructuredSerializer serializer;
+
+//   const _FirebaseDocumentHook({this.refs, this.serializer});
+
+//   @override
+//   _FirebaseDocumentHookState<T> createState() => _FirebaseDocumentHookState();
+// }
+
+// class _FirebaseDocumentHookState<T extends Path> extends HookState<
+//     Resolutions<DocumentResolution<T>>, _FirebaseDocumentHook<T>> {
+//   Resolutions<DocumentResolution<T>> _state;
+//   Map<Reference, int> _subs;
+//   StreamSubscription _firebaseClientChangesSub;
+//   _FirebaseClient _client;
+
+//   @override
+//   void initHook() {
+//     super.initHook();
+//     _state = _checkoutDocuments();
+//     _firebaseClientChangesSub = _client.change.listen((_) {
+//       final next = _recalculateState();
+//       if (_state != next) {
+//         _state = next;
+//         setState(() {});
+//       }
+//     });
+//   }
+
+//   @override
+//   void didUpdateHook(_FirebaseDocumentHook<T> old) {
+//     // unsub to old refs
+//     final subsToRemove = _subs.entries.where((e) => !hook.refs.contains(e.key));
+//     subsToRemove.forEach((e) {
+//       _client.checkinDocument(e.value);
+//       _subs.remove(e.key);
+//     });
+
+//     // sub to new refs
+//     final subsToObtain = hook.refs.where((ref) => !_subs.containsKey(ref));
+//     subsToObtain.forEach((ref) {
+//       _subs[ref] =
+//           _client.checkoutDocument(ref, hook.serializer).subscriptionId;
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     _firebaseClientChangesSub.cancel();
+//     _subs.values.forEach(_client.checkinDocument);
+//   }
+
+//   @override
+//   build(BuildContext context) {
+//     return _state;
+//   }
+
+//   Resolutions<DocumentResolution<T>> _checkoutDocuments() => Resolutions(
+//         data: BuiltMap.build((b) {
+//           hook.refs.forEach((ref) {
+//             final receipt = _client.checkoutDocument(ref, hook.serializer);
+//             b[ref] = receipt.resolution;
+//             _subs[ref] = receipt.subscriptionId;
+//           });
+//         }),
+//       );
+
+//   Resolutions<DocumentResolution<T>> _recalculateState() => Resolutions(
+//         data: BuiltMap.build((b) {
+//           hook.refs.forEach((ref) {
+//             b[ref] = _client.readDocument(_subs[ref]);
+//           });
+//         }),
+//       );
+// }
+
+// FirebaseClient useFirebaseClient() {
+//   return Hook.use(_FirebaseClientHook());
+// }
+
+// class _FirebaseClientHook extends Hook<FirebaseClient> {
+//   final Iterable<Reference> refs;
+//   final StructuredSerializer serializer;
+
+//   const _FirebaseClientHook({this.refs, this.serializer});
+
+//   @override
+//   _FirebaseClientHookState createState() => _FirebaseClientHookState();
+// }
+
+// class _FirebaseClientHookState
+//     extends HookState<FirebaseClient, _FirebaseClientHook> {
+//   @override
+//   build(BuildContext context) {
+//     return null; // TODO from context
+//   }
+// }
+
+// CollectionResolution<T> useFirebaseCollection<T extends Path>(
+//     Reference ref, StructuredSerializer serializer) {
+//   return useFirebaseCollections<T>([ref], serializer)[ref];
+// }
+
+// Resolutions<CollectionResolution<T>> useFirebaseCollections<T extends Path>(
+//     Iterable<Reference> refs, StructuredSerializer serializer) {
+//   return Hook.use(_FirebaseCollectionHook(refs: refs, serializer: serializer));
+// }
+
+// class _FirebaseCollectionHook<T extends Path>
+//     extends Hook<Resolutions<CollectionResolution<T>>> {
+//   final Iterable<Reference> refs;
+//   final StructuredSerializer serializer;
+
+//   const _FirebaseCollectionHook({this.refs, this.serializer});
+
+//   @override
+//   _FirebaseCollectionHookState<T> createState() =>
+//       _FirebaseCollectionHookState();
+// }
+
+// class _FirebaseCollectionHookState<T extends Path> extends HookState<
+//     Resolutions<CollectionResolution<T>>, _FirebaseCollectionHook<T>> {
+//   Resolutions<CollectionResolution<T>> _state;
+//   Map<Reference, int> _subs;
+//   StreamSubscription _firebaseClientChangesSub;
+//   _FirebaseClient _client;
+
+//   @override
+//   void initHook() {
+//     super.initHook();
+//     _state = _checkoutCollections();
+//     _firebaseClientChangesSub = _client.change.listen((_) {
+//       final next = _recalculateState();
+//       if (_state != next) {
+//         _state = next;
+//         setState(() {});
+//       }
+//     });
+//   }
+
+//   @override
+//   void didUpdateHook(_FirebaseCollectionHook<T> old) {
+//     // unsub to old refs
+//     final subsToRemove = _subs.entries.where((e) => !hook.refs.contains(e.key));
+//     subsToRemove.forEach((e) {
+//       _client.checkinCollection(e.value);
+//       _subs.remove(e.key);
+//     });
+
+//     // sub to new refs
+//     final subsToObtain = hook.refs.where((ref) => !_subs.containsKey(ref));
+//     subsToObtain.forEach((ref) {
+//       _subs[ref] =
+//           _client.checkoutCollection(ref, hook.serializer).subscriptionId;
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     _firebaseClientChangesSub.cancel();
+//     _subs.values.forEach(_client.checkinCollection);
+//   }
+
+//   @override
+//   build(BuildContext context) {
+//     return _state;
+//   }
+
+//   Resolutions<CollectionResolution<T>> _checkoutCollections() => Resolutions(
+//         data: BuiltMap.build((b) {
+//           hook.refs.forEach((ref) {
+//             final receipt = _client.checkoutCollection(ref, hook.serializer);
+//             b[ref] = receipt.resolution;
+//             _subs[ref] = receipt.subscriptionId;
+//           });
+//         }),
+//       );
+
+//   Resolutions<CollectionResolution<T>> _recalculateState() => Resolutions(
+//         data: BuiltMap.build((b) {
+//           hook.refs.forEach((ref) {
+//             b[ref] = _client.readCollection(_subs[ref]);
+//           });
+//         }),
+//       );
+// }

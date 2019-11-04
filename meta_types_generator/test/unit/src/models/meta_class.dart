@@ -6,6 +6,7 @@ abstract class Meta<T extends Field> {
   bool get isPrivate;
   Iterable<TypeParameterDeclaration> get generics; //TODO option
   Iterable<T> get fields;
+  Iterable<Method> get methods;
 }
 
 @DataClass()
@@ -71,6 +72,19 @@ abstract class Value {
   Object get value;
 }
 
+@DataClass()
+abstract class $Method {
+  String get name;
+  Iterable<TypeParameterDeclaration> get typeParams;
+  FieldType get returnType;
+  Iterable<MethodParameter> get inputs;
+}
+
+@DataClass()
+abstract class $MethodParameter {
+  String get name;
+  FieldType get type;
+}
 // @SumClass()
 // abstract class $ValueKinds {
 //   int get integer;

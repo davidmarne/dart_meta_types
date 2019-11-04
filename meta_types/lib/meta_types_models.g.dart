@@ -133,7 +133,8 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields})
+      Iterable<T> fields,
+      Iterable<Method> methods})
       : _isConst = isConst,
         assert(isConst != null),
         _dataInterfaces = dataInterfaces,
@@ -145,7 +146,9 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
         _generics = generics,
         assert(generics != null),
         _fields = fields,
-        assert(fields != null);
+        assert(fields != null),
+        _methods = methods,
+        assert(methods != null);
 
   final bool _isConst;
 
@@ -159,13 +162,16 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
 
   final Iterable<T> _fields;
 
+  final Iterable<Method> _methods;
+
   Sealed<T, D> clone(
       {bool isConst,
       Iterable<MetaInterfaceType<Data<D>>> dataInterfaces,
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields}) {
+      Iterable<T> fields,
+      Iterable<Method> methods}) {
     return Sealed(
       isConst: isConst ?? _isConst,
       dataInterfaces: dataInterfaces ?? _dataInterfaces,
@@ -173,6 +179,7 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
       isPrivate: isPrivate ?? _isPrivate,
       generics: generics ?? _generics,
       fields: fields ?? _fields,
+      methods: methods ?? _methods,
     );
   }
 
@@ -200,15 +207,21 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
     return _fields;
   }
 
+  Iterable<Method> get methods {
+    return _methods;
+  }
+
   int get hashCode {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, isConst.hashCode), dataInterfaces.hashCode),
-                    name.hashCode),
-                isPrivate.hashCode),
-            generics.hashCode),
-        fields.hashCode));
+                $jc(
+                    $jc($jc($jc(0, isConst.hashCode), dataInterfaces.hashCode),
+                        name.hashCode),
+                    isPrivate.hashCode),
+                generics.hashCode),
+            fields.hashCode),
+        methods.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -219,11 +232,12 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
         name == other.name &&
         isPrivate == other.isPrivate &&
         generics == other.generics &&
-        fields == other.fields;
+        fields == other.fields &&
+        methods == other.methods;
   }
 
   String toString() {
-    return "Sealed (isConst: $isConst, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+    return "Sealed (isConst: $isConst, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields, methods: $methods)";
   }
 }
 
@@ -354,7 +368,8 @@ class Enum<T extends EnumField, D extends DataField> extends $Enum<T, D> {
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields})
+      Iterable<T> fields,
+      Iterable<Method> methods})
       : _type = type,
         assert(type != null),
         _dataInterfaces = dataInterfaces,
@@ -366,7 +381,9 @@ class Enum<T extends EnumField, D extends DataField> extends $Enum<T, D> {
         _generics = generics,
         assert(generics != null),
         _fields = fields,
-        assert(fields != null);
+        assert(fields != null),
+        _methods = methods,
+        assert(methods != null);
 
   final String _type;
 
@@ -380,13 +397,16 @@ class Enum<T extends EnumField, D extends DataField> extends $Enum<T, D> {
 
   final Iterable<T> _fields;
 
+  final Iterable<Method> _methods;
+
   Enum<T, D> clone(
       {String type,
       Iterable<MetaInterfaceType<Data<D>>> dataInterfaces,
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields}) {
+      Iterable<T> fields,
+      Iterable<Method> methods}) {
     return Enum(
       type: type ?? _type,
       dataInterfaces: dataInterfaces ?? _dataInterfaces,
@@ -394,6 +414,7 @@ class Enum<T extends EnumField, D extends DataField> extends $Enum<T, D> {
       isPrivate: isPrivate ?? _isPrivate,
       generics: generics ?? _generics,
       fields: fields ?? _fields,
+      methods: methods ?? _methods,
     );
   }
 
@@ -421,15 +442,21 @@ class Enum<T extends EnumField, D extends DataField> extends $Enum<T, D> {
     return _fields;
   }
 
+  Iterable<Method> get methods {
+    return _methods;
+  }
+
   int get hashCode {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, type.hashCode), dataInterfaces.hashCode),
-                    name.hashCode),
-                isPrivate.hashCode),
-            generics.hashCode),
-        fields.hashCode));
+                $jc(
+                    $jc($jc($jc(0, type.hashCode), dataInterfaces.hashCode),
+                        name.hashCode),
+                    isPrivate.hashCode),
+                generics.hashCode),
+            fields.hashCode),
+        methods.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -440,11 +467,12 @@ class Enum<T extends EnumField, D extends DataField> extends $Enum<T, D> {
         name == other.name &&
         isPrivate == other.isPrivate &&
         generics == other.generics &&
-        fields == other.fields;
+        fields == other.fields &&
+        methods == other.methods;
   }
 
   String toString() {
-    return "Enum (type: $type, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+    return "Enum (type: $type, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields, methods: $methods)";
   }
 }
 
@@ -645,7 +673,8 @@ class Data<T extends DataField> extends $Data<T> {
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields})
+      Iterable<T> fields,
+      Iterable<Method> methods})
       : _isFinal = isFinal,
         assert(isFinal != null),
         _isInterface = isInterface,
@@ -661,7 +690,9 @@ class Data<T extends DataField> extends $Data<T> {
         _generics = generics,
         assert(generics != null),
         _fields = fields,
-        assert(fields != null);
+        assert(fields != null),
+        _methods = methods,
+        assert(methods != null);
 
   final bool _isFinal;
 
@@ -679,6 +710,8 @@ class Data<T extends DataField> extends $Data<T> {
 
   final Iterable<T> _fields;
 
+  final Iterable<Method> _methods;
+
   Data<T> clone(
       {bool isFinal,
       bool isInterface,
@@ -687,7 +720,8 @@ class Data<T extends DataField> extends $Data<T> {
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields}) {
+      Iterable<T> fields,
+      Iterable<Method> methods}) {
     return Data(
       isFinal: isFinal ?? _isFinal,
       isInterface: isInterface ?? _isInterface,
@@ -697,6 +731,7 @@ class Data<T extends DataField> extends $Data<T> {
       isPrivate: isPrivate ?? _isPrivate,
       generics: generics ?? _generics,
       fields: fields ?? _fields,
+      methods: methods ?? _methods,
     );
   }
 
@@ -732,19 +767,27 @@ class Data<T extends DataField> extends $Data<T> {
     return _fields;
   }
 
+  Iterable<Method> get methods {
+    return _methods;
+  }
+
   int get hashCode {
     return $jf($jc(
         $jc(
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, isFinal.hashCode), isInterface.hashCode),
-                            isConst.hashCode),
-                        interfaces.hashCode),
-                    name.hashCode),
-                isPrivate.hashCode),
-            generics.hashCode),
-        fields.hashCode));
+                        $jc(
+                            $jc(
+                                $jc($jc(0, isFinal.hashCode),
+                                    isInterface.hashCode),
+                                isConst.hashCode),
+                            interfaces.hashCode),
+                        name.hashCode),
+                    isPrivate.hashCode),
+                generics.hashCode),
+            fields.hashCode),
+        methods.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -757,11 +800,12 @@ class Data<T extends DataField> extends $Data<T> {
         name == other.name &&
         isPrivate == other.isPrivate &&
         generics == other.generics &&
-        fields == other.fields;
+        fields == other.fields &&
+        methods == other.methods;
   }
 
   String toString() {
-    return "Data (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+    return "Data (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields, methods: $methods)";
   }
 }
 
@@ -849,13 +893,15 @@ class MetaInterfaceType<T extends Meta<Field>> extends $MetaInterfaceType<T> {
 
 class MetaSeal extends $MetaSeal {
   MetaSeal.data(Data<DataField> data)
-      : _data = data,
+      : assert(data != null),
+        _data = data,
         _sealed = null,
         _sum = null,
         _enumeration = null;
 
   MetaSeal.sealed(Sealed<SealedField, DataField> sealed)
       : _data = null,
+        assert(sealed != null),
         _sealed = sealed,
         _sum = null,
         _enumeration = null;
@@ -863,6 +909,7 @@ class MetaSeal extends $MetaSeal {
   MetaSeal.sum(Sum<SumField> sum)
       : _data = null,
         _sealed = null,
+        assert(sum != null),
         _sum = sum,
         _enumeration = null;
 
@@ -870,7 +917,37 @@ class MetaSeal extends $MetaSeal {
       : _data = null,
         _sealed = null,
         _sum = null,
+        assert(enumeration != null),
         _enumeration = enumeration;
+
+  MetaSeal(
+      {Data<DataField> data,
+      Sealed<SealedField, DataField> sealed,
+      Sum<SumField> sum,
+      Enum<EnumField, DataField> enumeration})
+      : _data = data,
+        _sealed = sealed,
+        _sum = sum,
+        _enumeration = enumeration {
+    var found = false;
+    if (data != null) {
+      if (found) throw Exception("todo");
+      found = true;
+    }
+    if (sealed != null) {
+      if (found) throw Exception("todo");
+      found = true;
+    }
+    if (sum != null) {
+      if (found) throw Exception("todo");
+      found = true;
+    }
+    if (enumeration != null) {
+      if (found) throw Exception("todo");
+      found = true;
+    }
+    throw Exception("TODO");
+  }
 
   final Data<DataField> _data;
 
@@ -913,6 +990,15 @@ class MetaSeal extends $MetaSeal {
       sealed: (sealed) => sealed.fields,
       sum: (sum) => sum.fields,
       enumeration: (enumeration) => enumeration.fields,
+    );
+  }
+
+  Iterable<Method> get methods {
+    return when(
+      data: (data) => data.methods,
+      sealed: (sealed) => sealed.methods,
+      sum: (sum) => sum.methods,
+      enumeration: (enumeration) => enumeration.methods,
     );
   }
 
@@ -1293,6 +1379,120 @@ class FieldType extends $FieldType {
   }
 }
 
+class Method extends $Method {
+  Method(
+      {String name,
+      Iterable<TypeParameterDeclaration> typeParams,
+      FieldType returnType,
+      Iterable<MethodParameter> inputs})
+      : _name = name,
+        assert(name != null),
+        _typeParams = typeParams,
+        assert(typeParams != null),
+        _returnType = returnType,
+        assert(returnType != null),
+        _inputs = inputs,
+        assert(inputs != null);
+
+  final String _name;
+
+  final Iterable<TypeParameterDeclaration> _typeParams;
+
+  final FieldType _returnType;
+
+  final Iterable<MethodParameter> _inputs;
+
+  Method clone(
+      {String name,
+      Iterable<TypeParameterDeclaration> typeParams,
+      FieldType returnType,
+      Iterable<MethodParameter> inputs}) {
+    return Method(
+      name: name ?? _name,
+      typeParams: typeParams ?? _typeParams,
+      returnType: returnType ?? _returnType,
+      inputs: inputs ?? _inputs,
+    );
+  }
+
+  String get name {
+    return _name;
+  }
+
+  Iterable<TypeParameterDeclaration> get typeParams {
+    return _typeParams;
+  }
+
+  FieldType get returnType {
+    return _returnType;
+  }
+
+  Iterable<MethodParameter> get inputs {
+    return _inputs;
+  }
+
+  int get hashCode {
+    return $jf($jc(
+        $jc($jc($jc(0, name.hashCode), typeParams.hashCode),
+            returnType.hashCode),
+        inputs.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! Method) return false;
+    return name == other.name &&
+        typeParams == other.typeParams &&
+        returnType == other.returnType &&
+        inputs == other.inputs;
+  }
+
+  String toString() {
+    return "Method (name: $name, typeParams: $typeParams, returnType: $returnType, inputs: $inputs)";
+  }
+}
+
+class MethodParameter extends $MethodParameter {
+  MethodParameter({String name, FieldType type})
+      : _name = name,
+        assert(name != null),
+        _type = type,
+        assert(type != null);
+
+  final String _name;
+
+  final FieldType _type;
+
+  MethodParameter clone({String name, FieldType type}) {
+    return MethodParameter(
+      name: name ?? _name,
+      type: type ?? _type,
+    );
+  }
+
+  String get name {
+    return _name;
+  }
+
+  FieldType get type {
+    return _type;
+  }
+
+  int get hashCode {
+    return $jf($jc($jc(0, name.hashCode), type.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! MethodParameter) return false;
+    return name == other.name && type == other.type;
+  }
+
+  String toString() {
+    return "MethodParameter (name: $name, type: $type)";
+  }
+}
+
 class Option<T> extends $Option<T> {
   Option.some(T some)
       : assert(some != null),
@@ -1535,7 +1735,8 @@ class Sum<T extends SumField> extends $Sum<T> {
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields})
+      Iterable<T> fields,
+      Iterable<Method> methods})
       : _isFinal = isFinal,
         assert(isFinal != null),
         _isInterface = isInterface,
@@ -1551,7 +1752,9 @@ class Sum<T extends SumField> extends $Sum<T> {
         _generics = generics,
         assert(generics != null),
         _fields = fields,
-        assert(fields != null);
+        assert(fields != null),
+        _methods = methods,
+        assert(methods != null);
 
   final bool _isFinal;
 
@@ -1569,6 +1772,8 @@ class Sum<T extends SumField> extends $Sum<T> {
 
   final Iterable<T> _fields;
 
+  final Iterable<Method> _methods;
+
   Sum<T> clone(
       {bool isFinal,
       bool isInterface,
@@ -1577,7 +1782,8 @@ class Sum<T extends SumField> extends $Sum<T> {
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
-      Iterable<T> fields}) {
+      Iterable<T> fields,
+      Iterable<Method> methods}) {
     return Sum(
       isFinal: isFinal ?? _isFinal,
       isInterface: isInterface ?? _isInterface,
@@ -1587,6 +1793,7 @@ class Sum<T extends SumField> extends $Sum<T> {
       isPrivate: isPrivate ?? _isPrivate,
       generics: generics ?? _generics,
       fields: fields ?? _fields,
+      methods: methods ?? _methods,
     );
   }
 
@@ -1622,19 +1829,27 @@ class Sum<T extends SumField> extends $Sum<T> {
     return _fields;
   }
 
+  Iterable<Method> get methods {
+    return _methods;
+  }
+
   int get hashCode {
     return $jf($jc(
         $jc(
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, isFinal.hashCode), isInterface.hashCode),
-                            isConst.hashCode),
-                        interfaces.hashCode),
-                    name.hashCode),
-                isPrivate.hashCode),
-            generics.hashCode),
-        fields.hashCode));
+                        $jc(
+                            $jc(
+                                $jc($jc(0, isFinal.hashCode),
+                                    isInterface.hashCode),
+                                isConst.hashCode),
+                            interfaces.hashCode),
+                        name.hashCode),
+                    isPrivate.hashCode),
+                generics.hashCode),
+            fields.hashCode),
+        methods.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -1647,10 +1862,11 @@ class Sum<T extends SumField> extends $Sum<T> {
         name == other.name &&
         isPrivate == other.isPrivate &&
         generics == other.generics &&
-        fields == other.fields;
+        fields == other.fields &&
+        methods == other.methods;
   }
 
   String toString() {
-    return "Sum (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+    return "Sum (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields, methods: $methods)";
   }
 }

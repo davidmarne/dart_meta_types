@@ -12,7 +12,7 @@ Enum enumFromClassElement(
   DartObject annotation,
   MetaClassCache cache,
 ) {
-  final fields = element.fields.where((f) => f.isSynthetic).map((field) {
+  final fields = element.fields.map((field) {
     if (!field.isConst || !field.isStatic || field.initializer == null) {
       throw new TemplateException(
           'enum class fields should be initialized static const. see ${field.name} on ${element.name}');
@@ -62,7 +62,16 @@ Enum enumFromClassElement(
     type: '',
     isPrivate: false,
     fields: fields,
-    generics: resolveTypeParameterDeclaration(element),
-    dataInterfaces: interfaces,
+    generics: resolveTypeParameterDeclaration(element.typeParameters),
+    methods: element.methods.map(methodElementToMethod),
+    dataInterfaces: interfaces.map(
+      (hack) => hack.clone(
+        meta: hack.meta.clone(
+          fields: hack.meta.fields.where(
+            (f) => !f.name.startsWith('_'),
+          ),
+        ),
+      ),
+    ), // TODO: hack
   );
 }

@@ -3,8 +3,26 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:meta_types/meta_types.dart' show computed;
 import 'package:build/build.dart';
 import 'package:meta_types/meta_types_models.dart'
-    show Data, DataField, Option, Generic, FieldType, TypeParameterDeclaration;
-import 'meta_class_cache.dart';
+    show
+        Data,
+        MethodParameter,
+        Option,
+        Method,
+        FieldType,
+        TypeParameterDeclaration;
+
+Method methodElementToMethod(MethodElement e) => Method(
+      name: e.name,
+      typeParams: resolveTypeParameterDeclaration(e.typeParameters),
+      returnType:
+          FieldType(type: e.returnType.toString(), generics: Option.none()),
+      inputs: e.parameters.map(
+        (p) => MethodParameter(
+          name: p.name,
+          type: FieldType(type: p.type.toString(), generics: Option.none()),
+        ),
+      ),
+    );
 
 bool isComputed(List<ElementAnnotation> metadata) => metadata
     .any((meta) => meta.computeConstantValue().toStringValue() == computed);
@@ -28,8 +46,8 @@ String extendedClassGenerics(
 }
 
 Iterable<TypeParameterDeclaration> resolveTypeParameterDeclaration(
-        ClassElement element) =>
-    element.typeParameters.map(
+        List<TypeParameterElement> typeParameters) =>
+    typeParameters.map(
       (p) => TypeParameterDeclaration(
         type: p.name,
         extension: p.bound == null

@@ -64,9 +64,10 @@ Sealed sealedFromClassElement(
 
   return Sealed(
     name: element.name.replaceAll('\$', ''),
-    generics: resolveTypeParameterDeclaration(element),
-    // isConst:
-    //     element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
+    generics: resolveTypeParameterDeclaration(element.typeParameters),
+    methods: element.methods.map(methodElementToMethod),
+    isConst:
+        element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
     dataInterfaces: interfaces,
     fields: fields,
   );

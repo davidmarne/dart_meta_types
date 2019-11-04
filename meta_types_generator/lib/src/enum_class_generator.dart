@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
-    show Enum, EnumField, DataField, Generic;
+    show Enum, EnumField, DataField;
+import 'package:meta_types/meta_types_models.dart' as mtm;
 import 'util.dart';
 
 //// TODO: mixin
@@ -27,6 +28,7 @@ Class generateEnum(Enum enumClass) => Class((b) => b
   ..methods.addAll([
     ..._genDataInterfaceFields(enumClass),
     ..._genComputedFieldsGetter(enumClass),
+    ..._genMethods(enumClass),
     ..._genNonCumputedFieldsCheck(enumClass),
     ..._genNonCumputedFieldsWhen(enumClass),
     _when(enumClass),
@@ -71,6 +73,7 @@ Iterable<Code> _nullAssertions(Iterable<EnumField> fields) =>
 
 Field _values(Enum enumClass) => Field((b) => b
   ..static = true
+  ..modifier = FieldModifier.final$
   ..name = 'values'
   ..assignment = Code('''
   <${enumClass.name}>{${_valuesEntries(enumClass)}}
@@ -118,34 +121,6 @@ Method _wheno(Enum enumClass, {bool isAbstract = false}) => Method(
         ..body = isAbstract ? null : Code('''
           ${_cloneWhenO(enumClass)}
           return otherwise();'''),
-    );
-
-Iterable<Constructor> _constructors(Enum enumClass) =>
-    enumClass.nonComputedFields.map(
-      (f) => Constructor(
-        (b) => b
-          // ..constant = enumClass.computedFields.isEmpty && enumClass.isConst
-          ..name = f.name
-          ..requiredParameters.addAll([
-            if (!_isVoid(f))
-              Parameter(
-                (b) => b
-                  ..name = f.name
-                  ..type = Reference(f.returnType.typeStr),
-              ),
-          ])
-          ..initializers.addAll(
-            enumClass.nonComputedFields.map(
-              (ifield) => Code(
-                ifield == f
-                    ? (_isVoid(f)
-                        ? '_${ifield.name} = true'
-                        : 'assert(${ifield.name} != null), _${ifield.name} = ${ifield.name}')
-                    : '_${ifield.name} = null',
-              ),
-            ),
-          ),
-      ),
     );
 
 String _cloneWhen(Enum enumClass) => enumClass.nonComputedFields.fold(
@@ -253,6 +228,28 @@ Iterable<Method> _genComputedFieldsGetter(Enum e) => e.computedFields.map(
       ),
     );
 
+Iterable<Method> _genMethods(Enum e) =>
+    e.dataInterfaces.expand((f) => f.meta.methods).map(
+          (method) => Method(
+            (b) => b
+              ..name = method.name
+              ..requiredParameters.addAll(
+                method.inputs.map(
+                  (i) => Parameter(
+                    (b) => b
+                      ..name = i.name
+                      ..type = Reference(i.type.typeStr),
+                  ),
+                ),
+              ) // TODO: should be setting this in meta
+              ..returns = Reference(method.returnType.typeStr)
+              ..types.addAll(
+                  method.typeParams.map((p) => Reference(p.typeParameterStr)))
+              ..body =
+                  Code('''return when(${_genMethodFieldBody(e, method)});'''),
+          ),
+        );
+
 String _replaceVoidReturnTypeWithBool(EnumField field) =>
     _isVoid(field) ? 'bool' : field.returnType.typeStr;
 String _removeReturnTypeVoid(EnumField field) =>
@@ -278,3 +275,8 @@ String _genDataInterfaceFieldBody(Enum e, DataField field) =>
         '',
         (comb, sfield) =>
             '$comb${sfield.name}: (${sfield.name}) => ${sfield.name}.${field.name},');
+
+String _genMethodFieldBody(Enum e, mtm.Method method) => e.nonComputedFields.fold(
+    '',
+    (comb, next) =>
+        '$comb${next.name}: (${next.name}) => ${next.name}.${method.name}(${method.inputs.map((i) => i.name).join(',')}),');

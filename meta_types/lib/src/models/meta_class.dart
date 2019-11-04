@@ -6,6 +6,7 @@ abstract class Meta<T extends Field> {
   bool get isPrivate;
   Iterable<TypeParameterDeclaration> get generics; //TODO option
   Iterable<T> get fields;
+  Iterable<Method> get methods;
 }
 
 @DataClass()
