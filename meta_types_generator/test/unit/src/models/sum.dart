@@ -32,10 +32,3 @@ abstract class $Sum<T extends SumField> implements Meta<T> {
   @computed
   Iterable<T> get localNonComputedFields => fields.where((f) => !f.isComputed);
 }
-
-@DataClass()
-abstract class $SumLoader {
-  const $SumLoader();
-  String get name;
-  Object get value;
-}

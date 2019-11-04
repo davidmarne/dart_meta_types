@@ -17,7 +17,7 @@ abstract class $Enum<T extends EnumField, D extends DataField>
 
   String get type;
 
-  // Iterable<MetaInterfaceType<Data<D>>> get dataInterfaces;
+  Iterable<MetaInterfaceType<Data<D>>> get dataInterfaces;
 
   @computed
   Iterable<T> get computedFields => fields.where((f) => f.isComputed);
@@ -25,7 +25,7 @@ abstract class $Enum<T extends EnumField, D extends DataField>
   @computed
   Iterable<T> get nonComputedFields => fields.where((f) => !f.isComputed);
 
-  // @computed
-  // Iterable<D> get dataFields =>
-  //     dataInterfaces.map((i) => i.meta.nonComputedFields).expand((i) => i);
+  @computed
+  Iterable<D> get dataFields =>
+      dataInterfaces.map((i) => i.meta.nonComputedFields).expand((i) => i);
 }

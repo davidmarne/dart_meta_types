@@ -427,7 +427,8 @@ class Json extends $Json {
         _string = null,
         _boolean = null,
         _float = null,
-        _list = null,
+        assert(list != null),
+        _list = list,
         _map = null;
 
   Json.map(Map<String, Json> map)
@@ -436,7 +437,8 @@ class Json extends $Json {
         _boolean = null,
         _float = null,
         _list = null,
-        _map = null;
+        assert(map != null),
+        _map = map;
 
   Json(
       {int integer,

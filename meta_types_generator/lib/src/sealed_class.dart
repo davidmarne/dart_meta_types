@@ -39,7 +39,7 @@ Sealed sealedFromClassElement(
     return cache.find(e.name).when(
       none: () {
         throw TemplateException(
-            'interfaces must be sealed classes. see ${e.name}');
+            'interfaces must be data classes. see ${e.name}');
       },
       some: (interface) {
         return interface.wheno(
@@ -55,7 +55,7 @@ Sealed sealedFromClassElement(
           },
           otherwise: () {
             throw TemplateException(
-                'interfaces must be sealed classes. see ${element.name}');
+                'interfaces must be data classes. see ${element.name}');
           },
         );
       },

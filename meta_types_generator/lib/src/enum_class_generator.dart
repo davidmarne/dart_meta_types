@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
-    show Enum, EnumField, Option, Generic;
+    show Enum, EnumField, DataField, Generic;
 import 'util.dart';
 
 //// TODO: mixin
@@ -25,6 +25,7 @@ Class generateEnum(Enum enumClass) => Class((b) => b
     _values(enumClass),
   ])
   ..methods.addAll([
+    ..._genDataInterfaceFields(enumClass),
     ..._genComputedFieldsGetter(enumClass),
     ..._genNonCumputedFieldsCheck(enumClass),
     ..._genNonCumputedFieldsWhen(enumClass),
@@ -260,3 +261,20 @@ String _removeVoidProperty(EnumField field) => _isVoid(field) ? '' : field.name;
 String _removeVoidPropertyNameSpaced(Enum enumClass, EnumField field) =>
     _isVoid(field) ? '' : '${enumClass.name}.' + field.name;
 bool _isVoid(EnumField field) => field.returnType.typeStr == 'void';
+
+Iterable<Method> _genDataInterfaceFields(Enum e) => e.dataFields.map(
+      (field) => Method(
+        (b) => b
+          ..name = field.name
+          ..returns = Reference(field.returnType.typeStr)
+          ..type = MethodType.getter
+          ..body =
+              Code('''return when(${_genDataInterfaceFieldBody(e, field)});'''),
+      ),
+    );
+
+String _genDataInterfaceFieldBody(Enum e, DataField field) =>
+    e.nonComputedFields.fold(
+        '',
+        (comb, sfield) =>
+            '$comb${sfield.name}: (${sfield.name}) => ${sfield.name}.${field.name},');

@@ -7,7 +7,7 @@ part of meta_types_models;
 // **************************************************************************
 
 class SealedField extends $SealedField {
-  SealedField({FieldType returnType, String name, bool isComputed})
+  const SealedField({FieldType returnType, String name, bool isComputed})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -60,7 +60,7 @@ class SealedField extends $SealedField {
 }
 
 class SealedValue extends $SealedValue {
-  SealedValue(
+  const SealedValue(
       {FieldType returnType, String name, bool isComputed, Object value})
       : _returnType = returnType,
         assert(returnType != null),
@@ -127,7 +127,7 @@ class SealedValue extends $SealedValue {
 }
 
 class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
-  Sealed(
+  const Sealed(
       {bool isConst,
       Iterable<MetaInterfaceType<Data<D>>> dataInterfaces,
       String name,
@@ -146,12 +146,6 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
         assert(generics != null),
         _fields = fields,
         assert(fields != null);
-
-  Iterable<T> _computedFields;
-
-  Iterable<T> _nonComputedFields;
-
-  Iterable<D> _dataFields;
 
   final bool _isConst;
 
@@ -206,18 +200,6 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
     return _fields;
   }
 
-  Iterable<T> get computedFields {
-    return _computedFields ??= super.computedFields;
-  }
-
-  Iterable<T> get nonComputedFields {
-    return _nonComputedFields ??= super.nonComputedFields;
-  }
-
-  Iterable<D> get dataFields {
-    return _dataFields ??= super.dataFields;
-  }
-
   int get hashCode {
     return $jf($jc(
         $jc(
@@ -246,7 +228,7 @@ class Sealed<T extends SealedField, D extends DataField> extends $Sealed<T, D> {
 }
 
 class EnumField extends $EnumField {
-  EnumField({FieldType returnType, String name, bool isComputed})
+  const EnumField({FieldType returnType, String name, bool isComputed})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -299,7 +281,8 @@ class EnumField extends $EnumField {
 }
 
 class EnumsValue extends $EnumsValue {
-  EnumsValue({FieldType returnType, String name, bool isComputed, Object value})
+  const EnumsValue(
+      {FieldType returnType, String name, bool isComputed, Object value})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -364,15 +347,18 @@ class EnumsValue extends $EnumsValue {
   }
 }
 
-class Enum<T extends EnumField> extends $Enum<T> {
-  Enum(
+class Enum<T extends EnumField, D extends DataField> extends $Enum<T, D> {
+  const Enum(
       {String type,
+      Iterable<MetaInterfaceType<Data<D>>> dataInterfaces,
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
       Iterable<T> fields})
       : _type = type,
         assert(type != null),
+        _dataInterfaces = dataInterfaces,
+        assert(dataInterfaces != null),
         _name = name,
         assert(name != null),
         _isPrivate = isPrivate,
@@ -384,6 +370,8 @@ class Enum<T extends EnumField> extends $Enum<T> {
 
   final String _type;
 
+  final Iterable<MetaInterfaceType<Data<D>>> _dataInterfaces;
+
   final String _name;
 
   final bool _isPrivate;
@@ -392,14 +380,16 @@ class Enum<T extends EnumField> extends $Enum<T> {
 
   final Iterable<T> _fields;
 
-  Enum<T> clone(
+  Enum<T, D> clone(
       {String type,
+      Iterable<MetaInterfaceType<Data<D>>> dataInterfaces,
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> generics,
       Iterable<T> fields}) {
     return Enum(
       type: type ?? _type,
+      dataInterfaces: dataInterfaces ?? _dataInterfaces,
       name: name ?? _name,
       isPrivate: isPrivate ?? _isPrivate,
       generics: generics ?? _generics,
@@ -409,6 +399,10 @@ class Enum<T extends EnumField> extends $Enum<T> {
 
   String get type {
     return _type;
+  }
+
+  Iterable<MetaInterfaceType<Data<D>>> get dataInterfaces {
+    return _dataInterfaces;
   }
 
   String get name {
@@ -429,7 +423,11 @@ class Enum<T extends EnumField> extends $Enum<T> {
 
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc($jc(0, type.hashCode), name.hashCode), isPrivate.hashCode),
+        $jc(
+            $jc(
+                $jc($jc($jc(0, type.hashCode), dataInterfaces.hashCode),
+                    name.hashCode),
+                isPrivate.hashCode),
             generics.hashCode),
         fields.hashCode));
   }
@@ -438,6 +436,7 @@ class Enum<T extends EnumField> extends $Enum<T> {
     if (identical(other, this)) return true;
     if (other is! Enum) return false;
     return type == other.type &&
+        dataInterfaces == other.dataInterfaces &&
         name == other.name &&
         isPrivate == other.isPrivate &&
         generics == other.generics &&
@@ -445,12 +444,12 @@ class Enum<T extends EnumField> extends $Enum<T> {
   }
 
   String toString() {
-    return "Enum (type: $type, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+    return "Enum (type: $type, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
   }
 }
 
 class DataField extends $DataField {
-  DataField(
+  const DataField(
       {bool isAbstract,
       bool isDefaulted,
       FieldType returnType,
@@ -537,7 +536,7 @@ class DataField extends $DataField {
 }
 
 class DataValue extends $DataValue {
-  DataValue(
+  const DataValue(
       {bool isAbstract,
       bool isDefaulted,
       FieldType returnType,
@@ -638,7 +637,7 @@ class DataValue extends $DataValue {
 }
 
 class Data<T extends DataField> extends $Data<T> {
-  Data(
+  const Data(
       {bool isFinal,
       bool isInterface,
       bool isConst,
@@ -663,20 +662,6 @@ class Data<T extends DataField> extends $Data<T> {
         assert(generics != null),
         _fields = fields,
         assert(fields != null);
-
-  Iterable<T> _computedFields;
-
-  Iterable<T> _nonComputedFields;
-
-  Iterable<T> _localNonComputedFields;
-
-  Iterable<T> _nonDefaultedFields;
-
-  Iterable<T> _localNonDefaultedFields;
-
-  Iterable<T> _defaultedFields;
-
-  Iterable<T> _localDefaultedFields;
 
   final bool _isFinal;
 
@@ -747,34 +732,6 @@ class Data<T extends DataField> extends $Data<T> {
     return _fields;
   }
 
-  Iterable<T> get computedFields {
-    return _computedFields ??= super.computedFields;
-  }
-
-  Iterable<T> get nonComputedFields {
-    return _nonComputedFields ??= super.nonComputedFields;
-  }
-
-  Iterable<T> get localNonComputedFields {
-    return _localNonComputedFields ??= super.localNonComputedFields;
-  }
-
-  Iterable<T> get nonDefaultedFields {
-    return _nonDefaultedFields ??= super.nonDefaultedFields;
-  }
-
-  Iterable<T> get localNonDefaultedFields {
-    return _localNonDefaultedFields ??= super.localNonDefaultedFields;
-  }
-
-  Iterable<T> get defaultedFields {
-    return _defaultedFields ??= super.defaultedFields;
-  }
-
-  Iterable<T> get localDefaultedFields {
-    return _localDefaultedFields ??= super.localDefaultedFields;
-  }
-
   int get hashCode {
     return $jf($jc(
         $jc(
@@ -805,6 +762,47 @@ class Data<T extends DataField> extends $Data<T> {
 
   String toString() {
     return "Data (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, generics: $generics, fields: $fields)";
+  }
+}
+
+class DataLoader extends $DataLoader {
+  const DataLoader({String name, Object value})
+      : _name = name,
+        assert(name != null),
+        _value = value,
+        assert(value != null);
+
+  final String _name;
+
+  final Object _value;
+
+  DataLoader clone({String name, Object value}) {
+    return DataLoader(
+      name: name ?? _name,
+      value: value ?? _value,
+    );
+  }
+
+  String get name {
+    return _name;
+  }
+
+  Object get value {
+    return _value;
+  }
+
+  int get hashCode {
+    return $jf($jc($jc(0, name.hashCode), value.hashCode));
+  }
+
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! DataLoader) return false;
+    return name == other.name && value == other.value;
+  }
+
+  String toString() {
+    return "DataLoader (name: $name, value: $value)";
   }
 }
 
@@ -868,40 +866,11 @@ class MetaSeal extends $MetaSeal {
         _sum = sum,
         _enumeration = null;
 
-  MetaSeal.enumeration(Enum<EnumField> enumeration)
+  MetaSeal.enumeration(Enum<EnumField, DataField> enumeration)
       : _data = null,
         _sealed = null,
         _sum = null,
         _enumeration = enumeration;
-
-  MetaSeal(
-      {Data<DataField> data,
-      Sealed<SealedField, DataField> sealed,
-      Sum<SumField> sum,
-      Enum<EnumField> enumeration})
-      : _data = data,
-        _sealed = sealed,
-        _sum = sum,
-        _enumeration = enumeration {
-    var found = false;
-    if (data != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (sealed != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (sum != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (enumeration != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    throw Exception("TODO");
-  }
 
   final Data<DataField> _data;
 
@@ -909,7 +878,7 @@ class MetaSeal extends $MetaSeal {
 
   final Sum<SumField> _sum;
 
-  final Enum<EnumField> _enumeration;
+  final Enum<EnumField, DataField> _enumeration;
 
   String get name {
     return when(
@@ -962,7 +931,7 @@ class MetaSeal extends $MetaSeal {
     throw Exception('TODO name htis');
   }
 
-  Enum<EnumField> get enumeration {
+  Enum<EnumField, DataField> get enumeration {
     if (_enumeration != null) return _enumeration;
     throw Exception('TODO name htis');
   }
@@ -995,7 +964,7 @@ class MetaSeal extends $MetaSeal {
     if (_sum != null) handler(_sum);
   }
 
-  void whenEnumeration(void Function(Enum<EnumField>) handler) {
+  void whenEnumeration(void Function(Enum<EnumField, DataField>) handler) {
     if (_enumeration != null) handler(_enumeration);
   }
 
@@ -1003,7 +972,7 @@ class MetaSeal extends $MetaSeal {
       {WHEN Function(Data<DataField>) data,
       WHEN Function(Sealed<SealedField, DataField>) sealed,
       WHEN Function(Sum<SumField>) sum,
-      WHEN Function(Enum<EnumField>) enumeration}) {
+      WHEN Function(Enum<EnumField, DataField>) enumeration}) {
     if (_data != null) {
       return data(_data);
     }
@@ -1024,7 +993,7 @@ class MetaSeal extends $MetaSeal {
       WHENO Function(Data<DataField>) data,
       WHENO Function(Sealed<SealedField, DataField>) sealed,
       WHENO Function(Sum<SumField>) sum,
-      WHENO Function(Enum<EnumField>) enumeration}) {
+      WHENO Function(Enum<EnumField, DataField>) enumeration}) {
     if (_data != null) {
       if (data != null)
         return data(_data);
@@ -1082,18 +1051,18 @@ abstract class IMetaSeal {
   void whenData(void Function(Data<DataField>) handler);
   void whenSealed(void Function(Sealed<SealedField, DataField>) handler);
   void whenSum(void Function(Sum<SumField>) handler);
-  void whenEnumeration(void Function(Enum<EnumField>) handler);
+  void whenEnumeration(void Function(Enum<EnumField, DataField>) handler);
   WHEN when<WHEN>(
       {WHEN Function(Data<DataField>) data,
       WHEN Function(Sealed<SealedField, DataField>) sealed,
       WHEN Function(Sum<SumField>) sum,
-      WHEN Function(Enum<EnumField>) enumeration});
+      WHEN Function(Enum<EnumField, DataField>) enumeration});
   WHENO wheno<WHENO>(
       {WHENO Function() otherwise,
       WHENO Function(Data<DataField>) data,
       WHENO Function(Sealed<SealedField, DataField>) sealed,
       WHENO Function(Sum<SumField>) sum,
-      WHENO Function(Enum<EnumField>) enumeration});
+      WHENO Function(Enum<EnumField, DataField>) enumeration});
 }
 
 class Generic extends $Generic {
@@ -1215,7 +1184,7 @@ abstract class IGeneric {
 }
 
 class TypeParameterDeclaration extends $TypeParameterDeclaration {
-  TypeParameterDeclaration(
+  const TypeParameterDeclaration(
       {String type, Option<FieldType> extension, String genericsStr})
       : _type = type,
         assert(type != null),
@@ -1223,8 +1192,6 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
         assert(extension != null),
         _genericsStr = genericsStr,
         assert(genericsStr != null);
-
-  String _typeParameterStr;
 
   final String _type;
 
@@ -1253,10 +1220,6 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
     return _genericsStr ?? super.genericsStr;
   }
 
-  String get typeParameterStr {
-    return _typeParameterStr ??= super.typeParameterStr;
-  }
-
   int get hashCode {
     return $jf($jc(
         $jc($jc(0, type.hashCode), extension.hashCode), genericsStr.hashCode));
@@ -1276,7 +1239,7 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
 }
 
 class FieldType extends $FieldType {
-  FieldType(
+  const FieldType(
       {String type, Option<Iterable<FieldType>> generics, String genericsStr})
       : _type = type,
         assert(type != null),
@@ -1284,8 +1247,6 @@ class FieldType extends $FieldType {
         assert(generics != null),
         _genericsStr = genericsStr,
         assert(genericsStr != null);
-
-  String _typeStr;
 
   final String _type;
 
@@ -1312,10 +1273,6 @@ class FieldType extends $FieldType {
 
   String get genericsStr {
     return _genericsStr ?? super.genericsStr;
-  }
-
-  String get typeStr {
-    return _typeStr ??= super.typeStr;
   }
 
   int get hashCode {
@@ -1450,7 +1407,7 @@ abstract class IOption<T> {
 }
 
 class SumField extends $SumField {
-  SumField({FieldType returnType, String name, bool isComputed})
+  const SumField({FieldType returnType, String name, bool isComputed})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -1503,7 +1460,8 @@ class SumField extends $SumField {
 }
 
 class SumValue extends $SumValue {
-  SumValue({FieldType returnType, String name, bool isComputed, Object value})
+  const SumValue(
+      {FieldType returnType, String name, bool isComputed, Object value})
       : _returnType = returnType,
         assert(returnType != null),
         _name = name,
@@ -1569,7 +1527,7 @@ class SumValue extends $SumValue {
 }
 
 class Sum<T extends SumField> extends $Sum<T> {
-  Sum(
+  const Sum(
       {bool isFinal,
       bool isInterface,
       bool isConst,
@@ -1594,12 +1552,6 @@ class Sum<T extends SumField> extends $Sum<T> {
         assert(generics != null),
         _fields = fields,
         assert(fields != null);
-
-  Iterable<T> _computedFields;
-
-  Iterable<T> _nonComputedFields;
-
-  Iterable<T> _localNonComputedFields;
 
   final bool _isFinal;
 
@@ -1668,18 +1620,6 @@ class Sum<T extends SumField> extends $Sum<T> {
 
   Iterable<T> get fields {
     return _fields;
-  }
-
-  Iterable<T> get computedFields {
-    return _computedFields ??= super.computedFields;
-  }
-
-  Iterable<T> get nonComputedFields {
-    return _nonComputedFields ??= super.nonComputedFields;
-  }
-
-  Iterable<T> get localNonComputedFields {
-    return _localNonComputedFields ??= super.localNonComputedFields;
   }
 
   int get hashCode {

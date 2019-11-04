@@ -21,7 +21,7 @@ abstract class $MetaSeal implements Meta<Field> {
   Data<DataField> get data;
   Sealed<SealedField, DataField> get sealed;
   Sum<SumField> get sum;
-  Enum<EnumField> get enumeration;
+  Enum<EnumField, DataField> get enumeration;
 }
 
 @SumClass()
@@ -72,17 +72,39 @@ abstract class Value {
 }
 
 // @SumClass()
-// abstract class $Values {
+// abstract class $ValueKinds {
 //   int get integer;
-//   String get string;
+//   double get double_;
 //   bool get boolean;
-//   double get float;
-//   DateTime get date;
-//   List<Values> get list;
-//   Set<Values> get set$;
-//   Map<Values, Values> get map;
-//   Data get data;
-//   Sealed get sealed;
-//   Sum get sum;
-//   Enum get enumeration;
+//   List<ValueKinds> get list;
+//   Set<ValueKinds> get set_;
+//   Map<ValueKinds, ValueKinds> get map;
+//   List<DataValue> get data;
+//   SealedValue get sealed;
+//   SumValue get sum;
+//   // EnumValue enumeration;
+//   Object get value;
+// }
+
+// class JsonSerializer implements Serializer {
+//   final json = <String, dynamic>{};
+
+//   void write(String name, Object data) {
+//     json[name] = _write(data);
+//   }
+
+//   void _write(Object data) {
+//     if (Object is Data)
+//       return data.serialize(this);
+//     else
+//       return data;
+//   }
+// }
+
+// class JsonDeserializer implements Deserializer {
+//   final json = <String, dynamic>{};
+
+//   void read(String name, Type type) {
+//     return json[name];
+//   }
 // }

@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
     show Sealed, SealedField, Option, Generic, DataField;
+import 'package:build/build.dart';
 import 'util.dart';
 
 //// TODO: mixin
@@ -132,15 +133,16 @@ Iterable<Constructor> _constructors(Sealed sealedClass) =>
               ),
           ])
           ..initializers.addAll(
-            sealedClass.nonComputedFields.map(
-              (ifield) => Code(
-                ifield == f
+            sealedClass.nonComputedFields.map((ifield) {
+              return Code(
+                ifield.name ==
+                        f.name // WTF why isn't returnType equality passing?
                     ? (f.returnType == 'void'
                         ? '_${ifield.name} = true'
                         : 'assert(${ifield.name} != null), _${ifield.name} = ${ifield.name}')
                     : '_${ifield.name} = null',
-              ),
-            ),
+              );
+            }),
           ),
       ),
     );

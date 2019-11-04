@@ -29,10 +29,3 @@ abstract class $Sealed<T extends SealedField, D extends DataField>
   Iterable<D> get dataFields =>
       dataInterfaces.map((i) => i.meta.nonComputedFields).expand((i) => i);
 }
-
-@DataClass()
-abstract class $SealedLoader {
-  const $SealedLoader();
-  String get name;
-  Object get value;
-}

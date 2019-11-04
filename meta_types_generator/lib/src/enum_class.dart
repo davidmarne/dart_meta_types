@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
+import 'package:build/build.dart';
 import 'package:meta_types/meta_types_models.dart'
     show Enum, EnumField, Option, FieldType, MetaInterfaceType;
 import 'meta_class.dart';
@@ -11,10 +12,10 @@ Enum enumFromClassElement(
   DartObject annotation,
   MetaClassCache cache,
 ) {
-  final fields = element.fields.map((field) {
+  final fields = element.fields.where((f) => f.isSynthetic).map((field) {
     if (!field.isConst || !field.isStatic || field.initializer == null) {
       throw new TemplateException(
-          'enum class fields should be initialized static const. see ${field.name}');
+          'enum class fields should be initialized static const. see ${field.name} on ${element.name}');
     }
 
     return EnumField(
@@ -26,14 +27,14 @@ Enum enumFromClassElement(
 
   if (element.supertype.name != 'Object') {
     throw TemplateException(
-        'sealed classes cannot have super types. see ${element.name}');
+        'enum classes cannot have super types. see ${element.name}');
   }
 
   final interfaces = element.interfaces.map((e) {
     return cache.find(e.name).when(
       none: () {
         throw TemplateException(
-            'interfaces must be sealed classes. see ${e.name}');
+            'interfaces must be data classes. see ${e.name}');
       },
       some: (interface) {
         return interface.wheno(
@@ -49,7 +50,7 @@ Enum enumFromClassElement(
           },
           otherwise: () {
             throw TemplateException(
-                'interfaces must be sealed classes. see ${element.name}');
+                'interfaces must be data classes. see ${element.name}');
           },
         );
       },
@@ -62,6 +63,6 @@ Enum enumFromClassElement(
     isPrivate: false,
     fields: fields,
     generics: resolveTypeParameterDeclaration(element),
-    interfaces: interfaces,
+    dataInterfaces: interfaces,
   );
 }

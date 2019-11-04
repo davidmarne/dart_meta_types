@@ -21,7 +21,7 @@ abstract class $MetaSeal implements Meta<Field> {
   Data<DataField> get data;
   Sealed<SealedField, DataField> get sealed;
   Sum<SumField> get sum;
-  Enum<EnumField> get enumeration;
+  Enum<EnumField, DataField> get enumeration;
 }
 
 @SumClass()
@@ -71,6 +71,19 @@ abstract class Value {
   Object get value;
 }
 
+@DataClass()
+abstract class $Method {
+  String get name;
+  Iterable<TypeParameterDeclaration> get typeParams;
+  FieldType get returnType;
+  Iterable<MethodParameter> get inputs;
+}
+
+@DataClass()
+abstract class $MethodParameter {
+  String get name;
+  FieldType get type;
+}
 // @SumClass()
 // abstract class $ValueKinds {
 //   int get integer;
