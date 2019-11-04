@@ -1,24 +1,38 @@
 import 'dart:async';
+import 'package:meta_types/meta_types.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart' hide Path;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:built_value/serializer.dart' show StructuredSerializer;
 
 import 'client.dart';
 
+part 'collection_hook.g.dart';
+
+@DataClass()
+abstract class $CollectionResolutions<T extends Path> {
+  BuiltMap<CollectionReference, T> get _data;
+  T operator [](CollectionReference ref) => _data[ref];
+
+  @computed
+  Iterable<T> get datas => _data.values;
+}
+
 CollectionResolution<T> useFirebaseCollection<T extends Path>(
-    Reference ref, StructuredSerializer serializer) {
+    CollectionReference ref, StructuredSerializer serializer) {
   return useFirebaseCollections<T>([ref], serializer)[ref];
 }
 
-Resolutions<CollectionResolution<T>> useFirebaseCollections<T extends Path>(
-    Iterable<Reference> refs, StructuredSerializer serializer) {
+CollectionResolutions<CollectionResolution<T>>
+    useFirebaseCollections<T extends Path>(
+        Iterable<CollectionReference> refs, StructuredSerializer serializer) {
   return Hook.use(_FirebaseCollectionHook(refs: refs, serializer: serializer));
 }
 
 class _FirebaseCollectionHook<T extends Path>
-    extends Hook<Resolutions<CollectionResolution<T>>> {
-  final Iterable<Reference> refs;
+    extends Hook<CollectionResolutions<CollectionResolution<T>>> {
+  final Iterable<CollectionReference> refs;
   final StructuredSerializer serializer;
 
   const _FirebaseCollectionHook({this.refs, this.serializer});
@@ -29,9 +43,10 @@ class _FirebaseCollectionHook<T extends Path>
 }
 
 class _FirebaseCollectionHookState<T extends Path> extends HookState<
-    Resolutions<CollectionResolution<T>>, _FirebaseCollectionHook<T>> {
-  Resolutions<CollectionResolution<T>> _state;
-  Map<Reference, int> _subs;
+    CollectionResolutions<CollectionResolution<T>>,
+    _FirebaseCollectionHook<T>> {
+  CollectionResolutions<CollectionResolution<T>> _state;
+  Map<CollectionReference, int> _subs;
   StreamSubscription _firebaseClientChangesSub;
   FirebaseClient _client;
 
@@ -76,7 +91,8 @@ class _FirebaseCollectionHookState<T extends Path> extends HookState<
     return _state;
   }
 
-  Resolutions<CollectionResolution<T>> _checkoutCollections() => Resolutions(
+  CollectionResolutions<CollectionResolution<T>> _checkoutCollections() =>
+      CollectionResolutions(
         data: BuiltMap.build((b) {
           hook.refs.forEach((ref) {
             final receipt = _client.checkoutCollection(ref, hook.serializer);
@@ -86,11 +102,11 @@ class _FirebaseCollectionHookState<T extends Path> extends HookState<
         }),
       );
 
-  Resolutions<CollectionResolution<T>> _recalculateState() => Resolutions(
+  CollectionResolutions<CollectionResolution<T>> _recalculateState() =>
+      CollectionResolutions(
         data: BuiltMap.build((b) {
           hook.refs.forEach((ref) {
-            b[ref] =
-                _client.readCollection(_subs[ref]) as CollectionResolution<T>;
+            b[ref] = _client.readCollection(_subs[ref]);
           });
         }),
       );

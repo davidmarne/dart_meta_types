@@ -1,24 +1,37 @@
 import 'dart:async';
+import 'package:meta_types/meta_types.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/widgets.dart' hide Path;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:built_value/serializer.dart' show StructuredSerializer;
 
 import 'client.dart';
 
+part 'document_hook.g.dart';
+
+@DataClass()
+abstract class $DocumentResolutions<T extends Path> {
+  BuiltMap<DocumentReference, T> get _data;
+  T operator [](DocumentReference ref) => _data[ref];
+
+  @computed
+  Iterable<T> get datas => _data.values;
+}
+
 DocumentResolution<T> useFirebaseDocument<T extends Path>(
-    Reference ref, StructuredSerializer serializer) {
+    DocumentReference ref, StructuredSerializer serializer) {
   return useFirebaseDocuments<T>([ref], serializer)[ref];
 }
 
-Resolutions<DocumentResolution<T>> useFirebaseDocuments<T extends Path>(
-    Iterable<Reference> refs, StructuredSerializer serializer) {
+DocumentResolutions<DocumentResolution<T>> useFirebaseDocuments<T extends Path>(
+    Iterable<DocumentReference> refs, StructuredSerializer serializer) {
   return Hook.use(_FirebaseDocumentHook(refs: refs, serializer: serializer));
 }
 
 class _FirebaseDocumentHook<T extends Path>
-    extends Hook<Resolutions<DocumentResolution<T>>> {
-  final Iterable<Reference> refs;
+    extends Hook<DocumentResolutions<DocumentResolution<T>>> {
+  final Iterable<DocumentReference> refs;
   final StructuredSerializer serializer;
 
   const _FirebaseDocumentHook({this.refs, this.serializer});
@@ -28,9 +41,9 @@ class _FirebaseDocumentHook<T extends Path>
 }
 
 class _FirebaseDocumentHookState<T extends Path> extends HookState<
-    Resolutions<DocumentResolution<T>>, _FirebaseDocumentHook<T>> {
-  Resolutions<DocumentResolution<T>> _state;
-  Map<Reference, int> _subs;
+    DocumentResolutions<DocumentResolution<T>>, _FirebaseDocumentHook<T>> {
+  DocumentResolutions<DocumentResolution<T>> _state;
+  Map<DocumentReference, int> _subs;
   StreamSubscription _firebaseClientChangesSub;
   FirebaseClient _client;
 
@@ -75,7 +88,8 @@ class _FirebaseDocumentHookState<T extends Path> extends HookState<
     return _state;
   }
 
-  Resolutions<DocumentResolution<T>> _checkoutDocuments() => Resolutions(
+  DocumentResolutions<DocumentResolution<T>> _checkoutDocuments() =>
+      DocumentResolutions(
         data: BuiltMap.build((b) {
           hook.refs.forEach((ref) {
             final receipt = _client.checkoutDocument(ref, hook.serializer);
@@ -85,7 +99,8 @@ class _FirebaseDocumentHookState<T extends Path> extends HookState<
         }),
       );
 
-  Resolutions<DocumentResolution<T>> _recalculateState() => Resolutions(
+  DocumentResolutions<DocumentResolution<T>> _recalculateState() =>
+      DocumentResolutions(
         data: BuiltMap.build((b) {
           hook.refs.forEach((ref) {
             b[ref] = _client.readDocument(_subs[ref]);

@@ -66,14 +66,6 @@ abstract class $Receipt<T extends Path> {
   T get resolution;
 }
 
-// abstract class FirebaseClient {
-//   // Future<void> create<T extends Path>(T data);
-//   // Future<void> update<T extends Path>(T data);
-//   // Future<void> delete<T extends Path>(T data);
-//   factory FirebaseClient(Firestore store, Serializers serializers) =>
-//       new FirebaseClient(store, serializers);
-// }
-
 class FirebaseClient {
   final Firestore _store;
   final Serializers _allSerializers;
@@ -107,8 +99,9 @@ class FirebaseClient {
   }
 
   Receipt checkoutCollection<T extends Path>(
-      Reference ref, StructuredSerializer serializer) {
+      CollectionReference collectionRef, StructuredSerializer serializer) {
     final subscriptionId = _nextId++;
+    final ref = Reference(path: collectionRef.path);
 
     // save the serializer
     _serializers[subscriptionId] = serializer;
@@ -125,8 +118,7 @@ class FirebaseClient {
         .listen(_onQuerySnapshot(ref, subscriptionId));
 
     // fetch the data
-    _store
-        .collection(ref.path)
+    collectionRef
         .getDocuments()
         .then(_onNewQuerySnapshot(ref, subscriptionId))
         .catchError(_onQueryFail(ref, subscriptionId));
@@ -144,8 +136,10 @@ class FirebaseClient {
   }
 
   Receipt checkoutDocument<T extends Path>(
-      Reference ref, StructuredSerializer serializer) {
+      DocumentReference documentRef, StructuredSerializer serializer) {
     final subscriptionId = _nextId++;
+    final ref = Reference(path: documentRef.path);
+
     // save the serializer
     _serializers[subscriptionId] = serializer;
 
@@ -173,8 +167,7 @@ class FirebaseClient {
         .listen(_onDocumentSnapshot(ref, subscriptionId));
 
     // fetch the data
-    _store
-        .document(ref.path)
+    documentRef
         .get()
         .then(_onNewDocumentSnapshot(ref, subscriptionId))
         .catchError(_onDocumentFail(ref));
@@ -303,13 +296,4 @@ class FirebaseClient {
       (Object error) {
         _collectionData[subscriptionId] = CollectionResolution.notFound(ref);
       };
-}
-
-@DataClass()
-abstract class $Resolutions<T extends Path> {
-  BuiltMap<Reference, T> get _data;
-  T operator [](Reference ref) => _data[ref];
-
-  @computed
-  Iterable<T> get datas => _data.values;
 }
