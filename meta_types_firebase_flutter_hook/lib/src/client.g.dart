@@ -7,15 +7,20 @@ part of 'client.dart';
 // **************************************************************************
 
 class Reference extends $Reference {
-  Reference({String path})
+  Reference({String path, String id})
       : _path = path,
-        assert(path != null);
+        assert(path != null),
+        _id = id,
+        assert(id != null);
 
   final String _path;
 
-  Reference clone({String path}) {
+  final String _id;
+
+  Reference clone({String path, String id}) {
     return Reference(
       path: path ?? _path,
+      id: id ?? _id,
     );
   }
 
@@ -23,18 +28,22 @@ class Reference extends $Reference {
     return _path;
   }
 
+  String get id {
+    return _id;
+  }
+
   int get hashCode {
-    return $jf($jc(0, path.hashCode));
+    return $jf($jc($jc(0, path.hashCode), id.hashCode));
   }
 
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Reference) return false;
-    return path == other.path;
+    return path == other.path && id == other.id;
   }
 
   String toString() {
-    return "Reference (path: $path)";
+    return "Reference (path: $path, id: $id)";
   }
 }
 
@@ -179,6 +188,18 @@ class DocumentResolution<T extends Path> extends $DocumentResolution<T> {
       deleting: (deleting) => deleting.path,
       denied: (denied) => denied.path,
       notFound: (notFound) => notFound.path,
+    );
+  }
+
+  String get id {
+    return when(
+      fetching: (fetching) => fetching.id,
+      creating: (creating) => creating.id,
+      dirty: (dirty) => dirty.id,
+      resolved: (resolved) => resolved.id,
+      deleting: (deleting) => deleting.id,
+      denied: (denied) => denied.id,
+      notFound: (notFound) => notFound.id,
     );
   }
 
@@ -398,6 +419,33 @@ class DocumentResolution<T extends Path> extends $DocumentResolution<T> {
   }
 }
 
+abstract class IDocumentResolution<T> {
+  void whenFetching(void Function(Reference) handler);
+  void whenCreating(void Function(T) handler);
+  void whenDirty(void Function(T) handler);
+  void whenResolved(void Function(T) handler);
+  void whenDeleting(void Function(T) handler);
+  void whenDenied(void Function(Reference) handler);
+  void whenNotFound(void Function(Reference) handler);
+  WHEN when<WHEN>(
+      {WHEN Function(Reference) fetching,
+      WHEN Function(T) creating,
+      WHEN Function(T) dirty,
+      WHEN Function(T) resolved,
+      WHEN Function(T) deleting,
+      WHEN Function(Reference) denied,
+      WHEN Function(Reference) notFound});
+  WHENO wheno<WHENO>(
+      {WHENO Function() otherwise,
+      WHENO Function(Reference) fetching,
+      WHENO Function(T) creating,
+      WHENO Function(T) dirty,
+      WHENO Function(T) resolved,
+      WHENO Function(T) deleting,
+      WHENO Function(Reference) denied,
+      WHENO Function(Reference) notFound});
+}
+
 class CollectionResolution<T extends Path> extends $CollectionResolution<T> {
   CollectionResolution.fetching(Reference fetching)
       : assert(fetching != null),
@@ -566,6 +614,19 @@ class CollectionResolution<T extends Path> extends $CollectionResolution<T> {
       deleting: (deleting) => deleting.path,
       denied: (denied) => denied.path,
       notFound: (notFound) => notFound.path,
+    );
+  }
+
+  String get id {
+    return when(
+      fetching: (fetching) => fetching.id,
+      appendingItem: (appendingItem) => appendingItem.id,
+      prependingItem: (prependingItem) => prependingItem.id,
+      removingItem: (removingItem) => removingItem.id,
+      resolved: (resolved) => resolved.id,
+      deleting: (deleting) => deleting.id,
+      denied: (denied) => denied.id,
+      notFound: (notFound) => notFound.id,
     );
   }
 
@@ -816,13 +877,15 @@ class CollectionResolution<T extends Path> extends $CollectionResolution<T> {
 }
 
 class Items<T extends Path> extends $Items<T> {
-  Items({BuiltList<T> items, Option<T> nextStart, String path})
+  Items({BuiltList<T> items, Option<T> nextStart, String path, String id})
       : _items = items,
         assert(items != null),
         _nextStart = nextStart,
         assert(nextStart != null),
         _path = path,
-        assert(path != null);
+        assert(path != null),
+        _id = id,
+        assert(id != null);
 
   final BuiltList<T> _items;
 
@@ -830,11 +893,15 @@ class Items<T extends Path> extends $Items<T> {
 
   final String _path;
 
-  Items<T> clone({BuiltList<T> items, Option<T> nextStart, String path}) {
+  final String _id;
+
+  Items<T> clone(
+      {BuiltList<T> items, Option<T> nextStart, String path, String id}) {
     return Items(
       items: items ?? _items,
       nextStart: nextStart ?? _nextStart,
       path: path ?? _path,
+      id: id ?? _id,
     );
   }
 
@@ -850,9 +917,14 @@ class Items<T extends Path> extends $Items<T> {
     return _path;
   }
 
+  String get id {
+    return _id;
+  }
+
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, items.hashCode), nextStart.hashCode), path.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, items.hashCode), nextStart.hashCode), path.hashCode),
+        id.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -860,17 +932,22 @@ class Items<T extends Path> extends $Items<T> {
     if (other is! Items) return false;
     return items == other.items &&
         nextStart == other.nextStart &&
-        path == other.path;
+        path == other.path &&
+        id == other.id;
   }
 
   String toString() {
-    return "Items (items: $items, nextStart: $nextStart, path: $path)";
+    return "Items (items: $items, nextStart: $nextStart, path: $path, id: $id)";
   }
 }
 
 class AppendingItem<T extends Path> extends $AppendingItem<T> {
   AppendingItem(
-      {T appending, BuiltList<T> items, Option<T> nextStart, String path})
+      {T appending,
+      BuiltList<T> items,
+      Option<T> nextStart,
+      String path,
+      String id})
       : _appending = appending,
         assert(appending != null),
         _items = items,
@@ -878,7 +955,9 @@ class AppendingItem<T extends Path> extends $AppendingItem<T> {
         _nextStart = nextStart,
         assert(nextStart != null),
         _path = path,
-        assert(path != null);
+        assert(path != null),
+        _id = id,
+        assert(id != null);
 
   final T _appending;
 
@@ -888,13 +967,20 @@ class AppendingItem<T extends Path> extends $AppendingItem<T> {
 
   final String _path;
 
+  final String _id;
+
   AppendingItem<T> clone(
-      {T appending, BuiltList<T> items, Option<T> nextStart, String path}) {
+      {T appending,
+      BuiltList<T> items,
+      Option<T> nextStart,
+      String path,
+      String id}) {
     return AppendingItem(
       appending: appending ?? _appending,
       items: items ?? _items,
       nextStart: nextStart ?? _nextStart,
       path: path ?? _path,
+      id: id ?? _id,
     );
   }
 
@@ -914,11 +1000,17 @@ class AppendingItem<T extends Path> extends $AppendingItem<T> {
     return _path;
   }
 
+  String get id {
+    return _id;
+  }
+
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, appending.hashCode), items.hashCode),
-            nextStart.hashCode),
-        path.hashCode));
+        $jc(
+            $jc($jc($jc(0, appending.hashCode), items.hashCode),
+                nextStart.hashCode),
+            path.hashCode),
+        id.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -927,17 +1019,22 @@ class AppendingItem<T extends Path> extends $AppendingItem<T> {
     return appending == other.appending &&
         items == other.items &&
         nextStart == other.nextStart &&
-        path == other.path;
+        path == other.path &&
+        id == other.id;
   }
 
   String toString() {
-    return "AppendingItem (appending: $appending, items: $items, nextStart: $nextStart, path: $path)";
+    return "AppendingItem (appending: $appending, items: $items, nextStart: $nextStart, path: $path, id: $id)";
   }
 }
 
 class PrependingItem<T extends Path> extends $PrependingItem<T> {
   PrependingItem(
-      {T prepending, BuiltList<T> items, Option<T> nextStart, String path})
+      {T prepending,
+      BuiltList<T> items,
+      Option<T> nextStart,
+      String path,
+      String id})
       : _prepending = prepending,
         assert(prepending != null),
         _items = items,
@@ -945,7 +1042,9 @@ class PrependingItem<T extends Path> extends $PrependingItem<T> {
         _nextStart = nextStart,
         assert(nextStart != null),
         _path = path,
-        assert(path != null);
+        assert(path != null),
+        _id = id,
+        assert(id != null);
 
   final T _prepending;
 
@@ -955,13 +1054,20 @@ class PrependingItem<T extends Path> extends $PrependingItem<T> {
 
   final String _path;
 
+  final String _id;
+
   PrependingItem<T> clone(
-      {T prepending, BuiltList<T> items, Option<T> nextStart, String path}) {
+      {T prepending,
+      BuiltList<T> items,
+      Option<T> nextStart,
+      String path,
+      String id}) {
     return PrependingItem(
       prepending: prepending ?? _prepending,
       items: items ?? _items,
       nextStart: nextStart ?? _nextStart,
       path: path ?? _path,
+      id: id ?? _id,
     );
   }
 
@@ -981,11 +1087,17 @@ class PrependingItem<T extends Path> extends $PrependingItem<T> {
     return _path;
   }
 
+  String get id {
+    return _id;
+  }
+
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, prepending.hashCode), items.hashCode),
-            nextStart.hashCode),
-        path.hashCode));
+        $jc(
+            $jc($jc($jc(0, prepending.hashCode), items.hashCode),
+                nextStart.hashCode),
+            path.hashCode),
+        id.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -994,17 +1106,22 @@ class PrependingItem<T extends Path> extends $PrependingItem<T> {
     return prepending == other.prepending &&
         items == other.items &&
         nextStart == other.nextStart &&
-        path == other.path;
+        path == other.path &&
+        id == other.id;
   }
 
   String toString() {
-    return "PrependingItem (prepending: $prepending, items: $items, nextStart: $nextStart, path: $path)";
+    return "PrependingItem (prepending: $prepending, items: $items, nextStart: $nextStart, path: $path, id: $id)";
   }
 }
 
 class RemovingItem<T extends Path> extends $RemovingItem<T> {
   RemovingItem(
-      {T removing, BuiltList<T> items, Option<T> nextStart, String path})
+      {T removing,
+      BuiltList<T> items,
+      Option<T> nextStart,
+      String path,
+      String id})
       : _removing = removing,
         assert(removing != null),
         _items = items,
@@ -1012,7 +1129,9 @@ class RemovingItem<T extends Path> extends $RemovingItem<T> {
         _nextStart = nextStart,
         assert(nextStart != null),
         _path = path,
-        assert(path != null);
+        assert(path != null),
+        _id = id,
+        assert(id != null);
 
   final T _removing;
 
@@ -1022,13 +1141,20 @@ class RemovingItem<T extends Path> extends $RemovingItem<T> {
 
   final String _path;
 
+  final String _id;
+
   RemovingItem<T> clone(
-      {T removing, BuiltList<T> items, Option<T> nextStart, String path}) {
+      {T removing,
+      BuiltList<T> items,
+      Option<T> nextStart,
+      String path,
+      String id}) {
     return RemovingItem(
       removing: removing ?? _removing,
       items: items ?? _items,
       nextStart: nextStart ?? _nextStart,
       path: path ?? _path,
+      id: id ?? _id,
     );
   }
 
@@ -1048,10 +1174,17 @@ class RemovingItem<T extends Path> extends $RemovingItem<T> {
     return _path;
   }
 
+  String get id {
+    return _id;
+  }
+
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, removing.hashCode), items.hashCode), nextStart.hashCode),
-        path.hashCode));
+        $jc(
+            $jc($jc($jc(0, removing.hashCode), items.hashCode),
+                nextStart.hashCode),
+            path.hashCode),
+        id.hashCode));
   }
 
   bool operator ==(dynamic other) {
@@ -1060,11 +1193,12 @@ class RemovingItem<T extends Path> extends $RemovingItem<T> {
     return removing == other.removing &&
         items == other.items &&
         nextStart == other.nextStart &&
-        path == other.path;
+        path == other.path &&
+        id == other.id;
   }
 
   String toString() {
-    return "RemovingItem (removing: $removing, items: $items, nextStart: $nextStart, path: $path)";
+    return "RemovingItem (removing: $removing, items: $items, nextStart: $nextStart, path: $path, id: $id)";
   }
 }
 

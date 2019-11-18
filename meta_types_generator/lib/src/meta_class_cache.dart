@@ -11,10 +11,13 @@ import 'sealed_class.dart';
 // import 'option.dart';
 
 class MetaClassCache {
-  final LibraryReader _library;
   final _cache = <String, MetaSeal>{};
+  final Set<LibraryElement> _libraries = {};
+  final LibraryReader _library;
 
-  MetaClassCache(this._library);
+  MetaClassCache(this._library) {
+    _initReaders(_library.element);
+  }
 
   // name should be MetaClassReference?
   Option<MetaSeal> find(String name) {
@@ -38,11 +41,16 @@ class MetaClassCache {
   Map<String, ClassElement> get _classElementLookup => __classElementLookup ??=
       Map.fromIterable(_classes, key: (dynamic e) => (e as ClassElement).name);
 
-  Iterable<LibraryReader> get _readers =>
-      _library.element.importedLibraries.map((e) => LibraryReader(e)).toList()
-        ..add(_library);
+  void _initReaders(LibraryElement library) {
+    if (library == null) return;
+    if (_libraries.contains(library)) return;
+    _libraries.add(library);
+    library.imports.forEach((e) => _initReaders(e.importedLibrary));
+    library.exports.forEach((e) => _initReaders(e.exportedLibrary));
+  }
 
-  Iterable<ClassElement> get _classes => _readers.expand((r) => r.classes);
+  Iterable<ClassElement> get _classes =>
+      _libraries.map((l) => LibraryReader(l)).expand((r) => r.classes);
 
   Option<DartObject> _toMetaAnnotation(ClassElement e) {
     final anno = e.metadata
@@ -50,8 +58,12 @@ class MetaClassCache {
           (a) => a.computeConstantValue(),
         )
         .singleWhere(
-          (w) => const ['DataClass', 'SealedClass', 'SumClass', 'EnumClass']
-              .contains(w.type.name),
+          (w) => const [
+            'DataClass',
+            'SealedClass',
+            'SumClass',
+            'EnumClass',
+          ].contains(w.type.name),
           orElse: () => null,
         );
 

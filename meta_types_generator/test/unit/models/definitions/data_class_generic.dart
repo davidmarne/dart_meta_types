@@ -1,12 +1,12 @@
 part of models;
 
-@DataClass()
+@data
 abstract class $GenericDataClass<T> {
   int get foo;
   T get bar;
 }
 
-@DataClass()
+@data
 abstract class $GenericsDataClass<T, P> {
   int get foo;
   T get bar;

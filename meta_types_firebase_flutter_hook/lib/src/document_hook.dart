@@ -20,7 +20,7 @@ abstract class $DocumentResolutions<T extends Path> {
 }
 
 DocumentResolution<T> useFirebaseDocument<T extends Path>(
-    DocumentReference ref, StructuredSerializer serializer) {
+    DocumentReference ref, StructuredSerializer<T> serializer) {
   return useFirebaseDocuments<T>([ref], serializer)[ref];
 }
 

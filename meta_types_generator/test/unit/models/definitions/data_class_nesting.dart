@@ -1,17 +1,17 @@
 part of models;
 
-@DataClass()
+@data
 abstract class $NestingDataClass<T> {
-  $NestedDataClass get nested;
-  $GenericNestedDataClass<T> get genericNested;
+  NestedDataClass get nested;
+  GenericNestedDataClass<T> get genericNested;
 }
 
-@DataClass()
+@data
 abstract class $NestedDataClass {
   String get baz => 'baz';
 }
 
-@DataClass()
+@data
 abstract class $GenericNestedDataClass<T> {
   T get nested;
 }

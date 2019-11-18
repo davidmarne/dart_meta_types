@@ -28,6 +28,8 @@ dependencies:
   cloud_firestore: ^0.12.9
   flutter_hooks: ^0.6.0
   built_collection: ^4.0.0
+  meta_types_firebase:
+    path: /home/david/workspace/dart_meta_types/meta_types_firebase
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:built_value/serializer.dart' show StructuredSerializer;
 
 import 'client.dart';
 
+// trash?
 FirebaseClient useFirebaseClient() {
   return Hook.use(_FirebaseClientHook());
 }

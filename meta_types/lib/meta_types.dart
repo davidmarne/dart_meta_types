@@ -1,6 +1,8 @@
 library meta_types;
 
 export 'package:meta/meta.dart' show required;
+export 'package:built_value/serializer.dart'
+    show StructuredSerializer, FullType, Serializers;
 
 // part 'meta_types.g.dart';
 part 'src/annotations/annotations.dart';

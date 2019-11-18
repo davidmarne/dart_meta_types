@@ -1,6 +1,6 @@
 part of models;
 
-@EnumClass()
+@enumeration
 abstract class $StringEnum {
   const $StringEnum();
   static const String a = 'a';

@@ -3,6 +3,7 @@ import 'package:meta_types/meta_types.dart';
 import 'package:meta_types/meta_types_models.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meta_types_firebase/meta_types_firebase.dart';
 import 'package:built_value/serializer.dart'
     show StructuredSerializer, Serializers;
 
@@ -10,11 +11,6 @@ part 'client.g.dart';
 
 @DataClass()
 abstract class $Reference implements Path {}
-
-@DataClass(isInterface: true)
-abstract class Path {
-  String get path;
-}
 
 @SealedClass()
 abstract class $DocumentResolution<T extends Path> implements Path {
@@ -89,17 +85,18 @@ class FirebaseClient {
 
   Stream<void> get change => _changeController.stream;
 
-  DocumentResolution readDocument(int subscriptionId) {
-    return _documentData[_documentSnapshotStreamSubscriptions[subscriptionId]];
+  DocumentResolution<T> readDocument<T extends Path>(Receipt<T> receipt) {
+    return _documentData[
+        _documentSnapshotStreamSubscriptions[receipt.subscriptionId]];
   }
 
-  CollectionResolution readCollection(int subscriptionId) {
+  CollectionResolution<T> readCollection<T extends Path>(Receipt<T> receipt) {
     return _collectionData[
-        _collectionSnapshotStreamSubscriptions[subscriptionId]];
+        _collectionSnapshotStreamSubscriptions[receipt.subscriptionId]];
   }
 
-  Receipt checkoutCollection<T extends Path>(
-      CollectionReference collectionRef, StructuredSerializer serializer) {
+  Receipt<T> checkoutCollection<T extends Path>(
+      CollectionReference collectionRef, StructuredSerializer<T> serializer) {
     final subscriptionId = _nextId++;
     final ref = Reference(path: collectionRef.path);
 
@@ -107,7 +104,7 @@ class FirebaseClient {
     _serializers[subscriptionId] = serializer;
 
     // cache the current resolution
-    final resolution = CollectionResolution.fetching(ref);
+    final resolution = CollectionResolution<T>.fetching(ref);
     _collectionData[subscriptionId] = resolution;
     _documentSubscriptionReferenceLookup[subscriptionId] = ref;
 
@@ -135,7 +132,7 @@ class FirebaseClient {
     _serializers.remove(subscriptionId);
   }
 
-  Receipt checkoutDocument<T extends Path>(
+  Receipt checkoutDocument(
       DocumentReference documentRef, StructuredSerializer serializer) {
     final subscriptionId = _nextId++;
     final ref = Reference(path: documentRef.path);
@@ -178,7 +175,7 @@ class FirebaseClient {
     );
   }
 
-  void checkinDocument<T extends Path>(int subscriptionId) {
+  void checkinDocument(int subscriptionId) {
     final ref = _documentSubscriptionReferenceLookup.remove(subscriptionId);
     _documentSubscriptions[ref].remove(subscriptionId);
     if (_documentSubscriptions[ref].isEmpty) {
@@ -188,7 +185,8 @@ class FirebaseClient {
     }
   }
 
-  Future<void> create<T extends Path>(T data, StructuredSerializer serializer) {
+  Future<void> create<T extends Path>(
+      T data, StructuredSerializer<T> serializer) {
     _setDocumentData(
         Reference(path: data.path), DocumentResolution.creating(data));
     return _store
@@ -210,8 +208,12 @@ class FirebaseClient {
     return _store.document(data.path).delete();
   }
 
-  void _setDocumentData(Reference ref, DocumentResolution resolution) {
-    _documentData[ref] = resolution;
+  void _setDocumentData(DocumentSnapshot snapshot, int subscriptionId) {
+    final ref = _documentSubscriptionReferenceLookup[subscriptionId];
+    final shell = _allSerializers.deserializeWith(
+        _serializers[subscriptionId], snapshot.data);
+    final doc = (shell as Path).copyPath(path: ref.path, id: ref.id);
+    _documentData[ref] = DocumentResolution.resolved(doc);
     _changeController.add(null);
   }
 
@@ -224,14 +226,21 @@ class FirebaseClient {
     _changeController.close();
   }
 
+  T _deserialize<T extends Path>(
+      DocumentSnapshot snapshot, int subscriptionId) {
+    final ref = _documentSubscriptionReferenceLookup[subscriptionId];
+    final doc = _allSerializers.deserializeWith(
+        _serializers[subscriptionId], snapshot.data) as T;
+    return doc.copyPath(path: ref.path, id: ref.id);
+  }
+
   void Function(DocumentSnapshot) _onNewDocumentSnapshot(
           Reference ref, int subscriptionId) =>
       (DocumentSnapshot snapshot) {
         if (!_documentData.containsKey(ref)) {
           _setDocumentData(
             ref,
-            _allSerializers.serializeWith(
-                _serializers[subscriptionId], snapshot.data),
+            _deserialize(snapshot, subscriptionId),
           );
         }
       };

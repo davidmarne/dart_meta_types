@@ -1,19 +1,11 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:meta_types/meta_types.dart' show computed;
-import 'package:build/build.dart';
-import 'package:meta_types/meta_types_models.dart'
-    show
-        Data,
-        MethodParameter,
-        Option,
-        Method,
-        FieldType,
-        TypeParameterDeclaration;
+import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/meta_types.dart';
 
 Method methodElementToMethod(MethodElement e) => Method(
       name: e.name,
-      typeParams: resolveTypeParameterDeclaration(e.typeParameters),
+      typeParameters: resolveTypeParameterDeclaration(e.typeParameters),
       returnType:
           FieldType(type: e.returnType.toString(), generics: Option.none()),
       inputs: e.parameters.map(
@@ -24,8 +16,32 @@ Method methodElementToMethod(MethodElement e) => Method(
       ),
     );
 
-bool isComputed(List<ElementAnnotation> metadata) => metadata
-    .any((meta) => meta.computeConstantValue().toStringValue() == computed);
+Option<SerializableField> getSerializableField(
+        List<ElementAnnotation> metadata) =>
+    metadata
+        .map((meta) => meta.computeConstantValue())
+        .where(
+          (meta) => meta.type.name == 'Serializable',
+        )
+        .map((meta) => Option.some(meta as SerializableField))
+        .firstWhere(returnTrue, orElse: returnNone);
+
+bool implementsBase(ClassElement element) {
+  final afterClass =
+      element.source.contents.data.replaceRange(0, element.nameOffset, '');
+  final beforeBracket =
+      afterClass.replaceRange(afterClass.indexOf('{'), afterClass.length, '');
+  return beforeBracket.contains(element.name.replaceFirst('\$', '') + 'Base');
+}
+
+bool isConst(ClassElement element) =>
+    element.constructors.any((c) => c.isDefaultConstructor && c.isConst);
+
+bool isComputed(List<ElementAnnotation> metadata) =>
+    metadata.any((meta) => meta.computeConstantValue().type.name == 'Computed');
+
+bool isSerializable(List<ElementAnnotation> metadata) => metadata
+    .any((meta) => meta.computeConstantValue().type.name == 'Serializable');
 
 Iterable<InterfaceType> calcSupertypes(ClassElement e) =>
     e.type.name == 'Object'
@@ -93,14 +109,34 @@ FieldType resolveFieldReturnType(String returnTypeStr) {
   if (indexOfCaret == -1) {
     return FieldType(type: returnTypeStr, generics: Option.none());
   }
-  final generics = returnTypeStr
-      .substring(indexOfCaret + 1, returnTypeStr.length - 1)
-      .split(',')
-      .map(resolveFieldReturnType);
+  final generics =
+      returnTypeStr.substring(indexOfCaret + 1, returnTypeStr.length - 1);
+
+  final terminators = <String>[','];
+  final values = <String>[];
+  final buffer = StringBuffer();
+  for (var i = 0; i < generics.length; i++) {
+    final char = generics[i];
+    if (char == terminators.last) {
+      terminators.removeLast();
+      if (terminators.isEmpty) {
+        values.add(buffer.toString());
+        buffer.clear();
+        terminators.add(',');
+        continue;
+      }
+    }
+    if (char == '<') {
+      terminators.add('>');
+    }
+
+    buffer.write(char);
+  }
+  values.add(buffer.toString());
 
   return FieldType(
       type: returnTypeStr.substring(0, indexOfCaret),
-      generics: Option.some(generics));
+      generics: Option.some(values.map(resolveFieldReturnType)));
 }
 
 FieldType resolveFieldExtensionName(Element a) {
@@ -121,26 +157,53 @@ FieldType resolveFieldExtensionName(Element a) {
   if (indexOfBracketNewLine != -1 && indexOfBracketNewLine < lowest)
     lowest = indexOfBracketNewLine;
 
-  String x;
-  try {
-    x = afterExtends.replaceRange(lowest, afterExtends.length, '').trim();
-  } catch (e, s) {
-    log.severe('ame $afterExtends', e, s);
-  }
-  // log.severe(
-  //     '$x $indexOfComma $indexOfBracketSpace $indexOfBracketNewLine $lowest');
-  return resolveFieldReturnType(x);
+  return resolveFieldReturnType(
+    afterExtends.replaceRange(lowest, afterExtends.length, '').trim(),
+  );
 }
 
 String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-// Iterable<String> parseMixins(
-//   ClassElement element,
-//   String metaType,
-// ) =>
-//     element.metadata
-//         .map((m) => m.computeConstantValue())
-//         .where((c) => c.type.element is ClassElement)
-//         .where((c) => (c.type.element as ClassElement).allSupertypes.any(
-//             (s) => s.name == 'MetaTypeMixin' || s.name == '${metaType}Mixin'))
-//         .map((c) => element.name);
+bool isNull<T>(T value) => value == null;
+bool returnTrue<T>(T value) => true;
+Option<T> returnNone<T>() => Option<T>.none();
+
+String removeUnderscore(String field) =>
+    field.startsWith('_') ? field.substring(1) : field;
+
+MetaInterface<F, T> buildMetaInterface<F extends Field, T extends Meta<F>>(
+  T meta,
+  List<DartType> typeArguments,
+) {
+  final argMap = <String, String>{};
+  for (var i = 0; i < meta.typeParameters.length; i++) {
+    argMap[meta.typeParameters.elementAt(i).type] =
+        typeArguments.elementAt(i).toString();
+  }
+
+  String replaceType(String type) {
+    return argMap.containsKey(type) ? argMap[type] : type;
+  }
+
+  FieldType replaceFieldType(FieldType f) => f.copy(
+        type: replaceType(f.type),
+        generics: f.generics.map(
+          (generics) => generics.map(replaceFieldType),
+        ),
+      );
+
+  return MetaInterface(
+    meta: meta,
+    parametarizedFields: meta.fields.map(
+      (f) => f.copyField(
+        returnType: replaceFieldType(f.returnType),
+      ) as F,
+    ),
+    typeArguments: typeArguments.map(
+      (a) => FieldType(
+        type: a.displayName,
+        generics: Option.none(),
+      ),
+    ),
+  );
+}

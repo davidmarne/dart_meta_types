@@ -1,13 +1,11 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:build/build.dart';
-import 'package:meta_types/meta_types_models.dart'
-    show Enum, EnumField, Option, FieldType, MetaInterfaceType;
+import 'package:meta_types/meta_types_models.dart';
 import 'meta_class.dart';
 import 'meta_class_cache.dart';
 import 'util.dart';
 
-Enum enumFromClassElement(
+Enum<EnumField, DataField> enumFromClassElement(
   ClassElement element,
   DartObject annotation,
   MetaClassCache cache,
@@ -20,6 +18,8 @@ Enum enumFromClassElement(
 
     return EnumField(
       name: field.name,
+      isPrivate: field.name.startsWith('_'),
+      serialableField: getSerializableField(element.metadata),
       returnType: resolveFieldReturnTypeFromFieldElement(field),
       isComputed: isComputed(field.metadata),
     );
@@ -43,10 +43,21 @@ Enum enumFromClassElement(
               throw TemplateException(
                   'interfaces cannot be final. see: ${element.name}');
             }
-            return MetaInterfaceType(
-                meta: data,
-                generics:
-                    e.typeArguments.map((a) => FieldType(type: a.displayName)));
+
+            return buildMetaInterface<DataField, Data<DataField>>(
+              data,
+              e.typeArguments,
+            );
+            // return MetaInterface(
+            //   meta: data,
+            //   parametarizedFields: data.fields, //TODO
+            //   typeArguments: e.typeArguments.map(
+            //     (a) => FieldType(
+            //       type: a.displayName,
+            //       generics: Option.none(),
+            //     ),
+            //   ),
+            // );
           },
           otherwise: () {
             throw TemplateException(
@@ -57,21 +68,23 @@ Enum enumFromClassElement(
     );
   });
 
-  return Enum(
-    name: element.name.replaceAll('\$', ''),
+  return Enum<EnumField, DataField>(
+    name: element.name.replaceFirst('\$', ''),
+    isPrivate: element.isPrivate,
     type: '',
-    isPrivate: false,
     fields: fields,
-    generics: resolveTypeParameterDeclaration(element.typeParameters),
+    typeParameters: resolveTypeParameterDeclaration(element.typeParameters),
     methods: element.methods.map(methodElementToMethod),
     dataInterfaces: interfaces.map(
-      (hack) => hack.clone(
-        meta: hack.meta.clone(
+      (hack) => hack.copy(
+        meta: hack.meta.copy(
           fields: hack.meta.fields.where(
             (f) => !f.name.startsWith('_'),
           ),
         ),
       ),
-    ), // TODO: hack
+    ), // TODO: hack, private should be on field obj
+    serializable: isSerializable(element.metadata),
+    implementsBase: implementsBase(element),
   );
 }

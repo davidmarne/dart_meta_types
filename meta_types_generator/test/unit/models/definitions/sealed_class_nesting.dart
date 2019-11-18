@@ -1,12 +1,12 @@
 part of models;
 
-@SealedClass()
+@seal
 abstract class $NestingSealedClass {
   int get integer;
-  $NestedSealedClass get nested;
+  NestedSealedClass get nested;
 }
 
-@SealedClass()
+@seal
 abstract class $NestedSealedClass {
   int get integer;
   String get string;

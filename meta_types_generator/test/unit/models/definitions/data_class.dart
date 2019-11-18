@@ -1,6 +1,6 @@
 part of models;
 
-@DataClass()
+@data
 abstract class $TestDataClass {
   int get fieldWithNoDefault;
 

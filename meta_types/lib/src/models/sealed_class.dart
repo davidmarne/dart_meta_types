@@ -1,23 +1,26 @@
 part of meta_types_models;
 
-@DataClass()
-abstract class $SealedField implements Field {
+@dataInterface
+abstract class _$SealedField implements Field {}
+
+@data
+abstract class $SealedField implements _$SealedField {
   const $SealedField();
 }
 
-@DataClass()
-abstract class $SealedValue implements $SealedField, Value {
+@data
+abstract class $SealedValue implements _$SealedField, Value {
   const $SealedValue();
 }
 
-@DataClass()
-abstract class $Sealed<T extends SealedField, D extends DataField>
+@data
+abstract class $Sealed<T extends _$SealedField, D extends _$DataField>
     implements Meta<T> {
   const $Sealed();
 
   bool get isConst;
 
-  Iterable<MetaInterfaceType<Data<D>>> get dataInterfaces;
+  Iterable<MetaInterface<D, Data<D>>> get dataInterfaces;
 
   @computed
   Iterable<T> get computedFields => fields.where((f) => f.isComputed);
@@ -27,5 +30,5 @@ abstract class $Sealed<T extends SealedField, D extends DataField>
 
   @computed
   Iterable<D> get dataFields =>
-      dataInterfaces.map((i) => i.meta.nonComputedFields).expand((i) => i);
+      dataInterfaces.map((i) => i.parametarizedFields).expand((i) => i);
 }

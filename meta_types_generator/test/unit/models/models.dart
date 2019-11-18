@@ -2,8 +2,6 @@ library models;
 
 import 'package:meta_types/meta_types.dart';
 
-import 'm2.dart';
-
 part 'definitions/b_tree.dart';
 part 'definitions/data_class_generic.dart';
 part 'definitions/data_class_interfaces.dart';

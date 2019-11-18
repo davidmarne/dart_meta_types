@@ -1,6 +1,6 @@
 part of models;
 
-@SealedClass()
+@seal
 abstract class $TestSealedClass {
   int get integer;
   String get string;

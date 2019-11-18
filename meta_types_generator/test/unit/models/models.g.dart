@@ -17,33 +17,18 @@ class BinaryTree<T> extends $BinaryTree<T> {
         assert(branch != null),
         _branch = branch;
 
-  BinaryTree({T leaf, Branch<T> branch})
-      : _leaf = leaf,
-        _branch = branch {
-    var found = false;
-    if (leaf != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (branch != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    throw Exception("TODO");
-  }
-
   final T _leaf;
 
   final Branch<T> _branch;
 
   T get leaf {
     if (_leaf != null) return _leaf;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, leaf is not set');
   }
 
   Branch<T> get branch {
     if (_branch != null) return _branch;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, branch is not set');
   }
 
   bool get isLeaf {
@@ -55,14 +40,16 @@ class BinaryTree<T> extends $BinaryTree<T> {
   }
 
   void whenLeaf(void Function(T) handler) {
-    if (_leaf != null) handler(_leaf);
+    if (_leaf != null) return handler(_leaf);
   }
 
   void whenBranch(void Function(Branch<T>) handler) {
-    if (_branch != null) handler(_branch);
+    if (_branch != null) return handler(_branch);
   }
 
-  WHEN when<WHEN>({WHEN Function(T) leaf, WHEN Function(Branch<T>) branch}) {
+  WHEN when<WHEN>(
+      {@required WHEN Function(T) leaf,
+      @required WHEN Function(Branch<T>) branch}) {
     if (_leaf != null) {
       return leaf(_leaf);
     }
@@ -72,10 +59,10 @@ class BinaryTree<T> extends $BinaryTree<T> {
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(T) leaf,
-      WHENO Function(Branch<T>) branch}) {
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(T) leaf,
+      WHEN Function(Branch<T>) branch}) {
     if (_leaf != null) {
       if (leaf != null)
         return leaf(_leaf);
@@ -91,10 +78,7 @@ class BinaryTree<T> extends $BinaryTree<T> {
     return otherwise();
   }
 
-  int get hashCode {
-    return $jf($jc($jc(0, _leaf.hashCode), _branch.hashCode));
-  }
-
+  int get hashCode => $jf($jc($jc(0, _leaf.hashCode), _branch.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! BinaryTree) return false;
@@ -102,26 +86,15 @@ class BinaryTree<T> extends $BinaryTree<T> {
   }
 
   String toString() {
-    final value = when(
-      leaf: (leaf) => 'leaf $leaf',
-      branch: (branch) => 'branch $branch',
-    );
-    return 'BinaryTree( $value )';
+    return "BinaryTree (${when(leaf: (leaf) => 'leaf $leaf', branch: (branch) => 'branch $branch')}))";
   }
 }
 
-abstract class IBinaryTree<T> {
-  void whenLeaf(void Function(T) handler);
-  void whenBranch(void Function(Branch<T>) handler);
-  WHEN when<WHEN>({WHEN Function(T) leaf, WHEN Function(Branch<T>) branch});
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(T) leaf,
-      WHENO Function(Branch<T>) branch});
-}
-
 class Branch<T> extends $Branch<T> {
-  Branch({T value, BinaryTree<T> left, BinaryTree<T> right})
+  Branch(
+      {@required T value,
+      @required BinaryTree<T> left,
+      @required BinaryTree<T> right})
       : _value = value,
         assert(value != null),
         _left = left,
@@ -135,14 +108,6 @@ class Branch<T> extends $Branch<T> {
 
   final BinaryTree<T> _right;
 
-  Branch<T> clone({T value, BinaryTree<T> left, BinaryTree<T> right}) {
-    return Branch(
-      value: value ?? _value,
-      left: left ?? _left,
-      right: right ?? _right,
-    );
-  }
-
   T get value {
     return _value;
   }
@@ -155,10 +120,16 @@ class Branch<T> extends $Branch<T> {
     return _right;
   }
 
-  int get hashCode {
-    return $jf($jc($jc($jc(0, value.hashCode), left.hashCode), right.hashCode));
+  Branch<T> copy({T value, BinaryTree<T> left, BinaryTree<T> right}) {
+    return Branch(
+      value: value ?? _value,
+      left: left ?? _left,
+      right: right ?? _right,
+    );
   }
 
+  int get hashCode =>
+      $jf($jc($jc($jc(0, _value.hashCode), _left.hashCode), _right.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Branch) return false;
@@ -171,7 +142,7 @@ class Branch<T> extends $Branch<T> {
 }
 
 class GenericDataClass<T> extends $GenericDataClass<T> {
-  GenericDataClass({int foo, T bar})
+  GenericDataClass({@required int foo, @required T bar})
       : _foo = foo,
         assert(foo != null),
         _bar = bar,
@@ -181,13 +152,6 @@ class GenericDataClass<T> extends $GenericDataClass<T> {
 
   final T _bar;
 
-  GenericDataClass<T> clone({int foo, T bar}) {
-    return GenericDataClass(
-      foo: foo ?? _foo,
-      bar: bar ?? _bar,
-    );
-  }
-
   int get foo {
     return _foo;
   }
@@ -196,10 +160,14 @@ class GenericDataClass<T> extends $GenericDataClass<T> {
     return _bar;
   }
 
-  int get hashCode {
-    return $jf($jc($jc(0, foo.hashCode), bar.hashCode));
+  GenericDataClass<T> copy({int foo, T bar}) {
+    return GenericDataClass(
+      foo: foo ?? _foo,
+      bar: bar ?? _bar,
+    );
   }
 
+  int get hashCode => $jf($jc($jc(0, _foo.hashCode), _bar.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! GenericDataClass) return false;
@@ -212,7 +180,7 @@ class GenericDataClass<T> extends $GenericDataClass<T> {
 }
 
 class GenericsDataClass<T, P> extends $GenericsDataClass<T, P> {
-  GenericsDataClass({int foo, T bar, P baz})
+  GenericsDataClass({@required int foo, @required T bar, @required P baz})
       : _foo = foo,
         assert(foo != null),
         _bar = bar,
@@ -226,14 +194,6 @@ class GenericsDataClass<T, P> extends $GenericsDataClass<T, P> {
 
   final P _baz;
 
-  GenericsDataClass<T, P> clone({int foo, T bar, P baz}) {
-    return GenericsDataClass(
-      foo: foo ?? _foo,
-      bar: bar ?? _bar,
-      baz: baz ?? _baz,
-    );
-  }
-
   int get foo {
     return _foo;
   }
@@ -246,10 +206,16 @@ class GenericsDataClass<T, P> extends $GenericsDataClass<T, P> {
     return _baz;
   }
 
-  int get hashCode {
-    return $jf($jc($jc($jc(0, foo.hashCode), bar.hashCode), baz.hashCode));
+  GenericsDataClass<T, P> copy({int foo, T bar, P baz}) {
+    return GenericsDataClass(
+      foo: foo ?? _foo,
+      bar: bar ?? _bar,
+      baz: baz ?? _baz,
+    );
   }
 
+  int get hashCode =>
+      $jf($jc($jc($jc(0, _foo.hashCode), _bar.hashCode), _baz.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! GenericsDataClass) return false;
@@ -262,7 +228,11 @@ class GenericsDataClass<T, P> extends $GenericsDataClass<T, P> {
 }
 
 class ImplementorDataClass extends $ImplementorDataClass {
-  ImplementorDataClass({int implementor, int one, String two, int three})
+  ImplementorDataClass(
+      {@required int implementor,
+      @required int one,
+      @required String two,
+      @required int three})
       : _implementor = implementor,
         assert(implementor != null),
         _one = one,
@@ -280,16 +250,6 @@ class ImplementorDataClass extends $ImplementorDataClass {
 
   final int _three;
 
-  ImplementorDataClass clone(
-      {int implementor, int one, String two, int three}) {
-    return ImplementorDataClass(
-      implementor: implementor ?? _implementor,
-      one: one ?? _one,
-      two: two ?? _two,
-      three: three ?? _three,
-    );
-  }
-
   int get implementor {
     return _implementor;
   }
@@ -306,12 +266,37 @@ class ImplementorDataClass extends $ImplementorDataClass {
     return _three;
   }
 
-  int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, implementor.hashCode), one.hashCode), two.hashCode),
-        three.hashCode));
+  ImplementorDataClass copy({int implementor, int one, String two, int three}) {
+    return ImplementorDataClass(
+      implementor: implementor ?? _implementor,
+      one: one ?? _one,
+      two: two ?? _two,
+      three: three ?? _three,
+    );
   }
 
+  ImplementorDataClass copyInterfaceOne({int one, String two}) {
+    return copy(
+      one: one ?? _one,
+      two: two ?? _two,
+    );
+  }
+
+  ImplementorDataClass copyInterfaceTwo({String two}) {
+    return copy(
+      two: two ?? _two,
+    );
+  }
+
+  ImplementorDataClass copyInterfaceThree({int three}) {
+    return copy(
+      three: three ?? _three,
+    );
+  }
+
+  int get hashCode => $jf($jc(
+      $jc($jc($jc(0, _implementor.hashCode), _one.hashCode), _two.hashCode),
+      _three.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! ImplementorDataClass) return false;
@@ -326,79 +311,37 @@ class ImplementorDataClass extends $ImplementorDataClass {
   }
 }
 
-class FinalDataClass extends $FinalDataClass {
-  FinalDataClass({IMPORTDataClass foo, String bar})
-      : _foo = foo,
-        assert(foo != null),
-        _bar = bar,
-        assert(bar != null);
-
-  final IMPORTDataClass _foo;
-
-  final String _bar;
-
-  FinalDataClass clone({IMPORTDataClass foo, String bar}) {
-    return FinalDataClass(
-      foo: foo ?? _foo,
-      bar: bar ?? _bar,
-    );
-  }
-
-  IMPORTDataClass get foo {
-    return _foo;
-  }
-
-  String get bar {
-    return _bar;
-  }
-
-  int get hashCode {
-    return $jf($jc($jc(0, foo.hashCode), bar.hashCode));
-  }
-
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! FinalDataClass) return false;
-    return foo == other.foo && bar == other.bar;
-  }
-
-  String toString() {
-    return "FinalDataClass (foo: $foo, bar: $bar)";
-  }
-}
-
 class NestingDataClass<T> extends $NestingDataClass<T> {
   NestingDataClass(
-      {$NestedDataClass nested, $GenericNestedDataClass<T> genericNested})
+      {@required NestedDataClass nested,
+      @required GenericNestedDataClass<T> genericNested})
       : _nested = nested,
         assert(nested != null),
         _genericNested = genericNested,
         assert(genericNested != null);
 
-  final $NestedDataClass _nested;
+  final NestedDataClass _nested;
 
-  final $GenericNestedDataClass<T> _genericNested;
+  final GenericNestedDataClass<T> _genericNested;
 
-  NestingDataClass<T> clone(
-      {$NestedDataClass nested, $GenericNestedDataClass<T> genericNested}) {
+  NestedDataClass get nested {
+    return _nested;
+  }
+
+  GenericNestedDataClass<T> get genericNested {
+    return _genericNested;
+  }
+
+  NestingDataClass<T> copy(
+      {NestedDataClass nested, GenericNestedDataClass<T> genericNested}) {
     return NestingDataClass(
       nested: nested ?? _nested,
       genericNested: genericNested ?? _genericNested,
     );
   }
 
-  $NestedDataClass get nested {
-    return _nested;
-  }
-
-  $GenericNestedDataClass<T> get genericNested {
-    return _genericNested;
-  }
-
-  int get hashCode {
-    return $jf($jc($jc(0, nested.hashCode), genericNested.hashCode));
-  }
-
+  int get hashCode =>
+      $jf($jc($jc(0, _nested.hashCode), _genericNested.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! NestingDataClass) return false;
@@ -417,20 +360,17 @@ class NestedDataClass extends $NestedDataClass {
 
   final String _baz;
 
-  NestedDataClass clone({String baz}) {
+  String get baz {
+    return _baz ?? super.baz;
+  }
+
+  NestedDataClass copy({String baz}) {
     return NestedDataClass(
       baz: baz ?? _baz,
     );
   }
 
-  String get baz {
-    return _baz ?? super.baz;
-  }
-
-  int get hashCode {
-    return $jf($jc(0, baz.hashCode));
-  }
-
+  int get hashCode => $jf($jc(0, _baz.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! NestedDataClass) return false;
@@ -438,31 +378,28 @@ class NestedDataClass extends $NestedDataClass {
   }
 
   String toString() {
-    return "NestedDataClass ()";
+    return "NestedDataClass (baz: $baz)";
   }
 }
 
 class GenericNestedDataClass<T> extends $GenericNestedDataClass<T> {
-  GenericNestedDataClass({T nested})
+  GenericNestedDataClass({@required T nested})
       : _nested = nested,
         assert(nested != null);
 
   final T _nested;
 
-  GenericNestedDataClass<T> clone({T nested}) {
+  T get nested {
+    return _nested;
+  }
+
+  GenericNestedDataClass<T> copy({T nested}) {
     return GenericNestedDataClass(
       nested: nested ?? _nested,
     );
   }
 
-  T get nested {
-    return _nested;
-  }
-
-  int get hashCode {
-    return $jf($jc(0, nested.hashCode));
-  }
-
+  int get hashCode => $jf($jc(0, _nested.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! GenericNestedDataClass) return false;
@@ -475,24 +412,22 @@ class GenericNestedDataClass<T> extends $GenericNestedDataClass<T> {
 }
 
 class TestDataClass extends $TestDataClass {
-  TestDataClass({int fieldWithNoDefault, int fieldWithDefault})
+  TestDataClass(
+      {@required int fieldWithNoDefault,
+      int fieldWithDefault,
+      int computedField})
       : _fieldWithNoDefault = fieldWithNoDefault,
         assert(fieldWithNoDefault != null),
         _fieldWithDefault = fieldWithDefault,
-        assert(fieldWithDefault != null);
-
-  int _computedField;
+        assert(fieldWithDefault != null),
+        _computedField = computedField,
+        assert(computedField != null);
 
   final int _fieldWithNoDefault;
 
   final int _fieldWithDefault;
 
-  TestDataClass clone({int fieldWithNoDefault, int fieldWithDefault}) {
-    return TestDataClass(
-      fieldWithNoDefault: fieldWithNoDefault ?? _fieldWithNoDefault,
-      fieldWithDefault: fieldWithDefault ?? _fieldWithDefault,
-    );
-  }
+  final int _computedField;
 
   int get fieldWithNoDefault {
     return _fieldWithNoDefault;
@@ -503,43 +438,52 @@ class TestDataClass extends $TestDataClass {
   }
 
   int get computedField {
-    return _computedField ??= super.computedField;
+    return _computedField ?? super.computedField;
   }
 
-  int get hashCode {
-    return $jf(
-        $jc($jc(0, fieldWithNoDefault.hashCode), fieldWithDefault.hashCode));
+  TestDataClass copy(
+      {int fieldWithNoDefault, int fieldWithDefault, int computedField}) {
+    return TestDataClass(
+      fieldWithNoDefault: fieldWithNoDefault ?? _fieldWithNoDefault,
+      fieldWithDefault: fieldWithDefault ?? _fieldWithDefault,
+      computedField: computedField ?? _computedField,
+    );
   }
 
+  int get hashCode => $jf($jc(
+      $jc($jc(0, _fieldWithNoDefault.hashCode), _fieldWithDefault.hashCode),
+      _computedField.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! TestDataClass) return false;
     return fieldWithNoDefault == other.fieldWithNoDefault &&
-        fieldWithDefault == other.fieldWithDefault;
+        fieldWithDefault == other.fieldWithDefault &&
+        computedField == other.computedField;
   }
 
   String toString() {
-    return "TestDataClass (fieldWithNoDefault: $fieldWithNoDefault)";
+    return "TestDataClass (fieldWithNoDefault: $fieldWithNoDefault, fieldWithDefault: $fieldWithDefault, computedField: $computedField)";
   }
 }
 
-class StringEnum extends $StringEnum {
+class StringEnum<EGN> extends $StringEnum {
   const StringEnum._(this._value) : assert(_value != null);
 
-  final Object _value;
+  final EGN _value;
 
-  static const StringEnum a = StringEnum._($StringEnum.a);
+  static const StringEnum<String> a = StringEnum._($StringEnum.a);
 
-  static const StringEnum b = StringEnum._($StringEnum.b);
+  static const StringEnum<String> b = StringEnum._($StringEnum.b);
 
-  static var values = <StringEnum>{StringEnum.a, StringEnum.b};
+  static final values = <StringEnum>{StringEnum.a, StringEnum.b};
 
+  EGN get value => _value;
   bool get isA {
-    return a != null;
+    return a != this;
   }
 
   bool get isB {
-    return b != null;
+    return b != this;
   }
 
   void whenA(void Function(String) handler) {
@@ -550,7 +494,8 @@ class StringEnum extends $StringEnum {
     if (StringEnum.b == this) handler(StringEnum.b._value as String);
   }
 
-  WHEN when<WHEN>({WHEN Function(String) a, WHEN Function(String) b}) {
+  WHEN when<WHEN>(
+      {@required WHEN Function(String) a, @required WHEN Function(String) b}) {
     if (this == StringEnum.a) {
       return a(StringEnum.a._value as String);
     }
@@ -560,10 +505,10 @@ class StringEnum extends $StringEnum {
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(String) a,
-      WHENO Function(String) b}) {
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(String) a,
+      WHEN Function(String) b}) {
     if (this == StringEnum.a) {
       if (a != null)
         return a(StringEnum.a._value as String);
@@ -579,10 +524,7 @@ class StringEnum extends $StringEnum {
     return otherwise();
   }
 
-  int get hashCode {
-    return $jf($jc(_value.hashCode, 'StringEnum'.hashCode));
-  }
-
+  int get hashCode => $jf($jc(_value.hashCode, 'StringEnum'.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! StringEnum) return false;
@@ -590,7 +532,7 @@ class StringEnum extends $StringEnum {
   }
 
   String toString() {
-    return 'StringEnum( $_value )';
+    return "StringEnum ($_value)";
   }
 }
 
@@ -605,33 +547,18 @@ class TestSealedClass extends $TestSealedClass {
         assert(string != null),
         _string = string;
 
-  TestSealedClass({int integer, String string})
-      : _integer = integer,
-        _string = string {
-    var found = false;
-    if (integer != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (string != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    throw Exception("TODO");
-  }
-
   final int _integer;
 
   final String _string;
 
   int get integer {
     if (_integer != null) return _integer;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, integer is not set');
   }
 
   String get string {
     if (_string != null) return _string;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, string is not set');
   }
 
   bool get isInteger {
@@ -643,14 +570,16 @@ class TestSealedClass extends $TestSealedClass {
   }
 
   void whenInteger(void Function(int) handler) {
-    if (_integer != null) handler(_integer);
+    if (_integer != null) return handler(_integer);
   }
 
   void whenString(void Function(String) handler) {
-    if (_string != null) handler(_string);
+    if (_string != null) return handler(_string);
   }
 
-  WHEN when<WHEN>({WHEN Function(int) integer, WHEN Function(String) string}) {
+  WHEN when<WHEN>(
+      {@required WHEN Function(int) integer,
+      @required WHEN Function(String) string}) {
     if (_integer != null) {
       return integer(_integer);
     }
@@ -660,10 +589,10 @@ class TestSealedClass extends $TestSealedClass {
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(int) integer,
-      WHENO Function(String) string}) {
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(int) integer,
+      WHEN Function(String) string}) {
     if (_integer != null) {
       if (integer != null)
         return integer(_integer);
@@ -679,10 +608,7 @@ class TestSealedClass extends $TestSealedClass {
     return otherwise();
   }
 
-  int get hashCode {
-    return $jf($jc($jc(0, _integer.hashCode), _string.hashCode));
-  }
-
+  int get hashCode => $jf($jc($jc(0, _integer.hashCode), _string.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! TestSealedClass) return false;
@@ -690,22 +616,8 @@ class TestSealedClass extends $TestSealedClass {
   }
 
   String toString() {
-    final value = when(
-      integer: (integer) => 'integer $integer',
-      string: (string) => 'string $string',
-    );
-    return 'TestSealedClass( $value )';
+    return "TestSealedClass (${when(integer: (integer) => 'integer $integer', string: (string) => 'string $string')}))";
   }
-}
-
-abstract class ITestSealedClass {
-  void whenInteger(void Function(int) handler);
-  void whenString(void Function(String) handler);
-  WHEN when<WHEN>({WHEN Function(int) integer, WHEN Function(String) string});
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(int) integer,
-      WHENO Function(String) string});
 }
 
 class Generic1SealedClass<T> extends $Generic1SealedClass<T> {
@@ -719,33 +631,18 @@ class Generic1SealedClass<T> extends $Generic1SealedClass<T> {
         assert(string != null),
         _string = string;
 
-  Generic1SealedClass({T t, String string})
-      : _t = t,
-        _string = string {
-    var found = false;
-    if (t != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (string != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    throw Exception("TODO");
-  }
-
   final T _t;
 
   final String _string;
 
   T get t {
     if (_t != null) return _t;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, t is not set');
   }
 
   String get string {
     if (_string != null) return _string;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, string is not set');
   }
 
   bool get isT {
@@ -757,14 +654,15 @@ class Generic1SealedClass<T> extends $Generic1SealedClass<T> {
   }
 
   void whenT(void Function(T) handler) {
-    if (_t != null) handler(_t);
+    if (_t != null) return handler(_t);
   }
 
   void whenString(void Function(String) handler) {
-    if (_string != null) handler(_string);
+    if (_string != null) return handler(_string);
   }
 
-  WHEN when<WHEN>({WHEN Function(T) t, WHEN Function(String) string}) {
+  WHEN when<WHEN>(
+      {@required WHEN Function(T) t, @required WHEN Function(String) string}) {
     if (_t != null) {
       return t(_t);
     }
@@ -774,10 +672,10 @@ class Generic1SealedClass<T> extends $Generic1SealedClass<T> {
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(T) t,
-      WHENO Function(String) string}) {
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(T) t,
+      WHEN Function(String) string}) {
     if (_t != null) {
       if (t != null)
         return t(_t);
@@ -793,10 +691,7 @@ class Generic1SealedClass<T> extends $Generic1SealedClass<T> {
     return otherwise();
   }
 
-  int get hashCode {
-    return $jf($jc($jc(0, _t.hashCode), _string.hashCode));
-  }
-
+  int get hashCode => $jf($jc($jc(0, _t.hashCode), _string.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Generic1SealedClass) return false;
@@ -804,22 +699,8 @@ class Generic1SealedClass<T> extends $Generic1SealedClass<T> {
   }
 
   String toString() {
-    final value = when(
-      t: (t) => 't $t',
-      string: (string) => 'string $string',
-    );
-    return 'Generic1SealedClass( $value )';
+    return "Generic1SealedClass (${when(t: (t) => 't $t', string: (string) => 'string $string')}))";
   }
-}
-
-abstract class IGeneric1SealedClass<T> {
-  void whenT(void Function(T) handler);
-  void whenString(void Function(String) handler);
-  WHEN when<WHEN>({WHEN Function(T) t, WHEN Function(String) string});
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(T) t,
-      WHENO Function(String) string});
 }
 
 class GenericSealedClass<T1, T2> extends $GenericSealedClass<T1, T2> {
@@ -833,33 +714,18 @@ class GenericSealedClass<T1, T2> extends $GenericSealedClass<T1, T2> {
         assert(t2 != null),
         _t2 = t2;
 
-  GenericSealedClass({T1 t1, T2 t2})
-      : _t1 = t1,
-        _t2 = t2 {
-    var found = false;
-    if (t1 != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (t2 != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    throw Exception("TODO");
-  }
-
   final T1 _t1;
 
   final T2 _t2;
 
   T1 get t1 {
     if (_t1 != null) return _t1;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, t1 is not set');
   }
 
   T2 get t2 {
     if (_t2 != null) return _t2;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, t2 is not set');
   }
 
   bool get isT1 {
@@ -871,14 +737,15 @@ class GenericSealedClass<T1, T2> extends $GenericSealedClass<T1, T2> {
   }
 
   void whenT1(void Function(T1) handler) {
-    if (_t1 != null) handler(_t1);
+    if (_t1 != null) return handler(_t1);
   }
 
   void whenT2(void Function(T2) handler) {
-    if (_t2 != null) handler(_t2);
+    if (_t2 != null) return handler(_t2);
   }
 
-  WHEN when<WHEN>({WHEN Function(T1) t1, WHEN Function(T2) t2}) {
+  WHEN when<WHEN>(
+      {@required WHEN Function(T1) t1, @required WHEN Function(T2) t2}) {
     if (_t1 != null) {
       return t1(_t1);
     }
@@ -888,10 +755,8 @@ class GenericSealedClass<T1, T2> extends $GenericSealedClass<T1, T2> {
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(T1) t1,
-      WHENO Function(T2) t2}) {
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise, WHEN Function(T1) t1, WHEN Function(T2) t2}) {
     if (_t1 != null) {
       if (t1 != null)
         return t1(_t1);
@@ -907,10 +772,7 @@ class GenericSealedClass<T1, T2> extends $GenericSealedClass<T1, T2> {
     return otherwise();
   }
 
-  int get hashCode {
-    return $jf($jc($jc(0, _t1.hashCode), _t2.hashCode));
-  }
-
+  int get hashCode => $jf($jc($jc(0, _t1.hashCode), _t2.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! GenericSealedClass) return false;
@@ -918,22 +780,8 @@ class GenericSealedClass<T1, T2> extends $GenericSealedClass<T1, T2> {
   }
 
   String toString() {
-    final value = when(
-      t1: (t1) => 't1 $t1',
-      t2: (t2) => 't2 $t2',
-    );
-    return 'GenericSealedClass( $value )';
+    return "GenericSealedClass (${when(t1: (t1) => 't1 $t1', t2: (t2) => 't2 $t2')}))";
   }
-}
-
-abstract class IGenericSealedClass<T1, T2> {
-  void whenT1(void Function(T1) handler);
-  void whenT2(void Function(T2) handler);
-  WHEN when<WHEN>({WHEN Function(T1) t1, WHEN Function(T2) t2});
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(T1) t1,
-      WHENO Function(T2) t2});
 }
 
 class NestingSealedClass extends $NestingSealedClass {
@@ -942,38 +790,23 @@ class NestingSealedClass extends $NestingSealedClass {
         _integer = integer,
         _nested = null;
 
-  NestingSealedClass.nested($NestedSealedClass nested)
+  NestingSealedClass.nested(NestedSealedClass nested)
       : _integer = null,
         assert(nested != null),
         _nested = nested;
 
-  NestingSealedClass({int integer, $NestedSealedClass nested})
-      : _integer = integer,
-        _nested = nested {
-    var found = false;
-    if (integer != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (nested != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    throw Exception("TODO");
-  }
-
   final int _integer;
 
-  final $NestedSealedClass _nested;
+  final NestedSealedClass _nested;
 
   int get integer {
     if (_integer != null) return _integer;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, integer is not set');
   }
 
-  $NestedSealedClass get nested {
+  NestedSealedClass get nested {
     if (_nested != null) return _nested;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, nested is not set');
   }
 
   bool get isInteger {
@@ -985,15 +818,16 @@ class NestingSealedClass extends $NestingSealedClass {
   }
 
   void whenInteger(void Function(int) handler) {
-    if (_integer != null) handler(_integer);
+    if (_integer != null) return handler(_integer);
   }
 
-  void whenNested(void Function($NestedSealedClass) handler) {
-    if (_nested != null) handler(_nested);
+  void whenNested(void Function(NestedSealedClass) handler) {
+    if (_nested != null) return handler(_nested);
   }
 
   WHEN when<WHEN>(
-      {WHEN Function(int) integer, WHEN Function($NestedSealedClass) nested}) {
+      {@required WHEN Function(int) integer,
+      @required WHEN Function(NestedSealedClass) nested}) {
     if (_integer != null) {
       return integer(_integer);
     }
@@ -1003,10 +837,10 @@ class NestingSealedClass extends $NestingSealedClass {
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(int) integer,
-      WHENO Function($NestedSealedClass) nested}) {
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(int) integer,
+      WHEN Function(NestedSealedClass) nested}) {
     if (_integer != null) {
       if (integer != null)
         return integer(_integer);
@@ -1022,10 +856,7 @@ class NestingSealedClass extends $NestingSealedClass {
     return otherwise();
   }
 
-  int get hashCode {
-    return $jf($jc($jc(0, _integer.hashCode), _nested.hashCode));
-  }
-
+  int get hashCode => $jf($jc($jc(0, _integer.hashCode), _nested.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! NestingSealedClass) return false;
@@ -1033,23 +864,8 @@ class NestingSealedClass extends $NestingSealedClass {
   }
 
   String toString() {
-    final value = when(
-      integer: (integer) => 'integer $integer',
-      nested: (nested) => 'nested $nested',
-    );
-    return 'NestingSealedClass( $value )';
+    return "NestingSealedClass (${when(integer: (integer) => 'integer $integer', nested: (nested) => 'nested $nested')}))";
   }
-}
-
-abstract class INestingSealedClass {
-  void whenInteger(void Function(int) handler);
-  void whenNested(void Function($NestedSealedClass) handler);
-  WHEN when<WHEN>(
-      {WHEN Function(int) integer, WHEN Function($NestedSealedClass) nested});
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(int) integer,
-      WHENO Function($NestedSealedClass) nested});
 }
 
 class NestedSealedClass extends $NestedSealedClass {
@@ -1063,33 +879,18 @@ class NestedSealedClass extends $NestedSealedClass {
         assert(string != null),
         _string = string;
 
-  NestedSealedClass({int integer, String string})
-      : _integer = integer,
-        _string = string {
-    var found = false;
-    if (integer != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    if (string != null) {
-      if (found) throw Exception("todo");
-      found = true;
-    }
-    throw Exception("TODO");
-  }
-
   final int _integer;
 
   final String _string;
 
   int get integer {
     if (_integer != null) return _integer;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, integer is not set');
   }
 
   String get string {
     if (_string != null) return _string;
-    throw Exception('TODO name htis');
+    throw Exception('Illegal access of sealed field, string is not set');
   }
 
   bool get isInteger {
@@ -1101,14 +902,16 @@ class NestedSealedClass extends $NestedSealedClass {
   }
 
   void whenInteger(void Function(int) handler) {
-    if (_integer != null) handler(_integer);
+    if (_integer != null) return handler(_integer);
   }
 
   void whenString(void Function(String) handler) {
-    if (_string != null) handler(_string);
+    if (_string != null) return handler(_string);
   }
 
-  WHEN when<WHEN>({WHEN Function(int) integer, WHEN Function(String) string}) {
+  WHEN when<WHEN>(
+      {@required WHEN Function(int) integer,
+      @required WHEN Function(String) string}) {
     if (_integer != null) {
       return integer(_integer);
     }
@@ -1118,10 +921,10 @@ class NestedSealedClass extends $NestedSealedClass {
     throw FallThroughError();
   }
 
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(int) integer,
-      WHENO Function(String) string}) {
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(int) integer,
+      WHEN Function(String) string}) {
     if (_integer != null) {
       if (integer != null)
         return integer(_integer);
@@ -1137,10 +940,7 @@ class NestedSealedClass extends $NestedSealedClass {
     return otherwise();
   }
 
-  int get hashCode {
-    return $jf($jc($jc(0, _integer.hashCode), _string.hashCode));
-  }
-
+  int get hashCode => $jf($jc($jc(0, _integer.hashCode), _string.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! NestedSealedClass) return false;
@@ -1148,20 +948,6 @@ class NestedSealedClass extends $NestedSealedClass {
   }
 
   String toString() {
-    final value = when(
-      integer: (integer) => 'integer $integer',
-      string: (string) => 'string $string',
-    );
-    return 'NestedSealedClass( $value )';
+    return "NestedSealedClass (${when(integer: (integer) => 'integer $integer', string: (string) => 'string $string')}))";
   }
-}
-
-abstract class INestedSealedClass {
-  void whenInteger(void Function(int) handler);
-  void whenString(void Function(String) handler);
-  WHEN when<WHEN>({WHEN Function(int) integer, WHEN Function(String) string});
-  WHENO wheno<WHENO>(
-      {WHENO Function() otherwise,
-      WHENO Function(int) integer,
-      WHENO Function(String) string});
 }

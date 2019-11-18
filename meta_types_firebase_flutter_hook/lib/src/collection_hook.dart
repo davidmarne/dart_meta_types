@@ -20,20 +20,20 @@ abstract class $CollectionResolutions<T extends Path> {
 }
 
 CollectionResolution<T> useFirebaseCollection<T extends Path>(
-    CollectionReference ref, StructuredSerializer serializer) {
+    CollectionReference ref, StructuredSerializer<T> serializer) {
   return useFirebaseCollections<T>([ref], serializer)[ref];
 }
 
 CollectionResolutions<CollectionResolution<T>>
-    useFirebaseCollections<T extends Path>(
-        Iterable<CollectionReference> refs, StructuredSerializer serializer) {
+    useFirebaseCollections<T extends Path>(Iterable<CollectionReference> refs,
+        StructuredSerializer<T> serializer) {
   return Hook.use(_FirebaseCollectionHook(refs: refs, serializer: serializer));
 }
 
 class _FirebaseCollectionHook<T extends Path>
     extends Hook<CollectionResolutions<CollectionResolution<T>>> {
   final Iterable<CollectionReference> refs;
-  final StructuredSerializer serializer;
+  final StructuredSerializer<T> serializer;
 
   const _FirebaseCollectionHook({this.refs, this.serializer});
 

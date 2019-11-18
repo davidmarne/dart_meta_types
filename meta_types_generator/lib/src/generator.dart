@@ -5,10 +5,22 @@ import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 
 import 'meta_class_cache.dart';
-import 'data_class_generator.dart';
-import 'sealed_class_generator.dart';
-import 'sum_class_generator.dart';
-import 'enum_class_generator.dart';
+
+import 'data/implementation.dart';
+import 'data/serializer.dart';
+import 'data/base.dart';
+
+import 'enum/implementation.dart';
+// import 'enum/serializer.dart';
+import 'enum/base.dart';
+
+import 'sum/implementation.dart';
+// import 'sum/serializer.dart';
+import 'sum/base.dart';
+
+import 'seal/implementation.dart';
+// import 'seal/serializer.dart';
+import 'seal/base.dart';
 
 final emitter = DartEmitter();
 final formatter = DartFormatter();
@@ -22,12 +34,27 @@ class MetaTypesGenerator extends Generator {
       library.classes.map((c) => cache.find(c.name)).map((metaClassOption) {
         return metaClassOption.map(
           (metaClass) => metaClass.when(
-            data: (d) => d.isInterface ? <Class>[] : [generateData(d)],
-            sealed: (d) => [generateSealed(d), generateSealedBase(d)],
-            sum: (d) => d.isInterface
-                ? <Class>[]
-                : [generateSum(d), generateSumBase(d)],
-            enumeration: (e) => <Class>[generateEnum(e)],
+            data: (d) => [
+              if (!d.isInterface) generateData(d),
+              if (!d.isInterface && d.serializable) generateDataSerializer(d),
+              if (d.implementsBase) generateDataBase(d),
+            ],
+            sealed: (s) => [
+              generateSealed(s),
+              // if (s.serializable) generateSumSerializer(s),
+              if (s.implementsBase)
+                generateSealedBase(s),
+            ],
+            sum: (s) => [
+              if (!s.isInterface) generateSum(s),
+              // if (!d.isInterface && d.serializable) generateSumSerializer(d),
+              if (s.implementsBase)
+                generateSumBase(s),
+            ],
+            enumeration: (e) => [
+              generateEnum(e),
+              if (e.implementsBase) generateEnumBase(e),
+            ],
           ),
         );
       }).forEach((classesOption) {

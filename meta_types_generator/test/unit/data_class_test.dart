@@ -9,11 +9,11 @@ void main() {
         final testFieldWithNoDefault = 9;
         final instance =
             new TestDataClass(fieldWithNoDefault: testFieldWithNoDefault);
-        final clone = instance.clone();
+        final copy = instance.copy();
 
         // test equality & hash override
-        expect(clone == instance, isTrue);
-        expect(clone.hashCode == instance.hashCode, isTrue);
+        expect(copy == instance, isTrue);
+        expect(copy.hashCode == instance.hashCode, isTrue);
 
         expect(instance.fieldWithNoDefault, testFieldWithNoDefault);
         expect(instance.fieldWithDefault, 10);
@@ -26,11 +26,11 @@ void main() {
         final instance = new TestDataClass(
             fieldWithNoDefault: testFieldWithNoDefault,
             fieldWithDefault: testFieldWithDefault);
-        final clone = instance.clone();
+        final copy = instance.copy();
 
         // test equality & hash override
-        expect(clone == instance, isTrue);
-        expect(clone.hashCode == instance.hashCode, isTrue);
+        expect(copy == instance, isTrue);
+        expect(copy.hashCode == instance.hashCode, isTrue);
 
         expect(instance.fieldWithNoDefault, testFieldWithNoDefault);
         expect(instance.fieldWithDefault, testFieldWithDefault);

@@ -3,19 +3,20 @@ part of models;
 // Binary tree is an example of an algebreic data type
 // It is the combination of two unions
 
-@SealedClass()
+@seal
 abstract class $BinaryTree<T> {
   T get leaf;
   Branch<T> get branch;
 }
 
-@DataClass()
+@data
 abstract class $Branch<T> {
   T get value;
   BinaryTree<T> get left;
   BinaryTree<T> get right;
 }
 
+//
 String preorderTraversal(BinaryTree<int> tree) => tree.when(
       leaf: (val) => '$val',
       branch: (b) => [

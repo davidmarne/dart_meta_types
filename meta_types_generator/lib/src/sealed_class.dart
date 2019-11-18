@@ -1,12 +1,12 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
+import 'package:build/build.dart';
 import 'meta_class.dart' show TemplateException;
-import 'package:meta_types/meta_types_models.dart'
-    show Sealed, SealedField, MetaInterfaceType, FieldType;
+import 'package:meta_types/meta_types_models.dart';
 import 'meta_class_cache.dart';
 import 'util.dart';
 
-Sealed sealedFromClassElement(
+Sealed<SealedField, DataField> sealedFromClassElement(
   ClassElement element,
   DartObject annotation,
   MetaClassCache cache,
@@ -25,8 +25,10 @@ Sealed sealedFromClassElement(
 
     return SealedField(
       name: accessor.name,
+      isPrivate: accessor.name.startsWith('_'),
       returnType: resolveFieldReturnTypeFromPropertyAccessorElement(accessor),
       isComputed: isComputed(accessor.metadata),
+      serialableField: getSerializableField(element.metadata),
     );
   });
 
@@ -48,10 +50,10 @@ Sealed sealedFromClassElement(
               throw TemplateException(
                   'interfaces cannot be final. see: ${element.name}');
             }
-            return MetaInterfaceType(
-                meta: data,
-                generics:
-                    e.typeArguments.map((a) => FieldType(type: a.displayName)));
+            return buildMetaInterface<DataField, Data<DataField>>(
+              data,
+              e.typeArguments,
+            );
           },
           otherwise: () {
             throw TemplateException(
@@ -62,13 +64,20 @@ Sealed sealedFromClassElement(
     );
   });
 
-  return Sealed(
-    name: element.name.replaceAll('\$', ''),
-    generics: resolveTypeParameterDeclaration(element.typeParameters),
+  // if (element.name == '\$MetaSeal')
+  //   throw Exception(interfaces.first.parametarizedFields
+  //       .where((f) => f.name == 'fields')
+  //       .toString());
+
+  return Sealed<SealedField, DataField>(
+    name: element.name.replaceFirst('\$', ''),
+    isPrivate: element.isPrivate,
+    typeParameters: resolveTypeParameterDeclaration(element.typeParameters),
     methods: element.methods.map(methodElementToMethod),
-    isConst:
-        element.constructors.any((c) => c.isDefaultConstructor && c.isConst),
+    isConst: isConst(element),
     dataInterfaces: interfaces,
     fields: fields,
+    serializable: isSerializable(element.metadata),
+    implementsBase: implementsBase(element),
   );
 }
