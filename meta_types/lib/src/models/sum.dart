@@ -30,7 +30,7 @@ abstract class $Sum<T extends _$SumField> implements Meta<T> {
 
   @computed
   Iterable<T> get nonComputedFields => localNonComputedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.meta.localNonComputedFields));
+    ..addAll(interfaces.expand((i) => i.parametarizedFields));
 
   @computed
   Iterable<T> get localNonComputedFields => fields.where((f) => !f.isComputed);

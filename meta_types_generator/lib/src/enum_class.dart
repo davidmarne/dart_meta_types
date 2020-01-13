@@ -48,16 +48,6 @@ Enum<EnumField, DataField> enumFromClassElement(
               data,
               e.typeArguments,
             );
-            // return MetaInterface(
-            //   meta: data,
-            //   parametarizedFields: data.fields, //TODO
-            //   typeArguments: e.typeArguments.map(
-            //     (a) => FieldType(
-            //       type: a.displayName,
-            //       generics: Option.none(),
-            //     ),
-            //   ),
-            // );
           },
           otherwise: () {
             throw TemplateException(

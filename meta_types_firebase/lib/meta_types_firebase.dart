@@ -1,49 +1,52 @@
 import 'package:meta_types/meta_types.dart';
 import 'package:built_collection/built_collection.dart';
 
-// part 'meta_types_firebase.g.dart';
+part 'meta_types_firebase.g.dart';
 
-const _id = 'id\$\$\$';
-const _path = 'path\$\$\$';
-
-abstract class MetaTypesFirebaseSerializerPlugin {
-  Object beforeSerialize(Object object, FullType specifiedType) => object;
-
-  Object afterSerialize(Object object, FullType specifiedType) {
-    if (object is Map &&
-        specifiedType.root != BuiltMap &&
-        specifiedType.root != BuiltSet &&
-        specifiedType.parameters.first.root == String) {
-      object.remove(_id);
-      object.remove(_path);
-    }
-    return object;
-  }
-
-  Object beforeDeserialize(Object object, FullType specifiedType) {
-    if (object is Map &&
-        specifiedType.root != BuiltMap &&
-        specifiedType.root != BuiltSet &&
-        specifiedType.parameters.first.root == String) {
-      object[_id] = -1;
-      object[_path] = '';
-    }
-    return object;
-  }
-
-  Object afterDeserialize(Object object, FullType specifiedType) {
-    if (object is Path) {
-      // return doc.copyPath(path: ref.path, id: ref.id);
-    }
-    return object;
-  }
+class Schema {
+  const Schema._();
 }
 
-@DataClass(isInterface: true)
-abstract class Path {
-  @SerializableField(wireName: _path)
-  String get path;
+const schema = Schema._();
 
-  @SerializableField(wireName: _id)
-  String get id;
+class DocumentField {
+  final bool isService;
+  const DocumentField._(this.isService);
+}
+
+/// if service field has default value it will
+/// be ommited from creator and updater
+///
+/// if service field has no default value it will
+/// only be ommited by the updater
+const serviceField = DocumentField._(true);
+
+@sum
+abstract class $DocumentResolution<T> {
+  const $DocumentResolution();
+
+  void get fetching;
+  T get dirty;
+  T get resolved;
+  void get deleting;
+  void get denied;
+  void get notFound;
+}
+
+@sum
+abstract class $CollectionResolution<T> {
+  const $CollectionResolution();
+
+  void get fetching;
+  BuiltList<DocumentResolution<T>> get resolved;
+  BuiltList<DocumentResolution<T>> get dirty;
+  void get deleting;
+  void get denied;
+  void get notFound;
+}
+
+class Collection<T> {
+  final String name;
+  final Iterable<Collection> subcollections;
+  const Collection({this.name = '', this.subcollections = const []});
 }

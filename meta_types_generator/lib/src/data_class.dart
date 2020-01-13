@@ -1,6 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:build/build.dart';
 import 'package:meta_types/meta_types_models.dart';
 import 'meta_class.dart' show TemplateException;
 import 'meta_class_cache.dart';
@@ -34,7 +33,7 @@ Data<DataField> dataFromClassElement(
     );
   });
 
-  final interfaces = element.interfaces
+  final interfaces = getInterfaces(element) //element.interfaces
       .map((e) {
         return cache.find(e.name).when(
           none: () {
@@ -53,37 +52,6 @@ Data<DataField> dataFromClassElement(
                   data,
                   e.typeArguments,
                 );
-                // if (element.name == '\$MetaSeal') {
-                //   log.severe('hi');
-                //   e.typeArguments.forEach(
-                //       (a) => log.severe('${a.name} ${a.resolveToBound(a)} '));
-                // }
-                // return MetaInterface(
-                //   meta: data,
-                //   parametarizedFields: data.fields.map((f) {
-                //     final arg = e.typeArguments.firstWhere(
-                //       (a) {
-                //         // log.severe('${a.name} ${a} ${f.returnType}');
-                //         return a.name == f.returnType.type;
-                //       },
-                //       orElse: null,
-                //     );
-                //     return arg == null
-                //         ? f
-                //         : f.copy(
-                //             returnType: FieldType(
-                //               type: arg.displayName,
-                //               generics: Option.none(), // TODO?
-                //             ),
-                //           );
-                //   }), //TODO
-                //   typeArguments: e.typeArguments.map(
-                //     (a) => FieldType(
-                //       type: a.displayName,
-                //       generics: Option.none(), // TODO?
-                //     ),
-                //   ),
-                // );
               },
               otherwise: () {
                 throw TemplateException(

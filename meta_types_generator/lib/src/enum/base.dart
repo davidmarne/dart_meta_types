@@ -2,7 +2,6 @@ import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
     show Enum, EnumField, DataField;
 import '../common/code_builder_utils.dart';
-import 'interface_methods.dart';
 import 'common.dart';
 
 Class generateEnumBase(Enum<EnumField, DataField> enumeration) => Class(

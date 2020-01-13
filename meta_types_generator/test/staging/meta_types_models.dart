@@ -6,15 +6,17 @@ import 'package:meta_types/meta_types.dart'
         seal,
         dataInterface,
         computed,
+        serializable,
         $jc,
         $jf,
         sum,
-        Serializers,
-        StructuredSerializer,
-        FullType,
         required,
         SerializableField;
 
+import 'package:built_value/serializer.dart'
+    show StructuredSerializer, Serializers, FullType;
+
+part 'src/models/common.dart';
 part 'src/models/sealed_class.dart';
 part 'src/models/enum_class.dart';
 part 'src/models/data_class.dart';

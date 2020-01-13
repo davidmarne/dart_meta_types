@@ -1,9 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:build/build.dart';
-
 import 'package:meta_types/meta_types_models.dart';
+
 import 'data_class.dart';
 import 'sum_class.dart';
 import 'enum_class.dart';
@@ -21,6 +20,13 @@ class MetaClassCache {
 
   // name should be MetaClassReference?
   Option<MetaSeal> find(String name) {
+    // TODO(hack)
+    final f = _find(name);
+    if (f.isSome) return f;
+    return _find('\$$name');
+  }
+
+  Option<MetaSeal> _find(String name) {
     if (_cache.containsKey(name)) {
       return Option.some(_cache[name]);
     }

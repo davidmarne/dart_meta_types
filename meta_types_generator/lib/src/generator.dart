@@ -11,15 +11,15 @@ import 'data/serializer.dart';
 import 'data/base.dart';
 
 import 'enum/implementation.dart';
-// import 'enum/serializer.dart';
+import 'enum/serializer.dart';
 import 'enum/base.dart';
 
 import 'sum/implementation.dart';
-// import 'sum/serializer.dart';
+import 'sum/serializer.dart';
 import 'sum/base.dart';
 
 import 'seal/implementation.dart';
-// import 'seal/serializer.dart';
+import 'seal/serializer.dart';
 import 'seal/base.dart';
 
 final emitter = DartEmitter();
@@ -41,18 +41,17 @@ class MetaTypesGenerator extends Generator {
             ],
             sealed: (s) => [
               generateSealed(s),
-              // if (s.serializable) generateSumSerializer(s),
-              if (s.implementsBase)
-                generateSealedBase(s),
+              if (s.serializable) generateSealedSerializer(s),
+              if (s.implementsBase) generateSealedBase(s),
             ],
             sum: (s) => [
               if (!s.isInterface) generateSum(s),
-              // if (!d.isInterface && d.serializable) generateSumSerializer(d),
-              if (s.implementsBase)
-                generateSumBase(s),
+              if (!s.isInterface && s.serializable) generateSumSerializer(s),
+              if (s.implementsBase) generateSumBase(s),
             ],
             enumeration: (e) => [
               generateEnum(e),
+              if (e.serializable) generateEnumSerializer(e),
               if (e.implementsBase) generateEnumBase(e),
             ],
           ),

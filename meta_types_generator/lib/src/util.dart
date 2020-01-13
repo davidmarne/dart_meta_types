@@ -17,14 +17,23 @@ Method methodElementToMethod(MethodElement e) => Method(
     );
 
 Option<SerializableField> getSerializableField(
-        List<ElementAnnotation> metadata) =>
-    metadata
-        .map((meta) => meta.computeConstantValue())
-        .where(
-          (meta) => meta.type.name == 'Serializable',
-        )
-        .map((meta) => Option.some(meta as SerializableField))
-        .firstWhere(returnTrue, orElse: returnNone);
+    List<ElementAnnotation> metadata) {
+  final annos = metadata
+      .map((meta) => meta.computeConstantValue())
+      .where(
+        (meta) => meta.type.name == 'SerializableField',
+      )
+      .map((meta) => meta.getField('ommit').toBoolValue()
+          ? ommit
+          : SerializableField(meta.getField('wireName').toString()));
+
+  return annos.isNotEmpty ? Option.some(annos.first) : Option.none();
+}
+
+Iterable<InterfaceType> getInterfaces(ClassElement classElement) =>
+    classElement.interfaces.where(
+      (i) => i.name != classElement.name.replaceFirst('\$', '') + 'Base',
+    );
 
 bool implementsBase(ClassElement element) {
   final afterClass =

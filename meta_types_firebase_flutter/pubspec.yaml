@@ -1,0 +1,24 @@
+name: meta_types_firebase_flutter
+description: A new Flutter project.
+version: 0.0.1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  meta_types:
+    path: /home/david/workspace/dart_meta_types/meta_types
+  cloud_firestore: ^0.12.9
+  flutter_hooks: ^0.6.0
+  built_collection: ^4.0.0
+  meta_types_firebase:
+    path: /home/david/workspace/dart_meta_types/meta_types_firebase
+
+dev_dependencies:
+  build_runner: ^1.0.0
+  pedantic: ^1.8.0
+  meta_types_generator: #^0.1.0
+    path: /home/david/workspace/dart_meta_types/meta_types_generator

@@ -54,16 +54,6 @@ Sum<SumField> sumFromClassElement(
               sum,
               e.typeArguments,
             );
-            // return MetaInterface(
-            //   meta: sum,
-            //   parametarizedFields: sum.fields, // TODO
-            //   typeArguments: e.typeArguments.map(
-            //     (a) => FieldType(
-            //       type: a.displayName,
-            //       generics: Option.none(),
-            //     ),
-            //   ),
-            // );
           },
           otherwise: () {
             throw TemplateException(

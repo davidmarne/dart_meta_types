@@ -1,9 +1,8 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
-    show Data, DataField, Option, Generic, TypeParameterDeclaration, FieldType;
-// import 'data_class_meta_generator.dart';
-import '../util.dart';
+    show Data, DataField, TypeParameterDeclaration, FieldType;
 
+// TODO: transitino to utils
 Class generateDataSerializer(Data<DataField> dataClass) => Class((b) => b
   ..abstract = false
   ..name = '${dataClass.name}Serializer'
@@ -87,9 +86,6 @@ String _downgradeGeneric(TypeParameterDeclaration p) => p.extension.when(
       none: () => 'Object',
       some: (s) => s.typeStr,
     );
-
-String _readTypeArgs(Data<DataField> data) =>
-    data.typeParameters.isEmpty ? '' : '${classGenerics(data.typeParameters)}';
 
 String _paramDeclaration(Data<DataField> dataClass) =>
     dataClass.typeParameters.isEmpty

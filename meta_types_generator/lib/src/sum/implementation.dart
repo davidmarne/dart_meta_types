@@ -6,7 +6,9 @@ Class generateSum(Sum<SumField> sumClass) => Class(
       (b) => b
         ..abstract = false
         ..name = sumClass.name
-        ..types.addAll(sumClass.typeParameters.map((g) => Reference(g.type)))
+        ..types.addAll(
+          typeParameterReferences(sumClass.typeParameters),
+        )
         ..constructors.addAll(
           restrictedFieldConstructors(
               sumClass.isConst, sumClass.nonComputedFields),

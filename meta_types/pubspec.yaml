@@ -16,4 +16,4 @@ dev_dependencies:
     path: /home/david/workspace/dart_meta_types/meta_types_generator
 
 environment:
-  sdk: '>=2.2.2 <3.0.0'
+  sdk: '>=2.7.0 <3.0.0'

@@ -2,6 +2,7 @@ library meta_types_models;
 
 import 'meta_types.dart';
 
+part 'src/models/common.dart';
 part 'src/models/sealed_class.dart';
 part 'src/models/enum_class.dart';
 part 'src/models/data_class.dart';

@@ -2,7 +2,7 @@ part of meta_types;
 
 /// [computed] is used to annotate fields that are computed and not set explicitly.
 /// [computed] can be used in sealed and data classes.
-const computed = 'computed';
+const computed = Computed._();
 
 class Computed {
   const Computed._();
@@ -85,7 +85,6 @@ const ommit = SerializableField._(ommit: true);
 
 const serializable = Serializable();
 
-@SerializableField('hi')
 class Serializable {
   const Serializable();
 }

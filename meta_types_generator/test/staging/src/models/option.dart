@@ -1,6 +1,7 @@
 part of meta_types_models;
 
 @sum
+// @serializable
 abstract class $Option<T> implements OptionBase<T> {
   const $Option();
 

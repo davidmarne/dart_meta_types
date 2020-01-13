@@ -12,5 +12,6 @@ part 'definitions/enum_string.dart';
 part 'definitions/sealed_class.dart';
 part 'definitions/sealed_class_generics.dart';
 part 'definitions/sealed_class_nesting.dart';
+part 'definitions/serializers.dart';
 
 part 'models.g.dart';

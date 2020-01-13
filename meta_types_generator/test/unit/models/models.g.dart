@@ -412,22 +412,17 @@ class GenericNestedDataClass<T> extends $GenericNestedDataClass<T> {
 }
 
 class TestDataClass extends $TestDataClass {
-  TestDataClass(
-      {@required int fieldWithNoDefault,
-      int fieldWithDefault,
-      int computedField})
+  TestDataClass({@required int fieldWithNoDefault, int fieldWithDefault})
       : _fieldWithNoDefault = fieldWithNoDefault,
         assert(fieldWithNoDefault != null),
         _fieldWithDefault = fieldWithDefault,
-        assert(fieldWithDefault != null),
-        _computedField = computedField,
-        assert(computedField != null);
+        assert(fieldWithDefault != null);
+
+  int _computedField;
 
   final int _fieldWithNoDefault;
 
   final int _fieldWithDefault;
-
-  final int _computedField;
 
   int get fieldWithNoDefault {
     return _fieldWithNoDefault;
@@ -437,32 +432,29 @@ class TestDataClass extends $TestDataClass {
     return _fieldWithDefault ?? super.fieldWithDefault;
   }
 
+  @override
   int get computedField {
-    return _computedField ?? super.computedField;
+    return _computedField ??= super.computedField;
   }
 
-  TestDataClass copy(
-      {int fieldWithNoDefault, int fieldWithDefault, int computedField}) {
+  TestDataClass copy({int fieldWithNoDefault, int fieldWithDefault}) {
     return TestDataClass(
       fieldWithNoDefault: fieldWithNoDefault ?? _fieldWithNoDefault,
       fieldWithDefault: fieldWithDefault ?? _fieldWithDefault,
-      computedField: computedField ?? _computedField,
     );
   }
 
-  int get hashCode => $jf($jc(
-      $jc($jc(0, _fieldWithNoDefault.hashCode), _fieldWithDefault.hashCode),
-      _computedField.hashCode));
+  int get hashCode => $jf(
+      $jc($jc(0, _fieldWithNoDefault.hashCode), _fieldWithDefault.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! TestDataClass) return false;
     return fieldWithNoDefault == other.fieldWithNoDefault &&
-        fieldWithDefault == other.fieldWithDefault &&
-        computedField == other.computedField;
+        fieldWithDefault == other.fieldWithDefault;
   }
 
   String toString() {
-    return "TestDataClass (fieldWithNoDefault: $fieldWithNoDefault, fieldWithDefault: $fieldWithDefault, computedField: $computedField)";
+    return "TestDataClass (fieldWithNoDefault: $fieldWithNoDefault, fieldWithDefault: $fieldWithDefault)";
   }
 }
 
@@ -949,5 +941,554 @@ class NestedSealedClass extends $NestedSealedClass {
 
   String toString() {
     return "NestedSealedClass (${when(integer: (integer) => 'integer $integer', string: (string) => 'string $string')}))";
+  }
+}
+
+class SerializeData extends $SerializeData {
+  SerializeData({@required int x, @required double y})
+      : _x = x,
+        assert(x != null),
+        _y = y,
+        assert(y != null);
+
+  final int _x;
+
+  final double _y;
+
+  int get x {
+    return _x;
+  }
+
+  double get y {
+    return _y;
+  }
+
+  SerializeData copy({int x, double y}) {
+    return SerializeData(
+      x: x ?? _x,
+      y: y ?? _y,
+    );
+  }
+
+  int get hashCode => $jf($jc($jc(0, _x.hashCode), _y.hashCode));
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SerializeData) return false;
+    return x == other.x && y == other.y;
+  }
+
+  String toString() {
+    return "SerializeData (x: $x, y: $y)";
+  }
+}
+
+class SerializeDataSerializer extends StructuredSerializer<SerializeData> {
+  @override
+  final Iterable<Type> types = const [SerializeData];
+
+  @override
+  final String wireName = 'SerializeData';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, SerializeData object,
+      {FullType specifiedType = FullType.unspecified}) {
+    return <Object>[
+      'x',
+      serializers.serialize(object.x, specifiedType: FullType(int)),
+      'y',
+      serializers.serialize(object.y, specifiedType: FullType(double))
+    ];
+  }
+
+  @override
+  SerializeData deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    Object x;
+    Object y;
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value$ = iterator.current;
+      switch (key) {
+        case 'x':
+          x = serializers.deserialize(value$, specifiedType: FullType(int));
+          break;
+        case 'y':
+          y = serializers.deserialize(value$, specifiedType: FullType(double));
+          break;
+      }
+    }
+
+    return SerializeData(
+      x: x as int,
+      y: y as double,
+    );
+  }
+}
+
+class SerializeSum extends $SerializeSum {
+  SerializeSum.a(int a)
+      : assert(a != null),
+        _a = a,
+        _b = null;
+
+  SerializeSum.b(double b)
+      : _a = null,
+        assert(b != null),
+        _b = b;
+
+  final int _a;
+
+  final double _b;
+
+  int get a {
+    if (_a != null) return _a;
+    throw Exception('Illegal access of sum field, a is not set');
+  }
+
+  double get b {
+    if (_b != null) return _b;
+    throw Exception('Illegal access of sum field, b is not set');
+  }
+
+  bool get isA {
+    return _a != null;
+  }
+
+  bool get isB {
+    return _b != null;
+  }
+
+  void whenA(void Function(int) handler) {
+    if (_a != null) return handler(_a);
+  }
+
+  void whenB(void Function(double) handler) {
+    if (_b != null) return handler(_b);
+  }
+
+  WHEN when<WHEN>(
+      {@required WHEN Function(int) a, @required WHEN Function(double) b}) {
+    if (_a != null) {
+      return a(_a);
+    }
+    if (_b != null) {
+      return b(_b);
+    }
+    throw FallThroughError();
+  }
+
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(int) a,
+      WHEN Function(double) b}) {
+    if (_a != null) {
+      if (a != null)
+        return a(_a);
+      else
+        return otherwise();
+    }
+    if (_b != null) {
+      if (b != null)
+        return b(_b);
+      else
+        return otherwise();
+    }
+    return otherwise();
+  }
+
+  int get hashCode => $jf($jc($jc(0, _a.hashCode), _b.hashCode));
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SerializeSum) return false;
+    return _a == other._a && _b == other._b;
+  }
+
+  String toString() {
+    return "SerializeSum (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))";
+  }
+}
+
+class SerializeSumSerializer extends StructuredSerializer<SerializeSum> {
+  @override
+  final Iterable<Type> types = const [SerializeSum];
+
+  @override
+  final String wireName = 'SerializeSum';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, SerializeSum object,
+      {FullType specifiedType = FullType.unspecified}) {
+    return object.when(
+        a: (object) => [
+              'kind',
+              serializers.serialize('a', specifiedType: FullType(String)),
+              'value',
+              serializers.serialize(object, specifiedType: FullType(int))
+            ],
+        b: (object) => [
+              'kind',
+              serializers.serialize('b', specifiedType: FullType(String)),
+              'value',
+              serializers.serialize(object, specifiedType: FullType(double))
+            ]);
+  }
+
+  @override
+  SerializeSum deserialize(Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final iterator = serialized.iterator;
+    iterator.moveNext();
+    iterator.moveNext();
+    final key = iterator.current as String;
+    iterator.moveNext();
+    iterator.moveNext();
+    final dynamic value$ = iterator.current;
+    switch (key) {
+      case 'a':
+        return SerializeSum.a(
+            serializers.deserialize(value$, specifiedType: FullType(int)));
+      case 'b':
+        return SerializeSum.b(
+            serializers.deserialize(value$, specifiedType: FullType(double)));
+    }
+    throw FallThroughError();
+  }
+}
+
+class SerializeEnum<EGN> extends $SerializeEnum {
+  const SerializeEnum._(this._value) : assert(_value != null);
+
+  final EGN _value;
+
+  static const SerializeEnum<int> x = SerializeEnum._($SerializeEnum.x);
+
+  static const SerializeEnum<int> y = SerializeEnum._($SerializeEnum.y);
+
+  static final values = <SerializeEnum>{SerializeEnum.x, SerializeEnum.y};
+
+  EGN get value => _value;
+  bool get isX {
+    return x != this;
+  }
+
+  bool get isY {
+    return y != this;
+  }
+
+  void whenX(void Function(int) handler) {
+    if (SerializeEnum.x == this) handler(SerializeEnum.x._value as int);
+  }
+
+  void whenY(void Function(int) handler) {
+    if (SerializeEnum.y == this) handler(SerializeEnum.y._value as int);
+  }
+
+  WHEN when<WHEN>(
+      {@required WHEN Function(int) x, @required WHEN Function(int) y}) {
+    if (this == SerializeEnum.x) {
+      return x(SerializeEnum.x._value as int);
+    }
+    if (this == SerializeEnum.y) {
+      return y(SerializeEnum.y._value as int);
+    }
+    throw FallThroughError();
+  }
+
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise, WHEN Function(int) x, WHEN Function(int) y}) {
+    if (this == SerializeEnum.x) {
+      if (x != null)
+        return x(SerializeEnum.x._value as int);
+      else
+        return otherwise();
+    }
+    if (this == SerializeEnum.y) {
+      if (y != null)
+        return y(SerializeEnum.y._value as int);
+      else
+        return otherwise();
+    }
+    return otherwise();
+  }
+
+  int get hashCode => $jf($jc(_value.hashCode, 'SerializeEnum'.hashCode));
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SerializeEnum) return false;
+    return _value == other._value;
+  }
+
+  String toString() {
+    return "SerializeEnum ($_value)";
+  }
+}
+
+class SerializeEnumSerializer extends StructuredSerializer<SerializeEnum> {
+  @override
+  final Iterable<Type> types = const [SerializeEnum];
+
+  @override
+  final String wireName = 'SerializeEnum';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, SerializeEnum object,
+      {FullType specifiedType = FullType.unspecified}) {
+    return <Object>[
+      object.when(
+          x: (object) =>
+              serializers.serialize('x', specifiedType: FullType(String)),
+          y: (object) =>
+              serializers.serialize('y', specifiedType: FullType(String)))
+    ];
+  }
+
+  @override
+  SerializeEnum deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    switch (serialized.first as String) {
+      case 'x':
+        return SerializeEnum.x;
+      case 'y':
+        return SerializeEnum.y;
+    }
+    throw FallThroughError();
+  }
+}
+
+class SerializeSealDataA extends $SerializeSealDataA {
+  SerializeSealDataA({@required int x, @required double y})
+      : _x = x,
+        assert(x != null),
+        _y = y,
+        assert(y != null);
+
+  final int _x;
+
+  final double _y;
+
+  int get x {
+    return _x;
+  }
+
+  double get y {
+    return _y;
+  }
+
+  SerializeSealDataA copy({int x, double y}) {
+    return SerializeSealDataA(
+      x: x ?? _x,
+      y: y ?? _y,
+    );
+  }
+
+  SerializeSealDataA copySerializeSealData({int x, double y}) {
+    return copy(
+      x: x ?? _x,
+      y: y ?? _y,
+    );
+  }
+
+  int get hashCode => $jf($jc($jc(0, _x.hashCode), _y.hashCode));
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SerializeSealDataA) return false;
+    return x == other.x && y == other.y;
+  }
+
+  String toString() {
+    return "SerializeSealDataA (x: $x, y: $y)";
+  }
+}
+
+class SerializeSealDataB extends $SerializeSealDataB {
+  SerializeSealDataB({@required int x, @required double y})
+      : _x = x,
+        assert(x != null),
+        _y = y,
+        assert(y != null);
+
+  final int _x;
+
+  final double _y;
+
+  int get x {
+    return _x;
+  }
+
+  double get y {
+    return _y;
+  }
+
+  SerializeSealDataB copy({int x, double y}) {
+    return SerializeSealDataB(
+      x: x ?? _x,
+      y: y ?? _y,
+    );
+  }
+
+  SerializeSealDataB copySerializeSealData({int x, double y}) {
+    return copy(
+      x: x ?? _x,
+      y: y ?? _y,
+    );
+  }
+
+  int get hashCode => $jf($jc($jc(0, _x.hashCode), _y.hashCode));
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SerializeSealDataB) return false;
+    return x == other.x && y == other.y;
+  }
+
+  String toString() {
+    return "SerializeSealDataB (x: $x, y: $y)";
+  }
+}
+
+class SerializeSeal extends $SerializeSeal {
+  SerializeSeal.a(SerializeSealDataA a)
+      : assert(a != null),
+        _a = a,
+        _b = null;
+
+  SerializeSeal.b(SerializeSealDataB b)
+      : _a = null,
+        assert(b != null),
+        _b = b;
+
+  final SerializeSealDataA _a;
+
+  final SerializeSealDataB _b;
+
+  int get x {
+    return when(
+      a: (a) => a.x,
+      b: (b) => b.x,
+    );
+  }
+
+  double get y {
+    return when(
+      a: (a) => a.y,
+      b: (b) => b.y,
+    );
+  }
+
+  SerializeSealDataA get a {
+    if (_a != null) return _a;
+    throw Exception('Illegal access of sealed field, a is not set');
+  }
+
+  SerializeSealDataB get b {
+    if (_b != null) return _b;
+    throw Exception('Illegal access of sealed field, b is not set');
+  }
+
+  bool get isA {
+    return _a != null;
+  }
+
+  bool get isB {
+    return _b != null;
+  }
+
+  void whenA(void Function(SerializeSealDataA) handler) {
+    if (_a != null) return handler(_a);
+  }
+
+  void whenB(void Function(SerializeSealDataB) handler) {
+    if (_b != null) return handler(_b);
+  }
+
+  WHEN when<WHEN>(
+      {@required WHEN Function(SerializeSealDataA) a,
+      @required WHEN Function(SerializeSealDataB) b}) {
+    if (_a != null) {
+      return a(_a);
+    }
+    if (_b != null) {
+      return b(_b);
+    }
+    throw FallThroughError();
+  }
+
+  WHEN wheno<WHEN>(
+      {WHEN Function() otherwise,
+      WHEN Function(SerializeSealDataA) a,
+      WHEN Function(SerializeSealDataB) b}) {
+    if (_a != null) {
+      if (a != null)
+        return a(_a);
+      else
+        return otherwise();
+    }
+    if (_b != null) {
+      if (b != null)
+        return b(_b);
+      else
+        return otherwise();
+    }
+    return otherwise();
+  }
+
+  int get hashCode => $jf($jc($jc(0, _a.hashCode), _b.hashCode));
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SerializeSeal) return false;
+    return _a == other._a && _b == other._b;
+  }
+
+  String toString() {
+    return "SerializeSeal (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))";
+  }
+}
+
+class SerializeSealSerializer extends StructuredSerializer<SerializeSeal> {
+  @override
+  final Iterable<Type> types = const [SerializeSeal];
+
+  @override
+  final String wireName = 'SerializeSeal';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, SerializeSeal object,
+      {FullType specifiedType = FullType.unspecified}) {
+    return <Object>[
+      object.when(
+          a: (object) => [
+                'a',
+                serializers.serialize(object,
+                    specifiedType: FullType(SerializeSealDataA))
+              ],
+          b: (object) => [
+                'b',
+                serializers.serialize(object,
+                    specifiedType: FullType(SerializeSealDataB))
+              ])
+    ];
+  }
+
+  @override
+  SerializeSeal deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final iterator = serialized.iterator;
+    iterator.moveNext();
+    final key = iterator.current as String;
+    iterator.moveNext();
+    final dynamic value$ = iterator.current;
+    switch (key) {
+      case 'a':
+        return SerializeSeal.a(serializers.deserialize(value$,
+            specifiedType: FullType(SerializeSealDataA)) as SerializeSealDataA);
+      case 'b':
+        return SerializeSeal.b(serializers.deserialize(value$,
+            specifiedType: FullType(SerializeSealDataB)) as SerializeSealDataB);
+    }
+    throw FallThroughError();
   }
 }

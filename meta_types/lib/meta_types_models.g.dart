@@ -179,7 +179,6 @@ class SealedValue extends $SealedValue {
     );
   }
 
-  @override
   SealedValue copyField(
       {FieldType returnType,
       String name,

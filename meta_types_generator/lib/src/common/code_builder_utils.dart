@@ -30,16 +30,16 @@ cb.Reference classNameWithTypeArguments(
   String name,
   Iterable<TypeParameterDeclaration> typeParameters,
 ) =>
-    cb.Reference('${name}' + _extendedClassTypeArguments(typeParameters));
+    cb.Reference('${name}' + extendedClassTypeArguments(typeParameters));
 
 // returns the complete extension cb.Reference for a template class
 cb.Reference templateExtension(
   String name,
   Iterable<TypeParameterDeclaration> typeParameters,
 ) =>
-    cb.Reference('\$${name}' + _extendedClassTypeArguments(typeParameters));
+    cb.Reference('\$${name}' + extendedClassTypeArguments(typeParameters));
 
-String _extendedClassTypeArguments(
+String extendedClassTypeArguments(
   Iterable<TypeParameterDeclaration> typeParameters,
 ) =>
     typeParameters.isEmpty

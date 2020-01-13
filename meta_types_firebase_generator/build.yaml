@@ -1,0 +1,9 @@
+builders:
+  meta_types_firebase:
+    target: ":meta_types_firebase_generator"
+    import: "package:meta_types_firebase_generator/builder.dart"
+    builder_factories: ["metaTypesFirebase"]
+    build_extensions: {".dart": [".meta_types_firebase.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
