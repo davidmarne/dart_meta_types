@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta_types/meta_types_models.dart'
     show Enum, EnumField, DataField;
+import 'package:meta_types_generator/src/enum/interface_methods.dart';
 import '../common/code_builder_utils.dart';
 import 'common.dart';
 
@@ -10,6 +11,8 @@ Class generateEnumBase(Enum<EnumField, DataField> enumeration) => Class(
         ..types.addAll(enumeration.typeParameters.map((g) => Reference(g.type)))
         ..name = enumeration.name + 'Base'
         ..methods.addAll([
+          ordinalGetter(isAbstract: true),
+          valueGetter(isAbstract: true),
           ...enumIsSetMethods(
             enumeration.nonComputedFields,
             isAbstract: true,

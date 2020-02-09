@@ -13,3 +13,15 @@ Method valueGetter({
         ..type = MethodType.getter
         ..returns = Reference(enumGenericName),
     );
+
+Method ordinalGetter({
+  bool isAbstract: false,
+}) =>
+    Method(
+      (b) => b
+        ..name = 'ordinal'
+        ..body = abstractBody(isAbstract, 'values.indexOf(this)')
+        ..lambda = !isAbstract
+        ..type = MethodType.getter
+        ..returns = Reference(enumGenericName),
+    );

@@ -29,6 +29,7 @@ Class generateEnum(Enum<EnumField, DataField> enumeration) => Class(
         ..methods.addAll(
           [
             valueGetter(),
+            ordinalGetter(),
             ...dataInterfaceFields(
               enumeration.nonComputedFields,
               enumeration.dataFields,
@@ -85,9 +86,9 @@ Field _valueField(Enum<EnumField, DataField> enumeration) => Field(
 
 Field _values(Enum<EnumField, DataField> enumeration) => Field((b) => b
   ..static = true
-  ..modifier = FieldModifier.final$
+  ..modifier = FieldModifier.constant
   ..name = 'values'
-  ..assignment = Code('<${enumeration.name}>{${_valuesEntries(enumeration)}}'));
+  ..assignment = Code('<${enumeration.name}>[${_valuesEntries(enumeration)}]'));
 
 String _valuesEntries(Enum<EnumField, DataField> enumeration) =>
     enumeration.fields
