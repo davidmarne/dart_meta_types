@@ -63,7 +63,7 @@ part of meta_types_models;
 //   }
 // }
 
-// Result<S, Object> computeResultUntyped<S>(S Function() func) {
+// Result<S, Object> computeResultCatchAll<S>(S Function() func) {
 //   try {
 //     return Result.success(func());
 //   } catch (e, s) {

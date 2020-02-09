@@ -23,5 +23,5 @@ Method ordinalGetter({
         ..body = abstractBody(isAbstract, 'values.indexOf(this)')
         ..lambda = !isAbstract
         ..type = MethodType.getter
-        ..returns = Reference(enumGenericName),
+        ..returns = Reference('int'),
     );

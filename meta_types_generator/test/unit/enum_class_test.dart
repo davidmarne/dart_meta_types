@@ -5,6 +5,15 @@ import 'package:meta_types/meta_types.dart';
 
 void main() {
   group('enumclass: ', () {
+    test('ordinal', () {
+      expect(Enum.a.ordinal, equals(0));
+      expect(Enum.b.ordinal, equals(1));
+    });
+    test('values', () {
+      expect(Enum.values.length, equals(2));
+      expect(Enum.a, equals(Enum.values[0]));
+      expect(Enum.b, equals(Enum.values[1]));
+    });
     test('when', () {
       const a = Enum.a;
       final aDoubled = a.when(a: (a) => a, b: (b) => fail('should not be b'));

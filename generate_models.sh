@@ -1,10 +1,7 @@
 set -e
 
-mkdir -p meta_types_generator/test/unit/src
-cd  meta_types_generator/test/unit/src
-rm -rf models
-cd ../../../../
-cp -r meta_types/lib/src/models meta_types_generator/test/unit/src/models
+rm -rf meta_types_generator/test/staging
+cp -r meta_types/lib/src/models meta_types_generator/test/staging
 
 cd meta_types_generator
 pub run build_runner build
