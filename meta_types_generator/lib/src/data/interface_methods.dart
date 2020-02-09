@@ -32,7 +32,9 @@ Method _copyInterface(
           dataClass.typeParameters,
         )
         ..optionalParameters.addAll(
-          _copyMethodParameters(interface.meta.nonComputedFields),
+          _copyMethodParameters(dataClass.nonComputedFields.where((f) =>
+              interface.meta.nonComputedFields
+                  .any((ifi) => f.name == ifi.name))),
         )
         ..body = abstractBody(
           isAbstract,

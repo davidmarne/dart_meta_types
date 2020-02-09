@@ -121,7 +121,10 @@ String hashBodyForFields<T extends Field>(Iterable<T> fields) =>
 String _hashFold<T extends Field>(Iterable<T> fields) => fields.fold(
     '',
     (params, field) =>
-        '\$jc(${params.isNotEmpty ? params : 0}, _${field.name}.hashCode)');
+        '\$jc(${params.isNotEmpty ? params : 0}, ${_publicDefaults(field)}.hashCode)');
+
+String _publicDefaults(Field f) =>
+    (f is DataField && f.isDefaulted) ? f.name : '_${f.name}';
 
 // conditionally returns a Code body depending on the value of
 // isAbstract

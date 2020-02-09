@@ -1,63 +1,104 @@
 import 'package:test/test.dart';
 
-import 'models/models.dart';
+import 'test_models/data.dart';
 import 'package:meta_types/meta_types.dart';
 
 void main() {
   group('dataclass: ', () {
-    group('field types: ', () {
-      // test('using default', () {
-      //   final testFieldWithNoDefault = 9;
-      //   final instance =
-      //       new TestDataClass(fieldWithNoDefault: testFieldWithNoDefault);
-      //   final copy = instance.copy();
+    test('copy', () {
+      const constData = DataClassConst(value: 3);
+      final copied = constData.copy(value: 4);
+      expect(constData.value, equals(3));
+      expect(copied.value, equals(4));
+    });
+    test('const', () {
+      const constData = DataClassConst(value: 3);
+      _expectEquality(constData, constData.copy());
+      _expectSerializable(constData, FullType(DataClassConstSerializer));
+    });
+    test('default values', () {
+      final overriden = DataClassDefaultFields(value: 3);
+      expect(overriden.value, 3);
+      _expectEquality(overriden, overriden.copy());
+      _expectSerializable(
+          overriden, FullType(DataClassDefaultFieldsSerializer));
 
-      //   // test equality & hash override
-      //   expect(copy == instance, isTrue);
-      //   expect(copy.hashCode == instance.hashCode, isTrue);
+      final defaulted = DataClassDefaultFields();
+      expect(defaulted.value, 2);
+      _expectEquality(defaulted, defaulted.copy());
+      _expectSerializable(
+          defaulted, FullType(DataClassDefaultFieldsSerializer));
+    });
+    test('computed values', () {
+      final data = DataClassComputedFields(value: 3);
+      expect(data.value, 3);
+      expect(data.doubled, 6);
+      _expectEquality(data, data.copy());
+      _expectSerializable(data, FullType(DataClassComputedFieldsSerializer));
+    });
+    test('generics', () {
+      final data = DataClassGenerics<int, DataInterfaceBasicImplementation>(
+        genericNoExtension: 2,
+        genericDataClassExtension: DataInterfaceBasicImplementation(
+          inheritedValue: 0,
+          concreteValue: 1,
+        ),
+      );
 
-      //   expect(instance.fieldWithNoDefault, testFieldWithNoDefault);
-      //   expect(instance.fieldWithDefault, 10);
-      //   expect(instance.computedField, 10);
-      // });
+      _expectEquality(data, data.copy());
+      _expectSerializable(
+          data,
+          FullType(DataClassGenericsSerializer, [
+            FullType(int),
+            FullType(DataInterfaceBasicImplementation),
+          ]));
+    });
+    test('interface generics (unset)', () {
+      final data = DataInterfaceGenericsImplementationUnset<int>(
+        inheritedValue: 0,
+        concreteValue: 1,
+      );
 
-      // test('overriding default', () {
-      //   final testFieldWithNoDefault = 9;
-      //   final testFieldWithDefault = 99;
-      //   final instance = new TestDataClass(
-      //       fieldWithNoDefault: testFieldWithNoDefault,
-      //       fieldWithDefault: testFieldWithDefault);
-      //   final copy = instance.copy();
+      _expectEquality(data, data.copy());
+      _expectSerializable(
+          data,
+          FullType(DataInterfaceGenericsImplementationUnset, [
+            FullType(int),
+          ]));
+    });
+    test('interface generics (set)', () {
+      final data = DataInterfaceGenericsImplementationSet(
+        inheritedValue: 0,
+        concreteValue: 1,
+      );
 
-      //   // test equality & hash override
-      //   expect(copy == instance, isTrue);
-      //   expect(copy.hashCode == instance.hashCode, isTrue);
-
-      //   expect(instance.fieldWithNoDefault, testFieldWithNoDefault);
-      //   expect(instance.fieldWithDefault, testFieldWithDefault);
-      //   expect(instance.computedField, testFieldWithDefault);
-      // });
-
-      test('serialize sum', () {
-        final s = SerializeSum.a(9);
-        final ser = SerializeSumSerializer();
-        final data = serializers.serializeWith(ser, s);
-        print(data);
-      });
-      test('serialize data', () {
-        final s = SerializeData(x: 0, y: 1);
-        final ser = SerializeDataSerializer();
-        final data = serializers.serializeWith(ser, s);
-        print(data);
-      });
+      _expectEquality(data, data.copy());
+      _expectSerializable(
+          data, FullType(DataInterfaceGenericsImplementationSet));
     });
   });
+}
+
+void _expectEquality<T>(T a, T b) {
+  expect(a.hashCode, equals(b.hashCode));
+  expect(a == b, isTrue);
+}
+
+void _expectSerializable<T>(T input, FullType type) {
+  final serialized = serializers.serialize(input, specifiedType: type);
+  final deserialized = serializers.deserialize(serialized, specifiedType: type);
+  _expectEquality(input, deserialized);
 }
 
 final serializers = (Serializers().toBuilder()
       ..addPlugin(StandardJsonPlugin())
       ..addAll([
-        SerializeDataSerializer(),
-        SerializeSumSerializer(),
+        DataInterfaceBasicImplementationSerializer(),
+        DataClassGenericsSerializer(),
+        DataClassConstSerializer(),
+        DataClassDefaultFieldsSerializer(),
+        DataClassComputedFieldsSerializer(),
+        DataInterfaceGenericsImplementationUnsetSerializer(),
+        DataInterfaceGenericsImplementationSetSerializer(),
       ]))
     .build();

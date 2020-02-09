@@ -354,9 +354,7 @@ class NestingDataClass<T> extends $NestingDataClass<T> {
 }
 
 class NestedDataClass extends $NestedDataClass {
-  NestedDataClass({String baz})
-      : _baz = baz,
-        assert(baz != null);
+  NestedDataClass({String baz}) : _baz = baz;
 
   final String _baz;
 
@@ -370,7 +368,7 @@ class NestedDataClass extends $NestedDataClass {
     );
   }
 
-  int get hashCode => $jf($jc(0, _baz.hashCode));
+  int get hashCode => $jf($jc(0, baz.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! NestedDataClass) return false;
@@ -415,8 +413,7 @@ class TestDataClass extends $TestDataClass {
   TestDataClass({@required int fieldWithNoDefault, int fieldWithDefault})
       : _fieldWithNoDefault = fieldWithNoDefault,
         assert(fieldWithNoDefault != null),
-        _fieldWithDefault = fieldWithDefault,
-        assert(fieldWithDefault != null);
+        _fieldWithDefault = fieldWithDefault;
 
   int _computedField;
 
@@ -444,8 +441,8 @@ class TestDataClass extends $TestDataClass {
     );
   }
 
-  int get hashCode => $jf(
-      $jc($jc(0, _fieldWithNoDefault.hashCode), _fieldWithDefault.hashCode));
+  int get hashCode =>
+      $jf($jc($jc(0, _fieldWithNoDefault.hashCode), fieldWithDefault.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! TestDataClass) return false;
@@ -471,11 +468,11 @@ class StringEnum<EGN> extends $StringEnum {
 
   EGN get value => _value;
   bool get isA {
-    return a != this;
+    return a == this;
   }
 
   bool get isB {
-    return b != this;
+    return b == this;
   }
 
   void whenA(void Function(String) handler) {
@@ -1171,11 +1168,11 @@ class SerializeEnum<EGN> extends $SerializeEnum {
 
   EGN get value => _value;
   bool get isX {
-    return x != this;
+    return x == this;
   }
 
   bool get isY {
-    return y != this;
+    return y == this;
   }
 
   void whenX(void Function(int) handler) {
@@ -1457,19 +1454,21 @@ class SerializeSealSerializer extends StructuredSerializer<SerializeSeal> {
   @override
   Iterable<Object> serialize(Serializers serializers, SerializeSeal object,
       {FullType specifiedType = FullType.unspecified}) {
-    return <Object>[
-      object.when(
-          a: (object) => [
-                'a',
-                serializers.serialize(object,
-                    specifiedType: FullType(SerializeSealDataA))
-              ],
-          b: (object) => [
-                'b',
-                serializers.serialize(object,
-                    specifiedType: FullType(SerializeSealDataB))
-              ])
-    ];
+    return object.when(
+        a: (object) => [
+              'kind',
+              serializers.serialize('a', specifiedType: FullType(String)),
+              'value',
+              serializers.serialize(object,
+                  specifiedType: FullType(SerializeSealDataA))
+            ],
+        b: (object) => [
+              'kind',
+              serializers.serialize('b', specifiedType: FullType(String)),
+              'value',
+              serializers.serialize(object,
+                  specifiedType: FullType(SerializeSealDataB))
+            ]);
   }
 
   @override
@@ -1478,7 +1477,9 @@ class SerializeSealSerializer extends StructuredSerializer<SerializeSeal> {
       {FullType specifiedType = FullType.unspecified}) {
     final iterator = serialized.iterator;
     iterator.moveNext();
+    iterator.moveNext();
     final key = iterator.current as String;
+    iterator.moveNext();
     iterator.moveNext();
     final dynamic value$ = iterator.current;
     switch (key) {

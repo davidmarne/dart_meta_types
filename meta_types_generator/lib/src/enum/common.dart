@@ -34,6 +34,6 @@ Iterable<cb.Method> enumIsSetMethods(
           ..name = "is" + capitalize(field.name)
           ..type = cb.MethodType.getter
           ..returns = cb.Reference('bool')
-          ..body = abstractBody(isAbstract, 'return ${field.name} != this;'),
+          ..body = abstractBody(isAbstract, 'return ${field.name} == this;'),
       ),
     );

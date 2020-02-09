@@ -2054,8 +2054,7 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
         assert(type != null),
         _extension = extension,
         assert(extension != null),
-        _genericsStr = genericsStr,
-        assert(genericsStr != null);
+        _genericsStr = genericsStr;
 
   final String _type;
 
@@ -2085,7 +2084,7 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
   }
 
   int get hashCode => $jf($jc(
-      $jc($jc(0, _type.hashCode), _extension.hashCode), _genericsStr.hashCode));
+      $jc($jc(0, _type.hashCode), _extension.hashCode), genericsStr.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! TypeParameterDeclaration) return false;
@@ -2108,8 +2107,7 @@ class FieldType extends $FieldType {
         assert(type != null),
         _generics = generics,
         assert(generics != null),
-        _genericsStr = genericsStr,
-        assert(genericsStr != null);
+        _genericsStr = genericsStr;
 
   final String _type;
 
@@ -2139,7 +2137,7 @@ class FieldType extends $FieldType {
   }
 
   int get hashCode => $jf($jc(
-      $jc($jc(0, _type.hashCode), _generics.hashCode), _genericsStr.hashCode));
+      $jc($jc(0, _type.hashCode), _generics.hashCode), genericsStr.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! FieldType) return false;

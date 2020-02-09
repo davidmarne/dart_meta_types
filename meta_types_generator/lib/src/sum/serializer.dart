@@ -37,9 +37,12 @@ String _generateSerializeValues(Sum<SumField> sumClass) =>
     sumClass.nonComputedFields
         .map(
           (f) =>
-              '${f.name}: (object) => [\'kind\', serializers.serialize(\'${f.name}\', specifiedType: FullType(String)), \'value\', serializers.serialize(object, specifiedType: ${fullType(sumClass.typeParameters, f.returnType)})]',
+              '${f.name}: (${f.returnType.typeStr == 'void' ? '' : 'object'}) => [\'kind\', serializers.serialize(\'${f.name}\', specifiedType: FullType(String)), \'value\', serializers.serialize(${_serializeFirstParameter(f)}, specifiedType: ${fullType(sumClass.typeParameters, f.returnType)})]',
         )
         .join(',');
+
+String _serializeFirstParameter(SumField f) =>
+    f.returnType.typeStr == 'void' ? 'true' : 'object';
 
 String _deserializeBody(Sum<SumField> sumClass) => '''
   final iterator = serialized.iterator;
@@ -60,5 +63,10 @@ String _switchClauses(Sum<SumField> sumClass) => sumClass.nonComputedFields
 
 String _switchClause(Sum<SumField> e, SumField f) => '''
   case '${f.name}':
-    return ${e.name}.${f.name}(serializers.deserialize(value\$, specifiedType: ${fullType(e.typeParameters, f.returnType)}));
+    return ${e.name}.${f.name}(${_constructorInput(e, f)});
 ''';
+
+String _constructorInput(Sum<SumField> e, SumField f) => f.returnType.typeStr ==
+        'void'
+    ? ''
+    : 'serializers.deserialize(value\$, specifiedType: ${fullType(e.typeParameters, f.returnType)})';

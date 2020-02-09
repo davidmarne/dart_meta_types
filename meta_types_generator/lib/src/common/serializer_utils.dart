@@ -66,8 +66,6 @@ Field wireName(String name) => Field((b) => b
   ..type = Reference('String')
   ..assignment = Code('\'$name\''));
 
-// String restrictedSectionSerializeBody(M meta) =>
-
 String _paramDeclaration(Iterable<TypeParameterDeclaration> typeParameters) =>
     typeParameters.isEmpty
         ? ''
@@ -172,4 +170,8 @@ String _fullTypeArg(Iterable<TypeParameterDeclaration> typeParameters,
 
 String _replaceTypeArg(
         Iterable<TypeParameterDeclaration> typeParameters, FieldType f) =>
-    typeParameters.any((g) => g.type == f.type) ? 'param${f.type}' : f.type;
+    f.typeStr == 'void'
+        ? 'bool'
+        : typeParameters.any((g) => g.type == f.type)
+            ? 'param${f.type}'
+            : f.type;

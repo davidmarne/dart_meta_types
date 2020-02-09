@@ -16,11 +16,14 @@ class DocumentResolver<
 
   DocumentResolver(this._ref) {
     // subscribe to snapshots
+    print("DAVE EF PASS ${_ref.path}");
     _subscription = _ref.snapshots(includeMetadataChanges: true).listen((d) {
+      print("DAVE GOTdHER");
       _controller.add(
         _snapshotToResolution(d),
       );
     }, onError: (e) {
+      print("DAVE ya here");
       // notfiy the client the data does not exist or is not accessable
       _controller.add(DocumentResolution.denied());
     });

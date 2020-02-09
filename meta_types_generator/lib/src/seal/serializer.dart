@@ -30,23 +30,25 @@ Class generateSealedSerializer(Sealed<SealedField, DataField> sealClass) =>
     );
 
 String _serializeBody(Sealed<SealedField, DataField> sealClass) => '''
-  return <Object>[object.when(
+  return object.when(
     ${_generateSerializeValues(sealClass)}
-  )];
+  );
 ''';
 
 String _generateSerializeValues(Sealed<SealedField, DataField> sealClass) =>
     sealClass.nonComputedFields
         .map(
           (f) =>
-              '${f.name}: (object) => [\'${f.name}\', serializers.serialize(object, specifiedType: ${fullType(sealClass.typeParameters, f.returnType)})]',
+              '${f.name}: (object) => [\'kind\', serializers.serialize(\'${f.name}\', specifiedType: FullType(String)), \'value\', serializers.serialize(object, specifiedType: ${fullType(sealClass.typeParameters, f.returnType)})]',
         )
         .join(',');
 
 String _deserializeBody(Sealed<SealedField, DataField> sealClass) => '''
   final iterator = serialized.iterator;
   iterator.moveNext();
+  iterator.moveNext();
   final key = iterator.current as String;
+  iterator.moveNext();
   iterator.moveNext();
   final dynamic value\$ = iterator.current;
   switch(key) {

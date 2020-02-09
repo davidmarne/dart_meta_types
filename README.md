@@ -2,16 +2,13 @@
 
 [![Pub](https://img.shields.io/pub/v/meta_types.svg)](https://pub.dartlang.org/packages/meta_types)
 
-a code gen solution for defining sealed classes, data classes, and enum classes for dart.
+a code gen solution for defining sum types, sealed classes, data classes, and enum classes for dart.
 [examples](meta_types/example/example.dart).
 
 ## puropse
 
-* attempt to keep dart up to par with data types supported by kotlin.
 * provide means for defining algebreic data types in dart.
-* define patterns and apis for generating 3rd party mixins to provide additional functionality to generated models. e.g. meta_types_json.
-* support explicitly defining dataclasses as abstract, interface, extendable, and/or final. The generator can enforces strict practices for these concepts which dart-lang itself does not enforce.
-* provide means for representing non-nullable and nullable types in your data model.
+* define patterns and apis for generating 3rd party extensions to generated models. e.g. meta_types_firebase.
 * provide means for meta-programming with your models without using dart:mirrors.
 
 ## How to use meta_types
@@ -22,50 +19,69 @@ a code gen solution for defining sealed classes, data classes, and enum classes 
 
 See meta_types/example for examples on how to write model definitions.
 
-## One rule to follow
+## Features
 
-When writing class definitions ALWAYS use other class definitions when referencing other meta types. When writing code ALWAYS use the generated classes. Using the class definitons gives the generator the ability to resolve type information for classes that have not yet been generated.
+* all types
+  * serializable with built_value serializer
+  * toString, hashCode, == implementaion
+  * const constructors
+  * computed values
+  * generics
+* data class
+  * interfaces
+  * copy method
+  * default values
+  * generated constructor
+  * generics
+* sum class
+  * when method (exhaustive)
+  * wheno method (non-exhaustive)
+  * generated constructors
+  * generics
+  * methods to check if a given field is set
+  * unsafe getters (throw when field is unset)
+  * safe callbacks (provided method called only if corresponding field is set)
+  * void type fields (TODO make serializable)
+* sealed class
+  * accessors to implemented fields
+  * when method (exhaustive)
+  * wheno method (non-exhaustive)
+  * generated constructors
+  * generics
+  * methods to check if a given field is set
+  * unsafe getters (throw when field is unset)
+  * safe callbacks (provided method called only if corresponding field is set)
+* enum class
+  * enums with associated values of any type
+  * values set
+  * methods to check enumeration type
+  * safe callbacks (provided method called only if correct enumeration type)
+  * when method (exhaustive)
+  * wheno method (non-exhaustive)
 
-For this reason, class definitions for public models should always be made public.
+* TODO:
+  * enum ordinal
+  * serialization for void sum types
+  * sound variance when released in dart
+  * support nullable types when nnbd is released in dart
 
-Note, this is different from other dart code gen solutions such as json_serializable and built_value, because the model definition is NOT used in your code. The generated classes are used directly in your code. This lets the generator generate constructors and additional fields and functions that are not present in the model definition, e.g. the clone method for data classes.
-
-## Types
-
-* All metatypes are hashable and comparable.
-* All meta_types extend from a base class that allow them to be used generically for metaprogramming.
-
-For example, you can write a function that has in input of type `DataClass` which can be called with any data class. That function can use the accessors on DataClass to iterate over all the fields in the dataclass.
-
-### data classes
-
-Data classes are immutable classes that only contain data. Dataclasses can be interfaces, abstract, extendable, or final. All generated models extend `DataClass`.
-
-### sealed classes
-
-Sealed classes are immutable classes that have multiple fields, but only a single field can be set. Sealed classes cannot be extended or used as interfaces. All generated models extend `SealedClass`.
-
-### enum classes
-
-Enum classes are classes that represent enumerations, using any type to represent the enumeration values. Enum classes cannot be extended or used as interfaces. All generated models extend `EnumClass`.
-
-## Example - Binary tree ADT using sealed and data classes
+## Example - Binary tree ADT using sum and data classes
 
 ```dart
 
 // model definitions
 
-@SealedClass()
+@sum
 abstract class $BinaryTree<T> {
   T get leaf;
-  $Branch<T> get branch;
+  Branch<T> get branch;
 }
 
-@DataClass()
+@data
 abstract class $Branch<T> {
   T get value;
-  $BinaryTree<T> get left;
-  $BinaryTree<T> get right;
+  BinaryTree<T> get left;
+  BinaryTree<T> get right;
 }
 ```
 
@@ -104,7 +120,7 @@ preorderTraversal(tree);
 ### Example: data class features
 ```dart
 // model definition
-@DataClass()
+@data
 abstract class $ExampleDataClass {
   // fieldWithNoDefault is a field without a default value
   // the constructor will require a value be passed for this param
@@ -115,8 +131,8 @@ abstract class $ExampleDataClass {
   int get fieldWithDefault => 10;
 
   // data class fields are not nullable, one must
-  // use the Nullable class to represent nullable fields
-  Nullable<int> get nullable;
+  // use the Option class to represent nullable fields
+  Option<int> get optional;
 
   // computed fields memoize the result of the getter function
   @computed
@@ -124,18 +140,52 @@ abstract class $ExampleDataClass {
 }
 ```
 
+
+### Example: sealed class features
+
 ```dart
-// model usage
+@dataInterface
+abstract class SuperType {
+  int get inheritedField;
+}
 
-final d = ExampleDataClass(
-  fieldWithNoDefault: 0,
-  nullable: Nullable<int>.nil(),
-);
+@data
+abstract class $SubclassA {
+  int get fieldA;
+}
 
-print(d.fieldWithNoDefault); // 0
-print(d.fieldWithDefault); // 10
-print(d.nullable.value); // null
-print(d.computedField); // 15
+@data
+abstract class $SubclassB {
+  int get fieldB;
+}
+
+@seal
+abstract class $SealedTypeOfSuper implements SuperType {
+  SubclassA get a;
+  SubclassB get b;
+}
+
+// usage
+final instanceOfA = SealedTypeOfSuper.a(SubclassA(fieldA: 2, inheritedField: 1));
+final instanceOfB = SealedTypeOfSuper.b(SubclassB(fieldB: 3, inheritedField: 1));
+
+// ...
+
+print(instanceOfA); // SealedTypeOfSuper( SubclassA (fieldA: 2, inheritedField: 1) )
+print(instanceOfB); // SealedTypeOfSuper( SubclassB (fieldB: 3, inheritedField: 1) )
+
+print(instanceOfA.a); // ok
+print(instanceOfA.b); // throws
+print(instanceOfA.inheritedField); // ok
+
+print(instanceOfA.isA); // true
+print(instanceOfA.isB); // false
+
+// prints SubclassA (fieldA: 2, inheritedField: 1)
+instanceOfA.when(
+  a: (a) => print(a),
+  a: (a) => print(a),
+)
 
 ```
 

@@ -68,6 +68,8 @@ class _FirebaseDocumentHookState<
   @override
   void initHook() {
     super.initHook();
+    print(
+        "DAVE INIT ${hook.refs.first.runtimeType} ${hook.refs.first.path} ${hook.refs.first.parent.runtimeType} ${hook.refs.first.parent.path}");
     _checkoutDocuments(hook.refs);
   }
 

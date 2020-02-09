@@ -65,7 +65,8 @@ Constructor _defaultConstructor(Data<DataField> dataClass) => new Constructor(
 
 Iterable<Code> _initializer(DataField field) => [
       Code('_${field.name} = ${fieldParameterName(field)}'),
-      Code('assert(${fieldParameterName(field)} != null)'),
+      if (!field.isDefaulted)
+        Code('assert(${fieldParameterName(field)} != null)'),
     ];
 
 String _equalityFold(Iterable<DataField> fields) =>

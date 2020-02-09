@@ -21,7 +21,8 @@ Data<DataField> dataFromClassElement(
       throw new TemplateException(
           'data class accessors should be getters. see ${accessor.name} on class ${element.name}');
     }
-
+    // if (!accessor.isAbstract && !isComputed(accessor.metadata))
+    //   throw TemplateException(accessor.name);
     return DataField(
       isPrivate: accessor.name.startsWith('_'),
       isComputed: isComputed(accessor.metadata),
