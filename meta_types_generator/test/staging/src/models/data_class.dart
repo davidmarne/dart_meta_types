@@ -3,6 +3,7 @@ part of meta_types_models;
 @dataInterface
 abstract class _$DataField implements Field {
   bool get isAbstract;
+
   bool get isDefaulted;
 }
 
@@ -33,21 +34,21 @@ abstract class $Data<T extends _$DataField> implements Meta<T> {
 
   @computed
   Iterable<T> get nonComputedFields => localNonComputedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.meta.localNonComputedFields));
+    ..addAll(interfaces.expand((i) => i.parametarizedFields));
 
   @computed
   Iterable<T> get localNonComputedFields => fields.where((f) => !f.isComputed);
 
   @computed
-  Iterable<T> get nonDefaultedFields => localNonDefaultedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.meta.localNonDefaultedFields));
+  Iterable<T> get nonDefaultedFields =>
+      nonComputedFields.where((f) => !f.isDefaulted);
 
   @computed
   Iterable<T> get localNonDefaultedFields => fields.where((f) => f.isAbstract);
 
   @computed
-  Iterable<T> get defaultedFields => localDefaultedFields.toSet()
-    ..addAll(interfaces.expand((i) => i.meta.localDefaultedFields));
+  Iterable<T> get defaultedFields =>
+      nonComputedFields.where((f) => f.isDefaulted);
 
   @computed
   Iterable<T> get localDefaultedFields => fields.where((f) => f.isDefaulted);

@@ -3,6 +3,8 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:meta_types_generator/api.dart';
+import 'package:meta_types/meta_types_models.dart';
 
 import 'context.dart';
 import 'models.dart';
@@ -17,9 +19,10 @@ class MetaTypesFirebaseGenerator extends Generator {
     final result = StringBuffer();
     final emitter = DartEmitter();
     final formatter = DartFormatter();
+    final metaCache = MetaClassCache(library);
 
     try {
-      final contexts = readContexts(library);
+      final contexts = readContexts(metaCache, library);
       void writeEach(Iterable<Class> Function(Context) classFactory) =>
           contexts.map(classFactory).expand((c) => c).forEach(
                 (cls) => result.write(
@@ -33,7 +36,7 @@ class MetaTypesFirebaseGenerator extends Generator {
       writeEach(flutterDocumentRefs);
       writeEach(flutterCollectionRefs);
       writeEach(updatersContext);
-      result.write(serializers(contexts.map((c) => c.schema)));
+      result.write(serializers(metaCache, library));
     } catch (e, s) {
       log.severe('META FIREBASE FAIL $s', e, s);
       return null;
@@ -43,9 +46,12 @@ class MetaTypesFirebaseGenerator extends Generator {
   }
 }
 
-String serializers(Iterable<Schema> schemas) =>
-    'final serializers = (Serializers().toBuilder()..addPlugin(StandardJsonPlugin())..addAll([${_serializersParams(schemas)}])).build();';
+String serializers(MetaClassCache cache, LibraryReader reader) =>
+    'final serializers = (Serializers().toBuilder()..addPlugin(StandardJsonPlugin())..addAll([${_serializersParams(cache, reader)}])).build();';
 
-String _serializersParams(Iterable<Schema> schemas) => schemas
-    .expand((s) => s.collections)
-    .fold('', (comb, next) => '$comb${next.name}Serializer(),');
+String _serializersParams(MetaClassCache cache, LibraryReader reader) =>
+    reader.classes
+        .map((c) => cache.find(c.name))
+        .whereIsSome
+        .where((a) => a.serializable)
+        .fold('', (comb, next) => '$comb${next.name}Serializer(),');

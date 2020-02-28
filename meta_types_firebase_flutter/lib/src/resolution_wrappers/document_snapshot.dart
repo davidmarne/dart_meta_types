@@ -16,14 +16,11 @@ class DocumentResolver<
 
   DocumentResolver(this._ref) {
     // subscribe to snapshots
-    print("DAVE EF PASS ${_ref.path}");
     _subscription = _ref.snapshots(includeMetadataChanges: true).listen((d) {
-      print("DAVE GOTdHER");
       _controller.add(
         _snapshotToResolution(d),
       );
     }, onError: (e) {
-      print("DAVE ya here");
       // notfiy the client the data does not exist or is not accessable
       _controller.add(DocumentResolution.denied());
     });
@@ -48,15 +45,16 @@ DocumentResolution<D> _snapshotToResolution<
             ? DocumentResolution.deleting()
             : DocumentResolution.notFound()
         : d.metadata.isFromCache || d.metadata.hasPendingWrites
-            ? DocumentResolution.dirty(d.data)
-            : DocumentResolution.resolved(d.data);
+            ? DocumentResolution.dirty(Document(id: d.documentID, data: d.data))
+            : DocumentResolution.resolved(
+                Document(id: d.documentID, data: d.data));
 
 class CollectionResolver<
     D,
     U extends DocumentUpdater<D>,
     DR extends TypedDocumentReference<D, U, DR, DC>,
     DC extends TypedCollectionReference<D, U, DR, DC>> {
-  final DC _ref;
+  final TypedQuery<D, U, DR, DC> _ref;
   final _controller = StreamController<CollectionResolution<D>>();
   StreamSubscription<TypedQuerySnapshot<D, U, DR, DC>> _subscription;
 
@@ -72,12 +70,12 @@ class CollectionResolver<
       } else {
         _controller.add(
           c.metadata.isFromCache || c.metadata.hasPendingWrites
-              ? CollectionResolution.resolved(
+              ? CollectionResolution.dirty(
                   BuiltList<DocumentResolution<D>>(
                     c.documents.map(_snapshotToResolution),
                   ),
                 )
-              : CollectionResolution.dirty(
+              : CollectionResolution.resolved(
                   BuiltList<DocumentResolution<D>>(
                     c.documents.map(_snapshotToResolution),
                   ),
@@ -85,7 +83,6 @@ class CollectionResolver<
         );
       }
     }, onError: (e) {
-      print("DAVE failed ${e.runtimeType} $e");
       // notfiy the client the data does not exist or is not accessable
       _controller.add(
         CollectionResolution.denied(),

@@ -68,8 +68,6 @@ class _FirebaseDocumentHookState<
   @override
   void initHook() {
     super.initHook();
-    print(
-        "DAVE INIT ${hook.refs.first.runtimeType} ${hook.refs.first.path} ${hook.refs.first.parent.runtimeType} ${hook.refs.first.parent.path}");
     _checkoutDocuments(hook.refs);
   }
 
@@ -107,11 +105,11 @@ class _FirebaseDocumentHookState<
       });
       ref.get().then((d) {
         if (_state._data[ref.documentID].isFetching) {
-          _state._data[ref.documentID] = DocumentResolution.resolved(d.data);
+          _state._data[ref.documentID] = DocumentResolution.resolved(
+              Document(id: d.documentID, data: d.data));
           setState(() {});
         }
       }).catchError((e) {
-        print("DAVE failed doc ${e.runtimeType} $e");
         _state._data[ref.documentID] = DocumentResolution.denied();
         setState(() {});
       });

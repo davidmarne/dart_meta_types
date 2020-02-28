@@ -27,6 +27,7 @@ See meta_types/example for examples on how to write model definitions.
   * const constructors
   * computed values
   * generics
+  * base class generation so generated methods can be used in templates
 * data class
   * interfaces
   * copy method
@@ -41,7 +42,7 @@ See meta_types/example for examples on how to write model definitions.
   * methods to check if a given field is set
   * unsafe getters (throw when field is unset)
   * safe callbacks (provided method called only if corresponding field is set)
-  * void type fields (TODO make serializable)
+  * void type fields
 * sealed class
   * accessors to implemented fields
   * when method (exhaustive)
@@ -60,8 +61,6 @@ See meta_types/example for examples on how to write model definitions.
   * wheno method (non-exhaustive)
 
 * TODO:
-  * enum ordinal
-  * serialization for void sum types
   * sound variance when released in dart
   * support nullable types when nnbd is released in dart
 
@@ -99,17 +98,17 @@ void preorderTraversal(BinaryTree<int> tree) => tree.when(
       },
     );
 
-final tree = BinaryTree<int>.branchFactory(
+final tree = BinaryTree<int>.branch(
   Branch(
     value: 1,
-    left: BinaryTree.branchFactory(
+    left: BinaryTree.branch(
       Branch(
         value: 2,
-        left: BinaryTree.leafFactory(3),
-        right: BinaryTree.leafFactory(4),
+        left: BinaryTree.leaf(3),
+        right: BinaryTree.leaf(4),
       ),
     ),
-    right: BinaryTree.leafFactory(5),
+    right: BinaryTree.leaf(5),
   ),
 );
 
@@ -176,7 +175,8 @@ print(instanceOfB); // SealedTypeOfSuper( SubclassB (fieldB: 3, inheritedField: 
 
 print(instanceOfA.a); // ok
 print(instanceOfA.b); // throws
-print(instanceOfA.inheritedField); // ok
+print(instanceOfA.inheritedField); // always ok
+print(instanceOfB.inheritedField); // always ok
 
 print(instanceOfA.isA); // true
 print(instanceOfA.isB); // false

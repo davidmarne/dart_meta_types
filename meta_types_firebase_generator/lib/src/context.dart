@@ -6,8 +6,7 @@ import 'package:meta_types/meta_types_models.dart';
 
 import 'models.dart';
 
-Iterable<Context> readContexts(LibraryReader reader) {
-  final metaCache = MetaClassCache(reader);
+Iterable<Context> readContexts(MetaClassCache metaCache, LibraryReader reader) {
   return _loadSchemas(reader, metaCache).map(
     (schema) => Context(
       schema: schema,

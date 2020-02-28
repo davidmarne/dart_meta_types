@@ -6,29 +6,55 @@ part of 'meta_types_firebase.dart';
 // MetaTypesGenerator
 // **************************************************************************
 
+class Document<T> extends $Document<T> {
+  Document({@required String id, @required T data})
+      : _id = id,
+        assert(id != null),
+        _data = data,
+        assert(data != null);
+
+  final String _id;
+
+  final T _data;
+
+  String get id {
+    return _id;
+  }
+
+  T get data {
+    return _data;
+  }
+
+  Document<T> copy({String id, T data}) {
+    return Document(
+      id: id ?? _id,
+      data: data ?? _data,
+    );
+  }
+
+  int get hashCode => $jf($jc($jc(0, _id.hashCode), _data.hashCode));
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! Document) return false;
+    return id == other.id && data == other.data;
+  }
+
+  String toString() {
+    return "Document (id: $id, data: $data)";
+  }
+}
+
 class DocumentResolution<T> extends $DocumentResolution<T> {
   const DocumentResolution.fetching()
       : _fetching = true,
-        _creating = null,
         _dirty = null,
         _resolved = null,
         _deleting = null,
         _denied = null,
         _notFound = null;
 
-  const DocumentResolution.creating(T creating)
+  const DocumentResolution.dirty(Document<T> dirty)
       : _fetching = null,
-        assert(creating != null),
-        _creating = creating,
-        _dirty = null,
-        _resolved = null,
-        _deleting = null,
-        _denied = null,
-        _notFound = null;
-
-  const DocumentResolution.dirty(T dirty)
-      : _fetching = null,
-        _creating = null,
         assert(dirty != null),
         _dirty = dirty,
         _resolved = null,
@@ -36,9 +62,8 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
         _denied = null,
         _notFound = null;
 
-  const DocumentResolution.resolved(T resolved)
+  const DocumentResolution.resolved(Document<T> resolved)
       : _fetching = null,
-        _creating = null,
         _dirty = null,
         assert(resolved != null),
         _resolved = resolved,
@@ -48,7 +73,6 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
 
   const DocumentResolution.deleting()
       : _fetching = null,
-        _creating = null,
         _dirty = null,
         _resolved = null,
         _deleting = true,
@@ -57,7 +81,6 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
 
   const DocumentResolution.denied()
       : _fetching = null,
-        _creating = null,
         _dirty = null,
         _resolved = null,
         _deleting = null,
@@ -66,7 +89,6 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
 
   const DocumentResolution.notFound()
       : _fetching = null,
-        _creating = null,
         _dirty = null,
         _resolved = null,
         _deleting = null,
@@ -75,11 +97,9 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
 
   final bool _fetching;
 
-  final T _creating;
+  final Document<T> _dirty;
 
-  final T _dirty;
-
-  final T _resolved;
+  final Document<T> _resolved;
 
   final bool _deleting;
 
@@ -92,17 +112,12 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
     throw Exception('Illegal access of sum field, fetching is not set');
   }
 
-  T get creating {
-    if (_creating != null) return _creating;
-    throw Exception('Illegal access of sum field, creating is not set');
-  }
-
-  T get dirty {
+  Document<T> get dirty {
     if (_dirty != null) return _dirty;
     throw Exception('Illegal access of sum field, dirty is not set');
   }
 
-  T get resolved {
+  Document<T> get resolved {
     if (_resolved != null) return _resolved;
     throw Exception('Illegal access of sum field, resolved is not set');
   }
@@ -124,10 +139,6 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
 
   bool get isFetching {
     return _fetching != null;
-  }
-
-  bool get isCreating {
-    return _creating != null;
   }
 
   bool get isDirty {
@@ -154,15 +165,11 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
     if (_fetching != null) return handler();
   }
 
-  void whenCreating(void Function(T) handler) {
-    if (_creating != null) return handler(_creating);
-  }
-
-  void whenDirty(void Function(T) handler) {
+  void whenDirty(void Function(Document<T>) handler) {
     if (_dirty != null) return handler(_dirty);
   }
 
-  void whenResolved(void Function(T) handler) {
+  void whenResolved(void Function(Document<T>) handler) {
     if (_resolved != null) return handler(_resolved);
   }
 
@@ -180,17 +187,13 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
 
   WHEN when<WHEN>(
       {@required WHEN Function() fetching,
-      @required WHEN Function(T) creating,
-      @required WHEN Function(T) dirty,
-      @required WHEN Function(T) resolved,
+      @required WHEN Function(Document<T>) dirty,
+      @required WHEN Function(Document<T>) resolved,
       @required WHEN Function() deleting,
       @required WHEN Function() denied,
       @required WHEN Function() notFound}) {
     if (_fetching != null) {
       return fetching();
-    }
-    if (_creating != null) {
-      return creating(_creating);
     }
     if (_dirty != null) {
       return dirty(_dirty);
@@ -213,21 +216,14 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
   WHEN wheno<WHEN>(
       {WHEN Function() otherwise,
       WHEN Function() fetching,
-      WHEN Function(T) creating,
-      WHEN Function(T) dirty,
-      WHEN Function(T) resolved,
+      WHEN Function(Document<T>) dirty,
+      WHEN Function(Document<T>) resolved,
       WHEN Function() deleting,
       WHEN Function() denied,
       WHEN Function() notFound}) {
     if (_fetching != null) {
       if (fetching != null)
         return fetching();
-      else
-        return otherwise();
-    }
-    if (_creating != null) {
-      if (creating != null)
-        return creating(_creating);
       else
         return otherwise();
     }
@@ -267,9 +263,7 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
   int get hashCode => $jf($jc(
       $jc(
           $jc(
-              $jc(
-                  $jc($jc($jc(0, _fetching.hashCode), _creating.hashCode),
-                      _dirty.hashCode),
+              $jc($jc($jc(0, _fetching.hashCode), _dirty.hashCode),
                   _resolved.hashCode),
               _deleting.hashCode),
           _denied.hashCode),
@@ -278,7 +272,6 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
     if (identical(other, this)) return true;
     if (other is! DocumentResolution) return false;
     return _fetching == other._fetching &&
-        _creating == other._creating &&
         _dirty == other._dirty &&
         _resolved == other._resolved &&
         _deleting == other._deleting &&
@@ -287,7 +280,7 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
   }
 
   String toString() {
-    return "DocumentResolution (${when(fetching: () => 'fetching', creating: (creating) => 'creating $creating', dirty: (dirty) => 'dirty $dirty', resolved: (resolved) => 'resolved $resolved', deleting: () => 'deleting', denied: () => 'denied', notFound: () => 'notFound')}))";
+    return "DocumentResolution (${when(fetching: () => 'fetching', dirty: (dirty) => 'dirty $dirty', resolved: (resolved) => 'resolved $resolved', deleting: () => 'deleting', denied: () => 'denied', notFound: () => 'notFound')}))";
   }
 }
 

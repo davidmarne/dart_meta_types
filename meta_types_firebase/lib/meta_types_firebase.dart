@@ -21,13 +21,19 @@ class DocumentField {
 /// only be ommited by the updater
 const serviceField = DocumentField._(true);
 
+@data
+abstract class $Document<T> {
+  String get id;
+  T get data;
+}
+
 @sum
 abstract class $DocumentResolution<T> {
   const $DocumentResolution();
 
   void get fetching;
-  T get dirty;
-  T get resolved;
+  Document<T> get dirty;
+  Document<T> get resolved;
   void get deleting;
   void get denied;
   void get notFound;

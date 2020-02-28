@@ -7,6 +7,7 @@ abstract class TypedDocumentReference<
     DC extends TypedCollectionReference<D, U, DR, DC>> {
   final DocumentReference _ref;
   final U Function() _updaterFactory;
+  final Map<String, dynamic> Function(D) _serialize;
   final D Function(Map<String, dynamic>) _deserialize;
   final DR Function(DocumentReference) _toTypedDocumentReference;
 
@@ -14,6 +15,7 @@ abstract class TypedDocumentReference<
     Firestore firestore,
     String path,
     this._updaterFactory,
+    this._serialize,
     this._deserialize,
     this._toTypedDocumentReference,
   ) : _ref = firestore.document(path);
@@ -35,23 +37,14 @@ abstract class TypedDocumentReference<
 
   String get documentID => _ref.documentID;
 
-  Future<void> setData(
-    void Function(U) updater, {
-    bool merge = false,
-  }) {
-    if (merge) {
-      return updateData(updater);
-    }
-
-    final u = _updaterFactory();
-    updater(u);
-    return _ref.setData(u.update);
+  Future<void> setData(D data) {
+    return _ref.setData(_serialize(data));
   }
 
   Future<void> updateData(void Function(U) updater) {
     final u = _updaterFactory();
     updater(u);
-    return _ref.updateData(u.update);
+    return _ref.setData(u.update, merge: true);
   }
 
   Future<TypedDocumentSnapshot<D, U, DR, DC>> get({

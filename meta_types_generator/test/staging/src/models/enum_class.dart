@@ -30,5 +30,5 @@ abstract class $Enum<T extends _$EnumField, D extends _$DataField>
 
   @computed
   Iterable<D> get dataFields =>
-      dataInterfaces.map((i) => i.meta.nonComputedFields).expand((i) => i);
+      dataInterfaces.map((i) => i.parametarizedFields).expand((i) => i);
 }

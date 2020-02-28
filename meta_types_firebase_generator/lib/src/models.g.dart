@@ -21,8 +21,7 @@ class Collection extends $Collection {
         assert(name != null),
         _subcollections = subcollections,
         assert(subcollections != null),
-        _parent = parent,
-        assert(parent != null);
+        _parent = parent;
 
   final ParameterizedType _type;
 
@@ -74,7 +73,7 @@ class Collection extends $Collection {
           $jc($jc($jc(0, _type.hashCode), _documentMetaType.hashCode),
               _name.hashCode),
           _subcollections.hashCode),
-      _parent.hashCode));
+      parent.hashCode));
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Collection) return false;

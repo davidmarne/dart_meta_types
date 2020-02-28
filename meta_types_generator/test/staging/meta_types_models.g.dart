@@ -2350,6 +2350,60 @@ class Option<T> extends $Option<T> {
   }
 }
 
+class OptionSerializer extends StructuredSerializer<Option> {
+  @override
+  final Iterable<Type> types = const [Option];
+
+  @override
+  final String wireName = 'Option';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, Option object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final isUnderspecified =
+        specifiedType.isUnspecified || specifiedType.parameters.isEmpty;
+    final paramT =
+        isUnderspecified ? FullType.object : specifiedType.parameters[0];
+    return object.when(
+        some: (object) => [
+              'kind',
+              serializers.serialize('some', specifiedType: FullType(String)),
+              'value',
+              serializers.serialize(object, specifiedType: paramT)
+            ],
+        none: () => [
+              'kind',
+              serializers.serialize('none', specifiedType: FullType(String)),
+              'value',
+              serializers.serialize(true, specifiedType: FullType(bool))
+            ]);
+  }
+
+  @override
+  Option deserialize(Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final isUnderspecified =
+        specifiedType.isUnspecified || specifiedType.parameters.isEmpty;
+    final paramT =
+        isUnderspecified ? FullType.object : specifiedType.parameters[0];
+    final iterator = serialized.iterator;
+    iterator.moveNext();
+    iterator.moveNext();
+    final key = iterator.current as String;
+    iterator.moveNext();
+    iterator.moveNext();
+    final dynamic value$ = iterator.current;
+    switch (key) {
+      case 'some':
+        return Option.some(
+            serializers.deserialize(value$, specifiedType: paramT));
+      case 'none':
+        return Option.none();
+    }
+    throw FallThroughError();
+  }
+}
+
 abstract class OptionBase<T> {
   bool get isSome;
   bool get isNone;
@@ -2765,412 +2819,5 @@ class Sum<T extends _$SumField> extends $Sum<T> {
 
   String toString() {
     return "Sum (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)";
-  }
-}
-
-class UnionField extends $UnionField {
-  const UnionField(
-      {@required FieldType returnType,
-      @required String name,
-      @required bool isComputed,
-      @required bool isPrivate,
-      @required Option<SerializableField> serialableField})
-      : _returnType = returnType,
-        assert(returnType != null),
-        _name = name,
-        assert(name != null),
-        _isComputed = isComputed,
-        assert(isComputed != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _serialableField = serialableField,
-        assert(serialableField != null);
-
-  final FieldType _returnType;
-
-  final String _name;
-
-  final bool _isComputed;
-
-  final bool _isPrivate;
-
-  final Option<SerializableField> _serialableField;
-
-  FieldType get returnType {
-    return _returnType;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isComputed {
-    return _isComputed;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Option<SerializableField> get serialableField {
-    return _serialableField;
-  }
-
-  UnionField copy(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return UnionField(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  UnionField copyField(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return copy(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
-              _isComputed.hashCode),
-          _isPrivate.hashCode),
-      _serialableField.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! UnionField) return false;
-    return returnType == other.returnType &&
-        name == other.name &&
-        isComputed == other.isComputed &&
-        isPrivate == other.isPrivate &&
-        serialableField == other.serialableField;
-  }
-
-  String toString() {
-    return "UnionField (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)";
-  }
-}
-
-class UnionValue extends $UnionValue {
-  const UnionValue(
-      {@required FieldType returnType,
-      @required String name,
-      @required bool isComputed,
-      @required bool isPrivate,
-      @required Option<SerializableField> serialableField,
-      @required Object value})
-      : _returnType = returnType,
-        assert(returnType != null),
-        _name = name,
-        assert(name != null),
-        _isComputed = isComputed,
-        assert(isComputed != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _serialableField = serialableField,
-        assert(serialableField != null),
-        _value = value,
-        assert(value != null);
-
-  final FieldType _returnType;
-
-  final String _name;
-
-  final bool _isComputed;
-
-  final bool _isPrivate;
-
-  final Option<SerializableField> _serialableField;
-
-  final Object _value;
-
-  FieldType get returnType {
-    return _returnType;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isComputed {
-    return _isComputed;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Option<SerializableField> get serialableField {
-    return _serialableField;
-  }
-
-  Object get value {
-    return _value;
-  }
-
-  UnionValue copy(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField,
-      Object value}) {
-    return UnionValue(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-      value: value ?? _value,
-    );
-  }
-
-  UnionValue copyField(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return copy(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  UnionValue copyValue({Object value}) {
-    return copy(
-      value: value ?? _value,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc(
-              $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
-                  _isComputed.hashCode),
-              _isPrivate.hashCode),
-          _serialableField.hashCode),
-      _value.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! UnionValue) return false;
-    return returnType == other.returnType &&
-        name == other.name &&
-        isComputed == other.isComputed &&
-        isPrivate == other.isPrivate &&
-        serialableField == other.serialableField &&
-        value == other.value;
-  }
-
-  String toString() {
-    return "UnionValue (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)";
-  }
-}
-
-class Union<T extends _$UnionField> extends $Union<T> {
-  const Union(
-      {@required bool isFinal,
-      @required bool isInterface,
-      @required bool isConst,
-      @required Iterable<MetaInterface<T, Union<T>>> interfaces,
-      @required String name,
-      @required bool isPrivate,
-      @required Iterable<TypeParameterDeclaration> typeParameters,
-      @required Iterable<T> fields,
-      @required Iterable<Method> methods,
-      @required bool serializable,
-      @required bool implementsBase})
-      : _isFinal = isFinal,
-        assert(isFinal != null),
-        _isInterface = isInterface,
-        assert(isInterface != null),
-        _isConst = isConst,
-        assert(isConst != null),
-        _interfaces = interfaces,
-        assert(interfaces != null),
-        _name = name,
-        assert(name != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _typeParameters = typeParameters,
-        assert(typeParameters != null),
-        _fields = fields,
-        assert(fields != null),
-        _methods = methods,
-        assert(methods != null),
-        _serializable = serializable,
-        assert(serializable != null),
-        _implementsBase = implementsBase,
-        assert(implementsBase != null);
-
-  final bool _isFinal;
-
-  final bool _isInterface;
-
-  final bool _isConst;
-
-  final Iterable<MetaInterface<T, Union<T>>> _interfaces;
-
-  final String _name;
-
-  final bool _isPrivate;
-
-  final Iterable<TypeParameterDeclaration> _typeParameters;
-
-  final Iterable<T> _fields;
-
-  final Iterable<Method> _methods;
-
-  final bool _serializable;
-
-  final bool _implementsBase;
-
-  bool get isFinal {
-    return _isFinal;
-  }
-
-  bool get isInterface {
-    return _isInterface;
-  }
-
-  bool get isConst {
-    return _isConst;
-  }
-
-  Iterable<MetaInterface<T, Union<T>>> get interfaces {
-    return _interfaces;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Iterable<TypeParameterDeclaration> get typeParameters {
-    return _typeParameters;
-  }
-
-  Iterable<T> get fields {
-    return _fields;
-  }
-
-  Iterable<Method> get methods {
-    return _methods;
-  }
-
-  bool get serializable {
-    return _serializable;
-  }
-
-  bool get implementsBase {
-    return _implementsBase;
-  }
-
-  Union<T> copy(
-      {bool isFinal,
-      bool isInterface,
-      bool isConst,
-      Iterable<MetaInterface<T, Union<T>>> interfaces,
-      String name,
-      bool isPrivate,
-      Iterable<TypeParameterDeclaration> typeParameters,
-      Iterable<T> fields,
-      Iterable<Method> methods,
-      bool serializable,
-      bool implementsBase}) {
-    return Union(
-      isFinal: isFinal ?? _isFinal,
-      isInterface: isInterface ?? _isInterface,
-      isConst: isConst ?? _isConst,
-      interfaces: interfaces ?? _interfaces,
-      name: name ?? _name,
-      isPrivate: isPrivate ?? _isPrivate,
-      typeParameters: typeParameters ?? _typeParameters,
-      fields: fields ?? _fields,
-      methods: methods ?? _methods,
-      serializable: serializable ?? _serializable,
-      implementsBase: implementsBase ?? _implementsBase,
-    );
-  }
-
-  Union<T> copyMeta(
-      {String name,
-      bool isPrivate,
-      Iterable<TypeParameterDeclaration> typeParameters,
-      Iterable<T> fields,
-      Iterable<Method> methods,
-      bool serializable,
-      bool implementsBase}) {
-    return copy(
-      name: name ?? _name,
-      isPrivate: isPrivate ?? _isPrivate,
-      typeParameters: typeParameters ?? _typeParameters,
-      fields: fields ?? _fields,
-      methods: methods ?? _methods,
-      serializable: serializable ?? _serializable,
-      implementsBase: implementsBase ?? _implementsBase,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc(
-              $jc(
-                  $jc(
-                      $jc(
-                          $jc(
-                              $jc(
-                                  $jc(
-                                      $jc($jc(0, _isFinal.hashCode),
-                                          _isInterface.hashCode),
-                                      _isConst.hashCode),
-                                  _interfaces.hashCode),
-                              _name.hashCode),
-                          _isPrivate.hashCode),
-                      _typeParameters.hashCode),
-                  _fields.hashCode),
-              _methods.hashCode),
-          _serializable.hashCode),
-      _implementsBase.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! Union) return false;
-    return isFinal == other.isFinal &&
-        isInterface == other.isInterface &&
-        isConst == other.isConst &&
-        interfaces == other.interfaces &&
-        name == other.name &&
-        isPrivate == other.isPrivate &&
-        typeParameters == other.typeParameters &&
-        fields == other.fields &&
-        methods == other.methods &&
-        serializable == other.serializable &&
-        implementsBase == other.implementsBase;
-  }
-
-  String toString() {
-    return "Union (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)";
   }
 }

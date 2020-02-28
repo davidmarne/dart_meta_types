@@ -15,7 +15,7 @@ Class _documentRef(Collection collection) => Class(
       (b) => b
         ..name = collection.name + 'DocumentReference'
         ..extend = Reference(
-            'TypedDocumentReference<${collection.name}, ${collection.name}Updater, ${collection.name}DocumentReference, ${collection.name}CollectionReference>')
+            'TypedDocumentReference<${collection.documentMetaType.name}, ${collection.documentMetaType.name}Updater, ${collection.name}DocumentReference, ${collection.name}CollectionReference>')
         ..constructors.add(_documentConstructor(collection))
         ..fields.add(_firestoreField)
         ..methods.addAll([
@@ -28,7 +28,7 @@ Constructor _documentConstructor(Collection collection) => Constructor(
       (b) => b
         ..name = '_'
         ..initializers.add(Code(
-            'super(firestore, path, () => ${collection.name}Updater._(), (data) => serializers.deserializeWith(${collection.name}Serializer(), data), (ref) => ${collection.name}DocumentReference._(firestore, ref.path))'))
+            'super(firestore, path, () => ${collection.documentMetaType.name}Updater._(), (data) => serializers.serializeWith(${collection.documentMetaType.name}Serializer(), data), (data) => serializers.deserializeWith(${collection.documentMetaType.name}Serializer(), data), (ref) => ${collection.name}DocumentReference._(firestore, ref.path))'))
         ..requiredParameters.addAll([
           Parameter(
             (b) => b

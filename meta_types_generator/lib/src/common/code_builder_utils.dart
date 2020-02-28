@@ -267,7 +267,7 @@ String whenConditionGenerator<T extends Field>(T field) =>
 
 // when condition generator for seal/sum/union
 String whenOConditionGenerator<T extends Field>(T field) =>
-    'if (_${field.name} != null) { if (${field.name} != null) return ${field.name}(${privateEmptyFieldNameIfVoid(field)}); else return otherwise(); }';
+    'if (_${field.name} != null) { if (${field.name} != null) { return ${field.name}(${privateEmptyFieldNameIfVoid(field)}); } else { return otherwise(); }}';
 
 // when condition for a single field on seal/sum/union
 String whenFieldGenerator<T extends Field>(T field) =>

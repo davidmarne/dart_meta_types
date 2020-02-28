@@ -18,9 +18,7 @@ class Enum<EGN> extends $Enum {
   static const values = <Enum>[Enum.a, Enum.b];
 
   EGN get value => _value;
-
   int get ordinal => values.indexOf(this);
-
   bool get isA {
     return a == this;
   }

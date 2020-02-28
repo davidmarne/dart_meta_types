@@ -7,12 +7,14 @@ abstract class TypedCollectionReference<
         DC extends TypedCollectionReference<D, U, DR, DC>>
     extends TypedQuery<D, U, DR, DC> {
   final CollectionReference _ref;
+  final Map<String, dynamic> Function(D) _serialize;
   final U Function() _updaterFactory;
 
   TypedCollectionReference(
     Firestore firestore,
     String path,
     this._updaterFactory,
+    this._serialize,
     DR Function(DocumentReference) toTypedDocumentReference,
     DC Function(CollectionReference) toTypedCollectionReference,
   )   : _ref = firestore.collection(path),
@@ -55,11 +57,9 @@ abstract class TypedCollectionReference<
   ///
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
-  Future<DR> add(void Function(U) updater) async {
-    final u = _updaterFactory();
-    updater(u);
+  Future<DR> add(D value) async {
     return _toTypedDocumentReference(
-      await _ref.add(u.update),
+      await _ref.add(_serialize(value)),
     );
   }
 }

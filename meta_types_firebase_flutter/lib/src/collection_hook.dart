@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:meta_types_firebase/meta_types_firebase.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:built_collection/built_collection.dart';
 
 import 'resolution_wrappers/document_snapshot.dart';
 import 'typed_wrappers.dart';
@@ -12,7 +13,7 @@ CollectionResolution<D> useFirebaseCollection<
         U extends DocumentUpdater<D>,
         DR extends TypedDocumentReference<D, U, DR, DC>,
         DC extends TypedCollectionReference<D, U, DR, DC>>(
-    TypedCollectionReference<D, U, DR, DC> ref) {
+    TypedQuery<D, U, DR, DC> ref) {
   return Hook.use(_FirebaseCollectionHook<D, U, DR, DC>(ref: ref));
 }
 
@@ -22,7 +23,7 @@ class _FirebaseCollectionHook<
         DR extends TypedDocumentReference<D, U, DR, DC>,
         DC extends TypedCollectionReference<D, U, DR, DC>>
     extends Hook<CollectionResolution<D>> {
-  final DC ref;
+  final TypedQuery<D, U, DR, DC> ref;
   const _FirebaseCollectionHook({this.ref});
 
   @override
@@ -48,7 +49,7 @@ class _FirebaseCollectionHookState<
 
   @override
   void didUpdateHook(old) {
-    _setupSub();
+    if (old.ref != hook.ref) _setupSub();
   }
 
   void _setupSub() {
