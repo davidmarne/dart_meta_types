@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/element/type.dart';
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/core.dart';
 import 'package:meta_types/meta_types.dart';
 import 'package:meta_types_generator/api.dart';
 

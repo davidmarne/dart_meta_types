@@ -1,4 +1,4 @@
-part of meta_types_models;
+part of meta_types;
 
 @dataInterface
 abstract class _$SumField implements Field {}

@@ -1,123 +1,96 @@
-// import 'package:meta_types/meta_types.dart';
-// import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/meta_types.dart';
+import 'package:meta_types/core.dart';
 
-// part 'example.g.dart';
+part 'example.g.dart';
 
-// // regular data class,
-// @DataClass()
-// abstract class $ExampleDataClass {
-//   // fieldWithNoDefault is a field without a default value
-//   // the constructor will require a value be passed for this param
-//   int get fieldWithNoDefault;
+// ExampleSumClass will require one and only
+// on of the following fields are set.
+@sum
+abstract class $ExampleSumClass {
+  int get integer;
+  String get string;
+}
 
-//   // fieldWithDefault uses a default value of 10 if
-//   // no other value is passed to the constructor
-//   int get fieldWithDefault => 10;
+// regular data class
+@data
+abstract class $ExampleDataClass {
+  // fieldWithNoDefault is a field without a default value
+  // the constructor will require a value be passed for this param
+  int get fieldWithNoDefault;
 
-//   // data class fields are not nullable, one must
-//   // use the Option sum type to represent nullable fields
-//   Option<int> get nullable;
+  // fieldWithDefault uses a default value of 10 if
+  // no other value is passed to the constructor
+  int get fieldWithDefault => 10;
 
-//   // computed fields memoize the result of the getter function
-//   @computed
-//   int get computedField => fieldWithDefault + 5;
-// }
+  // data class fields are not nullable, one must
+  // use the Option sum type to represent nullable fields
+  Option<int> get nullable;
 
-// // ImplementorDataClass will implement $InterfaceDataClass
-// @DataClass()
-// abstract class $ImplementorDataClass implements InterfaceDataClass {
-//   int get foo;
-// }
+  // computed fields memoize the result of the getter function
+  @computed
+  int get computedField => fieldWithDefault + 5;
+}
 
-// // $InterfaceDataClass must only be implemented. It will not be constructable itself.
-// // It cannot be used in extends clauses, only implements clauses. Interfaces cannot
-// // have default values.
-// @DataClass(isInterface: true)
-// abstract class InterfaceDataClass {
-//   String get bar;
-// }
+// InterfaceDataClass must only be implemented. No code will be generated.
+@dataInterface
+abstract class InterfaceDataClass {
+  String get foo;
+}
 
-// // ExampleSealedClass will require one and only
-// // on of the following fields are set. A when function
-// // is also generated for easy switching. e.g.:
-// // sealedClassInstance.when<void>(
-// //   (intval) => print('int val is $intval'),
-// //   (strval) => print('str val is $strval'),
-// // );
-// @SumClass()
-// abstract class $ExampleSealedClass {
-//   int get integer;
-//   String get string;
-// }
+// ImplementorDataClass will implement $InterfaceDataClass
+@data
+abstract class $ImplementorDataClass implements InterfaceDataClass {
+  int get baz;
+}
 
-// // // enum class with int will using incrementing integers as values
-// // // unless a nother value is specified
+@data
+abstract class $ImplementorDataClass2 implements InterfaceDataClass {
+  int get bar;
+}
 
-// // @EnumClass(int)
-// // abstract class $ExampleEnumInteger {
-// //   static int a; // 0
-// //   static int b; // 1
-// //   static int c = 1000; // 1000
-// //   static int d; // 3
-// // }
+// sealed class is a sum of InterfaceDataClass.
+// all fields must implement InterfaceDataClass.
+// Any fields form InterfaceDataClass will be accesiable
+// from instance of SealedDataClass.
+@seal
+abstract class $SealedDataClass implements InterfaceDataClass {
+  ImplementorDataClass get one;
+  ImplementorDataClass2 get two;
+}
 
-// // enum class with strings will use field name as value
-// // unless a nother value is specified
+// enum class, all fields must be static const
 
-// // @EnumClass(String)
-// // abstract class $ExampleEnumString {
-// //   static String a;
-// //   static String b;
-// //   static String c = 'custom';
-// // }
+@enumeration
+abstract class $ExampleEnumString {
+  const $ExampleEnumString();
 
-// // // enum class with custom type.
+  static const String a = 'a';
+  static const String b = 'b';
+  static const String c = 'c';
+}
 
-// // @EnumClass()
-// // abstract class $ProtocolState implements Signal {
-// //   const $ProtocolState();
+// Binary tree is an example of an algebreic data type
 
-// //   static const Waiting waiting = Waiting();
-// //   static const Talking talking = Talking();
-// // }
+@sum
+abstract class $BinaryTree<T> {
+  T get leaf;
+  Branch<T> get branch;
+}
 
-// // abstract class Signal {
-// //   ProtocolState get signal;
-// // }
+@data
+abstract class $Branch<T> {
+  T get val;
+  BinaryTree<T> get left;
+  BinaryTree<T> get right;
+}
 
-// // class Waiting implements Signal {
-// //   const Waiting();
-// //   ProtocolState get signal => ProtocolState.talking;
-// // }
-
-// // class Talking implements Signal {
-// //   const Talking();
-// //   ProtocolState get signal => ProtocolState.waiting;
-// // }
-
-// // Binary tree is an example of an algebreic data type
-// // It is the combination of two sums
-
-// @SumClass()
-// abstract class $BinaryTree<T> {
-//   T get leaf;
-//   Branch<T> get branch;
-// }
-
-// @DataClass()
-// abstract class $Branch<T> {
-//   T get val;
-//   BinaryTree<T> get left;
-//   BinaryTree<T> get right;
-// }
-
-// void traverse(BinaryTree<int> tree) => tree.when(
-//       leaf: (val) {
-//         print(val);
-//       },
-//       branch: (b) {
-//         print(b.val);
-//         traverse(b.left);
-//         traverse(b.right);
-//       },
-//     );
+void traverse(BinaryTree<int> tree) => tree.when(
+      leaf: (val) {
+        print(val);
+      },
+      branch: (b) {
+        print(b.val);
+        traverse(b.left);
+        traverse(b.right);
+      },
+    );

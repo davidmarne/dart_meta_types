@@ -19,10 +19,12 @@ class DataInterfaceBasicImplementation
 
   final int _inheritedValue;
 
+  @override
   int get concreteValue {
     return _concreteValue;
   }
 
+  @override
   int get inheritedValue {
     return _inheritedValue;
   }
@@ -42,8 +44,10 @@ class DataInterfaceBasicImplementation
     );
   }
 
+  @override
   int get hashCode =>
       $jf($jc($jc(0, _concreteValue.hashCode), _inheritedValue.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataInterfaceBasicImplementation) return false;
@@ -51,8 +55,9 @@ class DataInterfaceBasicImplementation
         inheritedValue == other.inheritedValue;
   }
 
+  @override
   String toString() {
-    return "DataInterfaceBasicImplementation (concreteValue: $concreteValue, inheritedValue: $inheritedValue)";
+    return 'DataInterfaceBasicImplementation (concreteValue: $concreteValue, inheritedValue: $inheritedValue)';
   }
 }
 
@@ -121,12 +126,14 @@ class SumGenerics<A, B extends DataInterfaceBasic> extends $SumGenerics<A, B> {
 
   final B _genericSumExtension;
 
+  @override
   A get genericNoExtension {
     if (_genericNoExtension != null) return _genericNoExtension;
     throw Exception(
         'Illegal access of sum field, genericNoExtension is not set');
   }
 
+  @override
   B get genericSumExtension {
     if (_genericSumExtension != null) return _genericSumExtension;
     throw Exception(
@@ -142,11 +149,15 @@ class SumGenerics<A, B extends DataInterfaceBasic> extends $SumGenerics<A, B> {
   }
 
   void whenGenericNoExtension(void Function(A) handler) {
-    if (_genericNoExtension != null) return handler(_genericNoExtension);
+    if (_genericNoExtension != null) {
+      return handler(_genericNoExtension);
+    }
   }
 
   void whenGenericSumExtension(void Function(B) handler) {
-    if (_genericSumExtension != null) return handler(_genericSumExtension);
+    if (_genericSumExtension != null) {
+      return handler(_genericSumExtension);
+    }
   }
 
   WHEN when<WHEN>(
@@ -166,22 +177,26 @@ class SumGenerics<A, B extends DataInterfaceBasic> extends $SumGenerics<A, B> {
       WHEN Function(A) genericNoExtension,
       WHEN Function(B) genericSumExtension}) {
     if (_genericNoExtension != null) {
-      if (genericNoExtension != null)
+      if (genericNoExtension != null) {
         return genericNoExtension(_genericNoExtension);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_genericSumExtension != null) {
-      if (genericSumExtension != null)
+      if (genericSumExtension != null) {
         return genericSumExtension(_genericSumExtension);
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf(
       $jc($jc(0, _genericNoExtension.hashCode), _genericSumExtension.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SumGenerics) return false;
@@ -189,8 +204,9 @@ class SumGenerics<A, B extends DataInterfaceBasic> extends $SumGenerics<A, B> {
         _genericSumExtension == other._genericSumExtension;
   }
 
+  @override
   String toString() {
-    return "SumGenerics (${when(genericNoExtension: (genericNoExtension) => 'genericNoExtension $genericNoExtension', genericSumExtension: (genericSumExtension) => 'genericSumExtension $genericSumExtension')}))";
+    return 'SumGenerics (${when(genericNoExtension: (genericNoExtension) => 'genericNoExtension $genericNoExtension', genericSumExtension: (genericSumExtension) => 'genericSumExtension $genericSumExtension')}))';
   }
 }
 
@@ -270,11 +286,13 @@ class SumConst extends $SumConst {
 
   final double _b;
 
+  @override
   int get a {
     if (_a != null) return _a;
     throw Exception('Illegal access of sum field, a is not set');
   }
 
+  @override
   double get b {
     if (_b != null) return _b;
     throw Exception('Illegal access of sum field, b is not set');
@@ -289,11 +307,15 @@ class SumConst extends $SumConst {
   }
 
   void whenA(void Function(int) handler) {
-    if (_a != null) return handler(_a);
+    if (_a != null) {
+      return handler(_a);
+    }
   }
 
   void whenB(void Function(double) handler) {
-    if (_b != null) return handler(_b);
+    if (_b != null) {
+      return handler(_b);
+    }
   }
 
   WHEN when<WHEN>(
@@ -312,29 +334,34 @@ class SumConst extends $SumConst {
       WHEN Function(int) a,
       WHEN Function(double) b}) {
     if (_a != null) {
-      if (a != null)
+      if (a != null) {
         return a(_a);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_b != null) {
-      if (b != null)
+      if (b != null) {
         return b(_b);
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _a.hashCode), _b.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SumConst) return false;
     return _a == other._a && _b == other._b;
   }
 
+  @override
   String toString() {
-    return "SumConst (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))";
+    return 'SumConst (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))';
   }
 }
 
@@ -407,11 +434,13 @@ class SumComputedFields extends $SumComputedFields {
     return _doubled ??= super.doubled;
   }
 
+  @override
   int get a {
     if (_a != null) return _a;
     throw Exception('Illegal access of sum field, a is not set');
   }
 
+  @override
   double get b {
     if (_b != null) return _b;
     throw Exception('Illegal access of sum field, b is not set');
@@ -426,11 +455,15 @@ class SumComputedFields extends $SumComputedFields {
   }
 
   void whenA(void Function(int) handler) {
-    if (_a != null) return handler(_a);
+    if (_a != null) {
+      return handler(_a);
+    }
   }
 
   void whenB(void Function(double) handler) {
-    if (_b != null) return handler(_b);
+    if (_b != null) {
+      return handler(_b);
+    }
   }
 
   WHEN when<WHEN>(
@@ -449,29 +482,34 @@ class SumComputedFields extends $SumComputedFields {
       WHEN Function(int) a,
       WHEN Function(double) b}) {
     if (_a != null) {
-      if (a != null)
+      if (a != null) {
         return a(_a);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_b != null) {
-      if (b != null)
+      if (b != null) {
         return b(_b);
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _a.hashCode), _b.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SumComputedFields) return false;
     return _a == other._a && _b == other._b;
   }
 
+  @override
   String toString() {
-    return "SumComputedFields (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))";
+    return 'SumComputedFields (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))';
   }
 }
 
@@ -551,11 +589,13 @@ class SumWithVoid extends $SumWithVoid {
 
   final bool _v;
 
+  @override
   int get a {
     if (_a != null) return _a;
     throw Exception('Illegal access of sum field, a is not set');
   }
 
+  @override
   void get v {
     if (_v != null) return;
     throw Exception('Illegal access of sum field, v is not set');
@@ -570,11 +610,15 @@ class SumWithVoid extends $SumWithVoid {
   }
 
   void whenA(void Function(int) handler) {
-    if (_a != null) return handler(_a);
+    if (_a != null) {
+      return handler(_a);
+    }
   }
 
   void whenV(void Function() handler) {
-    if (_v != null) return handler();
+    if (_v != null) {
+      return handler();
+    }
   }
 
   WHEN when<WHEN>(
@@ -591,29 +635,34 @@ class SumWithVoid extends $SumWithVoid {
   WHEN wheno<WHEN>(
       {WHEN Function() otherwise, WHEN Function(int) a, WHEN Function() v}) {
     if (_a != null) {
-      if (a != null)
+      if (a != null) {
         return a(_a);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_v != null) {
-      if (v != null)
+      if (v != null) {
         return v();
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _a.hashCode), _v.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SumWithVoid) return false;
     return _a == other._a && _v == other._v;
   }
 
+  @override
   String toString() {
-    return "SumWithVoid (${when(a: (a) => 'a $a', v: () => 'v')}))";
+    return 'SumWithVoid (${when(a: (a) => 'a $a', v: () => 'v')}))';
   }
 }
 

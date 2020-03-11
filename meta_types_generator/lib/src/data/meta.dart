@@ -1,6 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart'
-    show Data, DataField, MetaInterface;
+import 'package:meta_types/meta_types.dart' show Data, DataField, MetaInterface;
 
 Field metaField(Data<DataField> d) => Field((b) => b
   ..name = '_meta\$'

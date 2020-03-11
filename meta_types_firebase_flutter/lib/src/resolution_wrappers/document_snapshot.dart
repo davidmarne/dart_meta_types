@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'package:meta_types_firebase/meta_types_firebase.dart';
+
 import 'package:built_collection/built_collection.dart';
 
-import '../typed_wrappers.dart';
 import '../document_updater.dart';
+import '../resolutions.dart';
+import '../typed_wrappers.dart';
 
 class DocumentResolver<
     D,

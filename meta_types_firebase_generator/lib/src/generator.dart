@@ -4,7 +4,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:meta_types_generator/api.dart';
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/core.dart';
 
 import 'context.dart';
 import 'models.dart';

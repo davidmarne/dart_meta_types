@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:meta_types_firebase/meta_types_firebase.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:built_collection/built_collection.dart';
 
 import 'resolution_wrappers/document_snapshot.dart';
 import 'typed_wrappers.dart';
 import 'document_updater.dart';
+import 'resolutions.dart';
 
 CollectionResolution<D> useFirebaseCollection<
         D,
@@ -68,7 +67,7 @@ class _FirebaseCollectionHookState<
   }
 
   @override
-  build(BuildContext context) {
+  CollectionResolution<D> build(BuildContext context) {
     return _state;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/meta_types.dart';
 import 'meta_class.dart' show TemplateException;
 import 'meta_class_cache.dart';
 import 'util.dart';
@@ -12,13 +12,13 @@ Data<DataField> dataFromClassElement(
 ) {
   if (element.fields.isNotEmpty &&
       element.fields.every((f) => !f.isSynthetic)) {
-    throw new TemplateException(
+    throw TemplateException(
         'data class should have no fields. see ${element.name}');
   }
 
   final fields = element.accessors.map((accessor) {
     if (!accessor.isGetter) {
-      throw new TemplateException(
+      throw TemplateException(
           'data class accessors should be getters. see ${accessor.name} on class ${element.name}');
     }
     // if (!accessor.isAbstract && !isComputed(accessor.metadata))

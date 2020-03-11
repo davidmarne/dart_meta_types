@@ -1,0 +1,19 @@
+name: meta_types_staging
+version: 0.0.0
+description:
+  temp library for generating meta_types models
+authors:
+- David Marne <davemarne@gmail.com>
+homepage: https://github.com/davidmarne/dart_meta_types/meta_types_staging
+
+dependencies:
+  built_value: ^7.0.0
+  meta: ^1.0.0
+
+dev_dependencies:
+  build_runner: ^1.0.0
+  meta_types_generator:
+    path: ../meta_types_generator
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'

@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/meta_types.dart';
 import 'meta_class.dart';
 import 'meta_class_cache.dart';
 import 'util.dart';
@@ -12,7 +12,7 @@ Enum<EnumField, DataField> enumFromClassElement(
 ) {
   final fields = element.fields.map((field) {
     if (!field.isConst || !field.isStatic || field.initializer == null) {
-      throw new TemplateException(
+      throw TemplateException(
           'enum class fields should be initialized static const. see ${field.name} on ${element.name}');
     }
 

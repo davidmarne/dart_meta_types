@@ -6,8 +6,8 @@ part 'enumeration.g.dart';
 
 @enumeration
 @serializable
-abstract class $Enum {
-  const $Enum();
+abstract class $TestEnum {
+  const $TestEnum();
   static const int a = 0;
-  static const String b = "b";
+  static const String b = 'b';
 }

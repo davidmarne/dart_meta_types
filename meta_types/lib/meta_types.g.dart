@@ -1,853 +1,10 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of meta_types_models;
+part of meta_types;
 
 // **************************************************************************
 // MetaTypesGenerator
 // **************************************************************************
-
-class SealedField extends $SealedField {
-  const SealedField(
-      {@required FieldType returnType,
-      @required String name,
-      @required bool isComputed,
-      @required bool isPrivate,
-      @required Option<SerializableField> serialableField})
-      : _returnType = returnType,
-        assert(returnType != null),
-        _name = name,
-        assert(name != null),
-        _isComputed = isComputed,
-        assert(isComputed != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _serialableField = serialableField,
-        assert(serialableField != null);
-
-  final FieldType _returnType;
-
-  final String _name;
-
-  final bool _isComputed;
-
-  final bool _isPrivate;
-
-  final Option<SerializableField> _serialableField;
-
-  FieldType get returnType {
-    return _returnType;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isComputed {
-    return _isComputed;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Option<SerializableField> get serialableField {
-    return _serialableField;
-  }
-
-  SealedField copy(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return SealedField(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  SealedField copyField(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return copy(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
-              _isComputed.hashCode),
-          _isPrivate.hashCode),
-      _serialableField.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! SealedField) return false;
-    return returnType == other.returnType &&
-        name == other.name &&
-        isComputed == other.isComputed &&
-        isPrivate == other.isPrivate &&
-        serialableField == other.serialableField;
-  }
-
-  String toString() {
-    return "SealedField (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)";
-  }
-}
-
-class SealedValue extends $SealedValue {
-  const SealedValue(
-      {@required FieldType returnType,
-      @required String name,
-      @required bool isComputed,
-      @required bool isPrivate,
-      @required Option<SerializableField> serialableField,
-      @required Object value})
-      : _returnType = returnType,
-        assert(returnType != null),
-        _name = name,
-        assert(name != null),
-        _isComputed = isComputed,
-        assert(isComputed != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _serialableField = serialableField,
-        assert(serialableField != null),
-        _value = value,
-        assert(value != null);
-
-  final FieldType _returnType;
-
-  final String _name;
-
-  final bool _isComputed;
-
-  final bool _isPrivate;
-
-  final Option<SerializableField> _serialableField;
-
-  final Object _value;
-
-  FieldType get returnType {
-    return _returnType;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isComputed {
-    return _isComputed;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Option<SerializableField> get serialableField {
-    return _serialableField;
-  }
-
-  Object get value {
-    return _value;
-  }
-
-  SealedValue copy(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField,
-      Object value}) {
-    return SealedValue(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-      value: value ?? _value,
-    );
-  }
-
-  SealedValue copyField(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return copy(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  SealedValue copyValue({Object value}) {
-    return copy(
-      value: value ?? _value,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc(
-              $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
-                  _isComputed.hashCode),
-              _isPrivate.hashCode),
-          _serialableField.hashCode),
-      _value.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! SealedValue) return false;
-    return returnType == other.returnType &&
-        name == other.name &&
-        isComputed == other.isComputed &&
-        isPrivate == other.isPrivate &&
-        serialableField == other.serialableField &&
-        value == other.value;
-  }
-
-  String toString() {
-    return "SealedValue (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)";
-  }
-}
-
-class Sealed<T extends _$SealedField, D extends _$DataField>
-    extends $Sealed<T, D> {
-  const Sealed(
-      {@required bool isConst,
-      @required Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<D> dataFields,
-      @required String name,
-      @required bool isPrivate,
-      @required Iterable<TypeParameterDeclaration> typeParameters,
-      @required Iterable<T> fields,
-      @required Iterable<Method> methods,
-      @required bool serializable,
-      @required bool implementsBase})
-      : _isConst = isConst,
-        assert(isConst != null),
-        _dataInterfaces = dataInterfaces,
-        assert(dataInterfaces != null),
-        _computedFields = computedFields,
-        assert(computedFields != null),
-        _nonComputedFields = nonComputedFields,
-        assert(nonComputedFields != null),
-        _dataFields = dataFields,
-        assert(dataFields != null),
-        _name = name,
-        assert(name != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _typeParameters = typeParameters,
-        assert(typeParameters != null),
-        _fields = fields,
-        assert(fields != null),
-        _methods = methods,
-        assert(methods != null),
-        _serializable = serializable,
-        assert(serializable != null),
-        _implementsBase = implementsBase,
-        assert(implementsBase != null);
-
-  final bool _isConst;
-
-  final Iterable<MetaInterface<D, Data<D>>> _dataInterfaces;
-
-  final Iterable<T> _computedFields;
-
-  final Iterable<T> _nonComputedFields;
-
-  final Iterable<D> _dataFields;
-
-  final String _name;
-
-  final bool _isPrivate;
-
-  final Iterable<TypeParameterDeclaration> _typeParameters;
-
-  final Iterable<T> _fields;
-
-  final Iterable<Method> _methods;
-
-  final bool _serializable;
-
-  final bool _implementsBase;
-
-  bool get isConst {
-    return _isConst;
-  }
-
-  Iterable<MetaInterface<D, Data<D>>> get dataInterfaces {
-    return _dataInterfaces;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Iterable<TypeParameterDeclaration> get typeParameters {
-    return _typeParameters;
-  }
-
-  Iterable<T> get fields {
-    return _fields;
-  }
-
-  Iterable<Method> get methods {
-    return _methods;
-  }
-
-  bool get serializable {
-    return _serializable;
-  }
-
-  bool get implementsBase {
-    return _implementsBase;
-  }
-
-  Iterable<T> get computedFields {
-    return _computedFields ?? super.computedFields;
-  }
-
-  Iterable<T> get nonComputedFields {
-    return _nonComputedFields ?? super.nonComputedFields;
-  }
-
-  Iterable<D> get dataFields {
-    return _dataFields ?? super.dataFields;
-  }
-
-  Sealed<T, D> copy(
-      {bool isConst,
-      Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<D> dataFields,
-      String name,
-      bool isPrivate,
-      Iterable<TypeParameterDeclaration> typeParameters,
-      Iterable<T> fields,
-      Iterable<Method> methods,
-      bool serializable,
-      bool implementsBase}) {
-    return Sealed(
-      isConst: isConst ?? _isConst,
-      dataInterfaces: dataInterfaces ?? _dataInterfaces,
-      computedFields: computedFields ?? _computedFields,
-      nonComputedFields: nonComputedFields ?? _nonComputedFields,
-      dataFields: dataFields ?? _dataFields,
-      name: name ?? _name,
-      isPrivate: isPrivate ?? _isPrivate,
-      typeParameters: typeParameters ?? _typeParameters,
-      fields: fields ?? _fields,
-      methods: methods ?? _methods,
-      serializable: serializable ?? _serializable,
-      implementsBase: implementsBase ?? _implementsBase,
-    );
-  }
-
-  Sealed<T, D> copyMeta(
-      {String name,
-      bool isPrivate,
-      Iterable<TypeParameterDeclaration> typeParameters,
-      Iterable<T> fields,
-      Iterable<Method> methods,
-      bool serializable,
-      bool implementsBase}) {
-    return copy(
-      name: name ?? _name,
-      isPrivate: isPrivate ?? _isPrivate,
-      typeParameters: typeParameters ?? _typeParameters,
-      fields: fields ?? _fields,
-      methods: methods ?? _methods,
-      serializable: serializable ?? _serializable,
-      implementsBase: implementsBase ?? _implementsBase,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc(
-              $jc(
-                  $jc(
-                      $jc(
-                          $jc(
-                              $jc(
-                                  $jc(
-                                      $jc(
-                                          $jc($jc(0, _isConst.hashCode),
-                                              _dataInterfaces.hashCode),
-                                          _computedFields.hashCode),
-                                      _nonComputedFields.hashCode),
-                                  _dataFields.hashCode),
-                              _name.hashCode),
-                          _isPrivate.hashCode),
-                      _typeParameters.hashCode),
-                  _fields.hashCode),
-              _methods.hashCode),
-          _serializable.hashCode),
-      _implementsBase.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! Sealed) return false;
-    return isConst == other.isConst &&
-        dataInterfaces == other.dataInterfaces &&
-        computedFields == other.computedFields &&
-        nonComputedFields == other.nonComputedFields &&
-        dataFields == other.dataFields &&
-        name == other.name &&
-        isPrivate == other.isPrivate &&
-        typeParameters == other.typeParameters &&
-        fields == other.fields &&
-        methods == other.methods &&
-        serializable == other.serializable &&
-        implementsBase == other.implementsBase;
-  }
-
-  String toString() {
-    return "Sealed (isConst: $isConst, dataInterfaces: $dataInterfaces, computedFields: $computedFields, nonComputedFields: $nonComputedFields, dataFields: $dataFields, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)";
-  }
-}
-
-class EnumField extends $EnumField {
-  const EnumField(
-      {@required FieldType returnType,
-      @required String name,
-      @required bool isComputed,
-      @required bool isPrivate,
-      @required Option<SerializableField> serialableField})
-      : _returnType = returnType,
-        assert(returnType != null),
-        _name = name,
-        assert(name != null),
-        _isComputed = isComputed,
-        assert(isComputed != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _serialableField = serialableField,
-        assert(serialableField != null);
-
-  final FieldType _returnType;
-
-  final String _name;
-
-  final bool _isComputed;
-
-  final bool _isPrivate;
-
-  final Option<SerializableField> _serialableField;
-
-  FieldType get returnType {
-    return _returnType;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isComputed {
-    return _isComputed;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Option<SerializableField> get serialableField {
-    return _serialableField;
-  }
-
-  EnumField copy(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return EnumField(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  EnumField copyField(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return copy(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
-              _isComputed.hashCode),
-          _isPrivate.hashCode),
-      _serialableField.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! EnumField) return false;
-    return returnType == other.returnType &&
-        name == other.name &&
-        isComputed == other.isComputed &&
-        isPrivate == other.isPrivate &&
-        serialableField == other.serialableField;
-  }
-
-  String toString() {
-    return "EnumField (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)";
-  }
-}
-
-class EnumValue extends $EnumValue {
-  const EnumValue(
-      {@required FieldType returnType,
-      @required String name,
-      @required bool isComputed,
-      @required bool isPrivate,
-      @required Option<SerializableField> serialableField,
-      @required Object value})
-      : _returnType = returnType,
-        assert(returnType != null),
-        _name = name,
-        assert(name != null),
-        _isComputed = isComputed,
-        assert(isComputed != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _serialableField = serialableField,
-        assert(serialableField != null),
-        _value = value,
-        assert(value != null);
-
-  final FieldType _returnType;
-
-  final String _name;
-
-  final bool _isComputed;
-
-  final bool _isPrivate;
-
-  final Option<SerializableField> _serialableField;
-
-  final Object _value;
-
-  FieldType get returnType {
-    return _returnType;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isComputed {
-    return _isComputed;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Option<SerializableField> get serialableField {
-    return _serialableField;
-  }
-
-  Object get value {
-    return _value;
-  }
-
-  EnumValue copy(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField,
-      Object value}) {
-    return EnumValue(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-      value: value ?? _value,
-    );
-  }
-
-  EnumValue copyField(
-      {FieldType returnType,
-      String name,
-      bool isComputed,
-      bool isPrivate,
-      Option<SerializableField> serialableField}) {
-    return copy(
-      returnType: returnType ?? _returnType,
-      name: name ?? _name,
-      isComputed: isComputed ?? _isComputed,
-      isPrivate: isPrivate ?? _isPrivate,
-      serialableField: serialableField ?? _serialableField,
-    );
-  }
-
-  EnumValue copyValue({Object value}) {
-    return copy(
-      value: value ?? _value,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc(
-              $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
-                  _isComputed.hashCode),
-              _isPrivate.hashCode),
-          _serialableField.hashCode),
-      _value.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! EnumValue) return false;
-    return returnType == other.returnType &&
-        name == other.name &&
-        isComputed == other.isComputed &&
-        isPrivate == other.isPrivate &&
-        serialableField == other.serialableField &&
-        value == other.value;
-  }
-
-  String toString() {
-    return "EnumValue (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)";
-  }
-}
-
-class Enum<T extends _$EnumField, D extends _$DataField> extends $Enum<T, D> {
-  const Enum(
-      {@required String type,
-      @required Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<D> dataFields,
-      @required String name,
-      @required bool isPrivate,
-      @required Iterable<TypeParameterDeclaration> typeParameters,
-      @required Iterable<T> fields,
-      @required Iterable<Method> methods,
-      @required bool serializable,
-      @required bool implementsBase})
-      : _type = type,
-        assert(type != null),
-        _dataInterfaces = dataInterfaces,
-        assert(dataInterfaces != null),
-        _computedFields = computedFields,
-        assert(computedFields != null),
-        _nonComputedFields = nonComputedFields,
-        assert(nonComputedFields != null),
-        _dataFields = dataFields,
-        assert(dataFields != null),
-        _name = name,
-        assert(name != null),
-        _isPrivate = isPrivate,
-        assert(isPrivate != null),
-        _typeParameters = typeParameters,
-        assert(typeParameters != null),
-        _fields = fields,
-        assert(fields != null),
-        _methods = methods,
-        assert(methods != null),
-        _serializable = serializable,
-        assert(serializable != null),
-        _implementsBase = implementsBase,
-        assert(implementsBase != null);
-
-  final String _type;
-
-  final Iterable<MetaInterface<D, Data<D>>> _dataInterfaces;
-
-  final Iterable<T> _computedFields;
-
-  final Iterable<T> _nonComputedFields;
-
-  final Iterable<D> _dataFields;
-
-  final String _name;
-
-  final bool _isPrivate;
-
-  final Iterable<TypeParameterDeclaration> _typeParameters;
-
-  final Iterable<T> _fields;
-
-  final Iterable<Method> _methods;
-
-  final bool _serializable;
-
-  final bool _implementsBase;
-
-  String get type {
-    return _type;
-  }
-
-  Iterable<MetaInterface<D, Data<D>>> get dataInterfaces {
-    return _dataInterfaces;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  bool get isPrivate {
-    return _isPrivate;
-  }
-
-  Iterable<TypeParameterDeclaration> get typeParameters {
-    return _typeParameters;
-  }
-
-  Iterable<T> get fields {
-    return _fields;
-  }
-
-  Iterable<Method> get methods {
-    return _methods;
-  }
-
-  bool get serializable {
-    return _serializable;
-  }
-
-  bool get implementsBase {
-    return _implementsBase;
-  }
-
-  Iterable<T> get computedFields {
-    return _computedFields ?? super.computedFields;
-  }
-
-  Iterable<T> get nonComputedFields {
-    return _nonComputedFields ?? super.nonComputedFields;
-  }
-
-  Iterable<D> get dataFields {
-    return _dataFields ?? super.dataFields;
-  }
-
-  Enum<T, D> copy(
-      {String type,
-      Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<D> dataFields,
-      String name,
-      bool isPrivate,
-      Iterable<TypeParameterDeclaration> typeParameters,
-      Iterable<T> fields,
-      Iterable<Method> methods,
-      bool serializable,
-      bool implementsBase}) {
-    return Enum(
-      type: type ?? _type,
-      dataInterfaces: dataInterfaces ?? _dataInterfaces,
-      computedFields: computedFields ?? _computedFields,
-      nonComputedFields: nonComputedFields ?? _nonComputedFields,
-      dataFields: dataFields ?? _dataFields,
-      name: name ?? _name,
-      isPrivate: isPrivate ?? _isPrivate,
-      typeParameters: typeParameters ?? _typeParameters,
-      fields: fields ?? _fields,
-      methods: methods ?? _methods,
-      serializable: serializable ?? _serializable,
-      implementsBase: implementsBase ?? _implementsBase,
-    );
-  }
-
-  Enum<T, D> copyMeta(
-      {String name,
-      bool isPrivate,
-      Iterable<TypeParameterDeclaration> typeParameters,
-      Iterable<T> fields,
-      Iterable<Method> methods,
-      bool serializable,
-      bool implementsBase}) {
-    return copy(
-      name: name ?? _name,
-      isPrivate: isPrivate ?? _isPrivate,
-      typeParameters: typeParameters ?? _typeParameters,
-      fields: fields ?? _fields,
-      methods: methods ?? _methods,
-      serializable: serializable ?? _serializable,
-      implementsBase: implementsBase ?? _implementsBase,
-    );
-  }
-
-  int get hashCode => $jf($jc(
-      $jc(
-          $jc(
-              $jc(
-                  $jc(
-                      $jc(
-                          $jc(
-                              $jc(
-                                  $jc(
-                                      $jc(
-                                          $jc($jc(0, _type.hashCode),
-                                              _dataInterfaces.hashCode),
-                                          _computedFields.hashCode),
-                                      _nonComputedFields.hashCode),
-                                  _dataFields.hashCode),
-                              _name.hashCode),
-                          _isPrivate.hashCode),
-                      _typeParameters.hashCode),
-                  _fields.hashCode),
-              _methods.hashCode),
-          _serializable.hashCode),
-      _implementsBase.hashCode));
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! Enum) return false;
-    return type == other.type &&
-        dataInterfaces == other.dataInterfaces &&
-        computedFields == other.computedFields &&
-        nonComputedFields == other.nonComputedFields &&
-        dataFields == other.dataFields &&
-        name == other.name &&
-        isPrivate == other.isPrivate &&
-        typeParameters == other.typeParameters &&
-        fields == other.fields &&
-        methods == other.methods &&
-        serializable == other.serializable &&
-        implementsBase == other.implementsBase;
-  }
-
-  String toString() {
-    return "Enum (type: $type, dataInterfaces: $dataInterfaces, computedFields: $computedFields, nonComputedFields: $nonComputedFields, dataFields: $dataFields, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)";
-  }
-}
 
 class DataField extends $DataField {
   const DataField(
@@ -887,30 +44,37 @@ class DataField extends $DataField {
 
   final Option<SerializableField> _serialableField;
 
+  @override
   bool get isAbstract {
     return _isAbstract;
   }
 
+  @override
   bool get isDefaulted {
     return _isDefaulted;
   }
 
+  @override
   FieldType get returnType {
     return _returnType;
   }
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   bool get isComputed {
     return _isComputed;
   }
 
+  @override
   bool get isPrivate {
     return _isPrivate;
   }
 
+  @override
   Option<SerializableField> get serialableField {
     return _serialableField;
   }
@@ -949,6 +113,7 @@ class DataField extends $DataField {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc(
@@ -959,6 +124,7 @@ class DataField extends $DataField {
               _isComputed.hashCode),
           _isPrivate.hashCode),
       _serialableField.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataField) return false;
@@ -971,8 +137,9 @@ class DataField extends $DataField {
         serialableField == other.serialableField;
   }
 
+  @override
   String toString() {
-    return "DataField (isAbstract: $isAbstract, isDefaulted: $isDefaulted, returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)";
+    return 'DataField (isAbstract: $isAbstract, isDefaulted: $isDefaulted, returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)';
   }
 }
 
@@ -1019,34 +186,42 @@ class DataValue extends $DataValue {
 
   final Object _value;
 
+  @override
   bool get isAbstract {
     return _isAbstract;
   }
 
+  @override
   bool get isDefaulted {
     return _isDefaulted;
   }
 
+  @override
   FieldType get returnType {
     return _returnType;
   }
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   bool get isComputed {
     return _isComputed;
   }
 
+  @override
   bool get isPrivate {
     return _isPrivate;
   }
 
+  @override
   Option<SerializableField> get serialableField {
     return _serialableField;
   }
 
+  @override
   Object get value {
     return _value;
   }
@@ -1093,6 +268,7 @@ class DataValue extends $DataValue {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc(
@@ -1107,6 +283,7 @@ class DataValue extends $DataValue {
               _isPrivate.hashCode),
           _serialableField.hashCode),
       _value.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataValue) return false;
@@ -1120,8 +297,9 @@ class DataValue extends $DataValue {
         value == other.value;
   }
 
+  @override
   String toString() {
-    return "DataValue (isAbstract: $isAbstract, isDefaulted: $isDefaulted, returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)";
+    return 'DataValue (isAbstract: $isAbstract, isDefaulted: $isDefaulted, returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)';
   }
 }
 
@@ -1131,13 +309,6 @@ class Data<T extends _$DataField> extends $Data<T> {
       @required bool isInterface,
       @required bool isConst,
       @required Iterable<MetaInterface<T, Data<T>>> interfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<T> localNonComputedFields,
-      Iterable<T> nonDefaultedFields,
-      Iterable<T> localNonDefaultedFields,
-      Iterable<T> defaultedFields,
-      Iterable<T> localDefaultedFields,
       @required String name,
       @required bool isPrivate,
       @required Iterable<TypeParameterDeclaration> typeParameters,
@@ -1153,20 +324,6 @@ class Data<T extends _$DataField> extends $Data<T> {
         assert(isConst != null),
         _interfaces = interfaces,
         assert(interfaces != null),
-        _computedFields = computedFields,
-        assert(computedFields != null),
-        _nonComputedFields = nonComputedFields,
-        assert(nonComputedFields != null),
-        _localNonComputedFields = localNonComputedFields,
-        assert(localNonComputedFields != null),
-        _nonDefaultedFields = nonDefaultedFields,
-        assert(nonDefaultedFields != null),
-        _localNonDefaultedFields = localNonDefaultedFields,
-        assert(localNonDefaultedFields != null),
-        _defaultedFields = defaultedFields,
-        assert(defaultedFields != null),
-        _localDefaultedFields = localDefaultedFields,
-        assert(localDefaultedFields != null),
         _name = name,
         assert(name != null),
         _isPrivate = isPrivate,
@@ -1190,20 +347,6 @@ class Data<T extends _$DataField> extends $Data<T> {
 
   final Iterable<MetaInterface<T, Data<T>>> _interfaces;
 
-  final Iterable<T> _computedFields;
-
-  final Iterable<T> _nonComputedFields;
-
-  final Iterable<T> _localNonComputedFields;
-
-  final Iterable<T> _nonDefaultedFields;
-
-  final Iterable<T> _localNonDefaultedFields;
-
-  final Iterable<T> _defaultedFields;
-
-  final Iterable<T> _localDefaultedFields;
-
   final String _name;
 
   final bool _isPrivate;
@@ -1218,76 +361,59 @@ class Data<T extends _$DataField> extends $Data<T> {
 
   final bool _implementsBase;
 
+  @override
   bool get isFinal {
     return _isFinal;
   }
 
+  @override
   bool get isInterface {
     return _isInterface;
   }
 
+  @override
   bool get isConst {
     return _isConst;
   }
 
+  @override
   Iterable<MetaInterface<T, Data<T>>> get interfaces {
     return _interfaces;
   }
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   bool get isPrivate {
     return _isPrivate;
   }
 
+  @override
   Iterable<TypeParameterDeclaration> get typeParameters {
     return _typeParameters;
   }
 
+  @override
   Iterable<T> get fields {
     return _fields;
   }
 
+  @override
   Iterable<Method> get methods {
     return _methods;
   }
 
+  @override
   bool get serializable {
     return _serializable;
   }
 
+  @override
   bool get implementsBase {
     return _implementsBase;
-  }
-
-  Iterable<T> get computedFields {
-    return _computedFields ?? super.computedFields;
-  }
-
-  Iterable<T> get nonComputedFields {
-    return _nonComputedFields ?? super.nonComputedFields;
-  }
-
-  Iterable<T> get localNonComputedFields {
-    return _localNonComputedFields ?? super.localNonComputedFields;
-  }
-
-  Iterable<T> get nonDefaultedFields {
-    return _nonDefaultedFields ?? super.nonDefaultedFields;
-  }
-
-  Iterable<T> get localNonDefaultedFields {
-    return _localNonDefaultedFields ?? super.localNonDefaultedFields;
-  }
-
-  Iterable<T> get defaultedFields {
-    return _defaultedFields ?? super.defaultedFields;
-  }
-
-  Iterable<T> get localDefaultedFields {
-    return _localDefaultedFields ?? super.localDefaultedFields;
   }
 
   Data<T> copy(
@@ -1295,13 +421,6 @@ class Data<T extends _$DataField> extends $Data<T> {
       bool isInterface,
       bool isConst,
       Iterable<MetaInterface<T, Data<T>>> interfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<T> localNonComputedFields,
-      Iterable<T> nonDefaultedFields,
-      Iterable<T> localNonDefaultedFields,
-      Iterable<T> defaultedFields,
-      Iterable<T> localDefaultedFields,
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> typeParameters,
@@ -1314,14 +433,6 @@ class Data<T extends _$DataField> extends $Data<T> {
       isInterface: isInterface ?? _isInterface,
       isConst: isConst ?? _isConst,
       interfaces: interfaces ?? _interfaces,
-      computedFields: computedFields ?? _computedFields,
-      nonComputedFields: nonComputedFields ?? _nonComputedFields,
-      localNonComputedFields: localNonComputedFields ?? _localNonComputedFields,
-      nonDefaultedFields: nonDefaultedFields ?? _nonDefaultedFields,
-      localNonDefaultedFields:
-          localNonDefaultedFields ?? _localNonDefaultedFields,
-      defaultedFields: defaultedFields ?? _defaultedFields,
-      localDefaultedFields: localDefaultedFields ?? _localDefaultedFields,
       name: name ?? _name,
       isPrivate: isPrivate ?? _isPrivate,
       typeParameters: typeParameters ?? _typeParameters,
@@ -1351,6 +462,7 @@ class Data<T extends _$DataField> extends $Data<T> {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc(
@@ -1360,34 +472,10 @@ class Data<T extends _$DataField> extends $Data<T> {
                           $jc(
                               $jc(
                                   $jc(
-                                      $jc(
-                                          $jc(
-                                              $jc(
-                                                  $jc(
-                                                      $jc(
-                                                          $jc(
-                                                              $jc(
-                                                                  $jc(
-                                                                      $jc(
-                                                                          0,
-                                                                          _isFinal
-                                                                              .hashCode),
-                                                                      _isInterface
-                                                                          .hashCode),
-                                                                  _isConst
-                                                                      .hashCode),
-                                                              _interfaces
-                                                                  .hashCode),
-                                                          _computedFields
-                                                              .hashCode),
-                                                      _nonComputedFields
-                                                          .hashCode),
-                                                  _localNonComputedFields
-                                                      .hashCode),
-                                              _nonDefaultedFields.hashCode),
-                                          _localNonDefaultedFields.hashCode),
-                                      _defaultedFields.hashCode),
-                                  _localDefaultedFields.hashCode),
+                                      $jc($jc(0, _isFinal.hashCode),
+                                          _isInterface.hashCode),
+                                      _isConst.hashCode),
+                                  _interfaces.hashCode),
                               _name.hashCode),
                           _isPrivate.hashCode),
                       _typeParameters.hashCode),
@@ -1395,6 +483,7 @@ class Data<T extends _$DataField> extends $Data<T> {
               _methods.hashCode),
           _serializable.hashCode),
       _implementsBase.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Data) return false;
@@ -1402,13 +491,6 @@ class Data<T extends _$DataField> extends $Data<T> {
         isInterface == other.isInterface &&
         isConst == other.isConst &&
         interfaces == other.interfaces &&
-        computedFields == other.computedFields &&
-        nonComputedFields == other.nonComputedFields &&
-        localNonComputedFields == other.localNonComputedFields &&
-        nonDefaultedFields == other.nonDefaultedFields &&
-        localNonDefaultedFields == other.localNonDefaultedFields &&
-        defaultedFields == other.defaultedFields &&
-        localDefaultedFields == other.localDefaultedFields &&
         name == other.name &&
         isPrivate == other.isPrivate &&
         typeParameters == other.typeParameters &&
@@ -1418,8 +500,417 @@ class Data<T extends _$DataField> extends $Data<T> {
         implementsBase == other.implementsBase;
   }
 
+  @override
   String toString() {
-    return "Data (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, computedFields: $computedFields, nonComputedFields: $nonComputedFields, localNonComputedFields: $localNonComputedFields, nonDefaultedFields: $nonDefaultedFields, localNonDefaultedFields: $localNonDefaultedFields, defaultedFields: $defaultedFields, localDefaultedFields: $localDefaultedFields, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)";
+    return 'Data (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)';
+  }
+}
+
+class EnumField extends $EnumField {
+  const EnumField(
+      {@required FieldType returnType,
+      @required String name,
+      @required bool isComputed,
+      @required bool isPrivate,
+      @required Option<SerializableField> serialableField})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _serialableField = serialableField,
+        assert(serialableField != null);
+
+  final FieldType _returnType;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  final bool _isPrivate;
+
+  final Option<SerializableField> _serialableField;
+
+  @override
+  FieldType get returnType {
+    return _returnType;
+  }
+
+  @override
+  String get name {
+    return _name;
+  }
+
+  @override
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  @override
+  bool get isPrivate {
+    return _isPrivate;
+  }
+
+  @override
+  Option<SerializableField> get serialableField {
+    return _serialableField;
+  }
+
+  EnumField copy(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField}) {
+    return EnumField(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+    );
+  }
+
+  EnumField copyField(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField}) {
+    return copy(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+    );
+  }
+
+  @override
+  int get hashCode => $jf($jc(
+      $jc(
+          $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
+              _isComputed.hashCode),
+          _isPrivate.hashCode),
+      _serialableField.hashCode));
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! EnumField) return false;
+    return returnType == other.returnType &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        isPrivate == other.isPrivate &&
+        serialableField == other.serialableField;
+  }
+
+  @override
+  String toString() {
+    return 'EnumField (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)';
+  }
+}
+
+class EnumValue extends $EnumValue {
+  const EnumValue(
+      {@required FieldType returnType,
+      @required String name,
+      @required bool isComputed,
+      @required bool isPrivate,
+      @required Option<SerializableField> serialableField,
+      @required Object value})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _serialableField = serialableField,
+        assert(serialableField != null),
+        _value = value,
+        assert(value != null);
+
+  final FieldType _returnType;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  final bool _isPrivate;
+
+  final Option<SerializableField> _serialableField;
+
+  final Object _value;
+
+  @override
+  FieldType get returnType {
+    return _returnType;
+  }
+
+  @override
+  String get name {
+    return _name;
+  }
+
+  @override
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  @override
+  bool get isPrivate {
+    return _isPrivate;
+  }
+
+  @override
+  Option<SerializableField> get serialableField {
+    return _serialableField;
+  }
+
+  @override
+  Object get value {
+    return _value;
+  }
+
+  EnumValue copy(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField,
+      Object value}) {
+    return EnumValue(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+      value: value ?? _value,
+    );
+  }
+
+  EnumValue copyField(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField}) {
+    return copy(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+    );
+  }
+
+  EnumValue copyValue({Object value}) {
+    return copy(
+      value: value ?? _value,
+    );
+  }
+
+  @override
+  int get hashCode => $jf($jc(
+      $jc(
+          $jc(
+              $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
+                  _isComputed.hashCode),
+              _isPrivate.hashCode),
+          _serialableField.hashCode),
+      _value.hashCode));
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! EnumValue) return false;
+    return returnType == other.returnType &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        isPrivate == other.isPrivate &&
+        serialableField == other.serialableField &&
+        value == other.value;
+  }
+
+  @override
+  String toString() {
+    return 'EnumValue (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)';
+  }
+}
+
+class Enum<T extends _$EnumField, D extends _$DataField> extends $Enum<T, D> {
+  const Enum(
+      {@required String type,
+      @required Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
+      @required String name,
+      @required bool isPrivate,
+      @required Iterable<TypeParameterDeclaration> typeParameters,
+      @required Iterable<T> fields,
+      @required Iterable<Method> methods,
+      @required bool serializable,
+      @required bool implementsBase})
+      : _type = type,
+        assert(type != null),
+        _dataInterfaces = dataInterfaces,
+        assert(dataInterfaces != null),
+        _name = name,
+        assert(name != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _typeParameters = typeParameters,
+        assert(typeParameters != null),
+        _fields = fields,
+        assert(fields != null),
+        _methods = methods,
+        assert(methods != null),
+        _serializable = serializable,
+        assert(serializable != null),
+        _implementsBase = implementsBase,
+        assert(implementsBase != null);
+
+  final String _type;
+
+  final Iterable<MetaInterface<D, Data<D>>> _dataInterfaces;
+
+  final String _name;
+
+  final bool _isPrivate;
+
+  final Iterable<TypeParameterDeclaration> _typeParameters;
+
+  final Iterable<T> _fields;
+
+  final Iterable<Method> _methods;
+
+  final bool _serializable;
+
+  final bool _implementsBase;
+
+  @override
+  String get type {
+    return _type;
+  }
+
+  @override
+  Iterable<MetaInterface<D, Data<D>>> get dataInterfaces {
+    return _dataInterfaces;
+  }
+
+  @override
+  String get name {
+    return _name;
+  }
+
+  @override
+  bool get isPrivate {
+    return _isPrivate;
+  }
+
+  @override
+  Iterable<TypeParameterDeclaration> get typeParameters {
+    return _typeParameters;
+  }
+
+  @override
+  Iterable<T> get fields {
+    return _fields;
+  }
+
+  @override
+  Iterable<Method> get methods {
+    return _methods;
+  }
+
+  @override
+  bool get serializable {
+    return _serializable;
+  }
+
+  @override
+  bool get implementsBase {
+    return _implementsBase;
+  }
+
+  Enum<T, D> copy(
+      {String type,
+      Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
+      String name,
+      bool isPrivate,
+      Iterable<TypeParameterDeclaration> typeParameters,
+      Iterable<T> fields,
+      Iterable<Method> methods,
+      bool serializable,
+      bool implementsBase}) {
+    return Enum(
+      type: type ?? _type,
+      dataInterfaces: dataInterfaces ?? _dataInterfaces,
+      name: name ?? _name,
+      isPrivate: isPrivate ?? _isPrivate,
+      typeParameters: typeParameters ?? _typeParameters,
+      fields: fields ?? _fields,
+      methods: methods ?? _methods,
+      serializable: serializable ?? _serializable,
+      implementsBase: implementsBase ?? _implementsBase,
+    );
+  }
+
+  Enum<T, D> copyMeta(
+      {String name,
+      bool isPrivate,
+      Iterable<TypeParameterDeclaration> typeParameters,
+      Iterable<T> fields,
+      Iterable<Method> methods,
+      bool serializable,
+      bool implementsBase}) {
+    return copy(
+      name: name ?? _name,
+      isPrivate: isPrivate ?? _isPrivate,
+      typeParameters: typeParameters ?? _typeParameters,
+      fields: fields ?? _fields,
+      methods: methods ?? _methods,
+      serializable: serializable ?? _serializable,
+      implementsBase: implementsBase ?? _implementsBase,
+    );
+  }
+
+  @override
+  int get hashCode => $jf($jc(
+      $jc(
+          $jc(
+              $jc(
+                  $jc(
+                      $jc(
+                          $jc(
+                              $jc($jc(0, _type.hashCode),
+                                  _dataInterfaces.hashCode),
+                              _name.hashCode),
+                          _isPrivate.hashCode),
+                      _typeParameters.hashCode),
+                  _fields.hashCode),
+              _methods.hashCode),
+          _serializable.hashCode),
+      _implementsBase.hashCode));
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! Enum) return false;
+    return type == other.type &&
+        dataInterfaces == other.dataInterfaces &&
+        name == other.name &&
+        isPrivate == other.isPrivate &&
+        typeParameters == other.typeParameters &&
+        fields == other.fields &&
+        methods == other.methods &&
+        serializable == other.serializable &&
+        implementsBase == other.implementsBase;
+  }
+
+  @override
+  String toString() {
+    return 'Enum (type: $type, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)';
   }
 }
 
@@ -1442,14 +933,17 @@ class MetaInterface<F extends Field, T extends Meta<F>>
 
   final Iterable<F> _parametarizedFields;
 
+  @override
   T get meta {
     return _meta;
   }
 
+  @override
   Iterable<FieldType> get typeArguments {
     return _typeArguments;
   }
 
+  @override
   Iterable<F> get parametarizedFields {
     return _parametarizedFields;
   }
@@ -1465,9 +959,11 @@ class MetaInterface<F extends Field, T extends Meta<F>>
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc($jc(0, _meta.hashCode), _typeArguments.hashCode),
       _parametarizedFields.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! MetaInterface) return false;
@@ -1476,8 +972,9 @@ class MetaInterface<F extends Field, T extends Meta<F>>
         parametarizedFields == other.parametarizedFields;
   }
 
+  @override
   String toString() {
-    return "MetaInterface (meta: $meta, typeArguments: $typeArguments, parametarizedFields: $parametarizedFields)";
+    return 'MetaInterface (meta: $meta, typeArguments: $typeArguments, parametarizedFields: $parametarizedFields)';
   }
 }
 
@@ -1518,6 +1015,7 @@ class MetaSeal extends $MetaSeal {
 
   final Enum<EnumField, DataField> _enumeration;
 
+  @override
   String get name {
     return when(
       data: (data) => data.name,
@@ -1527,6 +1025,7 @@ class MetaSeal extends $MetaSeal {
     );
   }
 
+  @override
   bool get isPrivate {
     return when(
       data: (data) => data.isPrivate,
@@ -1536,6 +1035,7 @@ class MetaSeal extends $MetaSeal {
     );
   }
 
+  @override
   Iterable<TypeParameterDeclaration> get typeParameters {
     return when(
       data: (data) => data.typeParameters,
@@ -1545,6 +1045,7 @@ class MetaSeal extends $MetaSeal {
     );
   }
 
+  @override
   Iterable<Field> get fields {
     return when(
       data: (data) => data.fields,
@@ -1554,6 +1055,7 @@ class MetaSeal extends $MetaSeal {
     );
   }
 
+  @override
   Iterable<Method> get methods {
     return when(
       data: (data) => data.methods,
@@ -1563,6 +1065,7 @@ class MetaSeal extends $MetaSeal {
     );
   }
 
+  @override
   bool get serializable {
     return when(
       data: (data) => data.serializable,
@@ -1572,6 +1075,7 @@ class MetaSeal extends $MetaSeal {
     );
   }
 
+  @override
   bool get implementsBase {
     return when(
       data: (data) => data.implementsBase,
@@ -1581,21 +1085,25 @@ class MetaSeal extends $MetaSeal {
     );
   }
 
+  @override
   Data<DataField> get data {
     if (_data != null) return _data;
     throw Exception('Illegal access of sealed field, data is not set');
   }
 
+  @override
   Sealed<SealedField, DataField> get sealed {
     if (_sealed != null) return _sealed;
     throw Exception('Illegal access of sealed field, sealed is not set');
   }
 
+  @override
   Sum<SumField> get sum {
     if (_sum != null) return _sum;
     throw Exception('Illegal access of sealed field, sum is not set');
   }
 
+  @override
   Enum<EnumField, DataField> get enumeration {
     if (_enumeration != null) return _enumeration;
     throw Exception('Illegal access of sealed field, enumeration is not set');
@@ -1618,19 +1126,27 @@ class MetaSeal extends $MetaSeal {
   }
 
   void whenData(void Function(Data<DataField>) handler) {
-    if (_data != null) return handler(_data);
+    if (_data != null) {
+      return handler(_data);
+    }
   }
 
   void whenSealed(void Function(Sealed<SealedField, DataField>) handler) {
-    if (_sealed != null) return handler(_sealed);
+    if (_sealed != null) {
+      return handler(_sealed);
+    }
   }
 
   void whenSum(void Function(Sum<SumField>) handler) {
-    if (_sum != null) return handler(_sum);
+    if (_sum != null) {
+      return handler(_sum);
+    }
   }
 
   void whenEnumeration(void Function(Enum<EnumField, DataField>) handler) {
-    if (_enumeration != null) return handler(_enumeration);
+    if (_enumeration != null) {
+      return handler(_enumeration);
+    }
   }
 
   WHEN when<WHEN>(
@@ -1660,35 +1176,41 @@ class MetaSeal extends $MetaSeal {
       WHEN Function(Sum<SumField>) sum,
       WHEN Function(Enum<EnumField, DataField>) enumeration}) {
     if (_data != null) {
-      if (data != null)
+      if (data != null) {
         return data(_data);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_sealed != null) {
-      if (sealed != null)
+      if (sealed != null) {
         return sealed(_sealed);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_sum != null) {
-      if (sum != null)
+      if (sum != null) {
         return sum(_sum);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_enumeration != null) {
-      if (enumeration != null)
+      if (enumeration != null) {
         return enumeration(_enumeration);
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc($jc($jc(0, _data.hashCode), _sealed.hashCode), _sum.hashCode),
       _enumeration.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! MetaSeal) return false;
@@ -1698,8 +1220,9 @@ class MetaSeal extends $MetaSeal {
         _enumeration == other._enumeration;
   }
 
+  @override
   String toString() {
-    return "MetaSeal (${when(data: (data) => 'data $data', sealed: (sealed) => 'sealed $sealed', sum: (sum) => 'sum $sum', enumeration: (enumeration) => 'enumeration $enumeration')}))";
+    return 'MetaSeal (${when(data: (data) => 'data $data', sealed: (sealed) => 'sealed $sealed', sum: (sum) => 'sum $sum', enumeration: (enumeration) => 'enumeration $enumeration')}))';
   }
 }
 
@@ -1707,69 +1230,58 @@ class TypeParameterDeclaration extends $TypeParameterDeclaration {
   const TypeParameterDeclaration(
       {@required String type,
       @required Option<FieldType> extension,
-      String typeParameterStr,
       String genericsStr})
       : _type = type,
         assert(type != null),
         _extension = extension,
         assert(extension != null),
-        _typeParameterStr = typeParameterStr,
-        assert(typeParameterStr != null),
-        _genericsStr = genericsStr,
-        assert(genericsStr != null);
+        _genericsStr = genericsStr;
 
   final String _type;
 
   final Option<FieldType> _extension;
 
-  final String _typeParameterStr;
-
   final String _genericsStr;
 
+  @override
   String get type {
     return _type;
   }
 
+  @override
   Option<FieldType> get extension {
     return _extension;
   }
 
-  String get typeParameterStr {
-    return _typeParameterStr ?? super.typeParameterStr;
-  }
-
+  @override
   String get genericsStr {
     return _genericsStr ?? super.genericsStr;
   }
 
   TypeParameterDeclaration copy(
-      {String type,
-      Option<FieldType> extension,
-      String typeParameterStr,
-      String genericsStr}) {
+      {String type, Option<FieldType> extension, String genericsStr}) {
     return TypeParameterDeclaration(
       type: type ?? _type,
       extension: extension ?? _extension,
-      typeParameterStr: typeParameterStr ?? _typeParameterStr,
       genericsStr: genericsStr ?? _genericsStr,
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
-      $jc($jc($jc(0, _type.hashCode), _extension.hashCode),
-          _typeParameterStr.hashCode),
-      _genericsStr.hashCode));
+      $jc($jc(0, _type.hashCode), _extension.hashCode), genericsStr.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! TypeParameterDeclaration) return false;
     return type == other.type &&
         extension == other.extension &&
-        typeParameterStr == other.typeParameterStr &&
         genericsStr == other.genericsStr;
   }
 
+  @override
   String toString() {
-    return "TypeParameterDeclaration (type: $type, extension: $extension, typeParameterStr: $typeParameterStr, genericsStr: $genericsStr)";
+    return 'TypeParameterDeclaration (type: $type, extension: $extension, genericsStr: $genericsStr)';
   }
 }
 
@@ -1777,68 +1289,58 @@ class FieldType extends $FieldType {
   const FieldType(
       {@required String type,
       @required Option<Iterable<FieldType>> generics,
-      String typeStr,
       String genericsStr})
       : _type = type,
         assert(type != null),
         _generics = generics,
         assert(generics != null),
-        _typeStr = typeStr,
-        assert(typeStr != null),
-        _genericsStr = genericsStr,
-        assert(genericsStr != null);
+        _genericsStr = genericsStr;
 
   final String _type;
 
   final Option<Iterable<FieldType>> _generics;
 
-  final String _typeStr;
-
   final String _genericsStr;
 
+  @override
   String get type {
     return _type;
   }
 
+  @override
   Option<Iterable<FieldType>> get generics {
     return _generics;
   }
 
-  String get typeStr {
-    return _typeStr ?? super.typeStr;
-  }
-
+  @override
   String get genericsStr {
     return _genericsStr ?? super.genericsStr;
   }
 
   FieldType copy(
-      {String type,
-      Option<Iterable<FieldType>> generics,
-      String typeStr,
-      String genericsStr}) {
+      {String type, Option<Iterable<FieldType>> generics, String genericsStr}) {
     return FieldType(
       type: type ?? _type,
       generics: generics ?? _generics,
-      typeStr: typeStr ?? _typeStr,
       genericsStr: genericsStr ?? _genericsStr,
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
-      $jc($jc($jc(0, _type.hashCode), _generics.hashCode), _typeStr.hashCode),
-      _genericsStr.hashCode));
+      $jc($jc(0, _type.hashCode), _generics.hashCode), genericsStr.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! FieldType) return false;
     return type == other.type &&
         generics == other.generics &&
-        typeStr == other.typeStr &&
         genericsStr == other.genericsStr;
   }
 
+  @override
   String toString() {
-    return "FieldType (type: $type, generics: $generics, typeStr: $typeStr, genericsStr: $genericsStr)";
+    return 'FieldType (type: $type, generics: $generics, genericsStr: $genericsStr)';
   }
 }
 
@@ -1874,18 +1376,22 @@ class Method extends $Method {
 
   final Iterable<MethodParameter> _inputs;
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   Iterable<TypeParameterDeclaration> get typeParameters {
     return _typeParameters;
   }
 
+  @override
   FieldType get returnType {
     return _returnType;
   }
 
+  @override
   Iterable<MethodParameter> get inputs {
     return _inputs;
   }
@@ -1903,10 +1409,12 @@ class Method extends $Method {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc($jc($jc(0, _name.hashCode), _typeParameters.hashCode),
           _returnType.hashCode),
       _inputs.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Method) return false;
@@ -1916,8 +1424,9 @@ class Method extends $Method {
         inputs == other.inputs;
   }
 
+  @override
   String toString() {
-    return "Method (name: $name, typeParameters: $typeParameters, returnType: $returnType, inputs: $inputs)";
+    return 'Method (name: $name, typeParameters: $typeParameters, returnType: $returnType, inputs: $inputs)';
   }
 }
 
@@ -1932,10 +1441,12 @@ class MethodParameter extends $MethodParameter {
 
   final FieldType _type;
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   FieldType get type {
     return _type;
   }
@@ -1947,109 +1458,428 @@ class MethodParameter extends $MethodParameter {
     );
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _name.hashCode), _type.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! MethodParameter) return false;
     return name == other.name && type == other.type;
   }
 
+  @override
   String toString() {
-    return "MethodParameter (name: $name, type: $type)";
+    return 'MethodParameter (name: $name, type: $type)';
   }
 }
 
-class Option<T> extends $Option<T> {
-  const Option.some(T some)
-      : assert(some != null),
-        _some = some,
-        _none = null;
+class SealedField extends $SealedField {
+  const SealedField(
+      {@required FieldType returnType,
+      @required String name,
+      @required bool isComputed,
+      @required bool isPrivate,
+      @required Option<SerializableField> serialableField})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _serialableField = serialableField,
+        assert(serialableField != null);
 
-  const Option.none()
-      : _some = null,
-        _none = true;
+  final FieldType _returnType;
 
-  final T _some;
+  final String _name;
 
-  final bool _none;
+  final bool _isComputed;
 
-  T get some {
-    if (_some != null) return _some;
-    throw Exception('Illegal access of sum field, some is not set');
+  final bool _isPrivate;
+
+  final Option<SerializableField> _serialableField;
+
+  @override
+  FieldType get returnType {
+    return _returnType;
   }
 
-  void get none {
-    if (_none != null) return;
-    throw Exception('Illegal access of sum field, none is not set');
+  @override
+  String get name {
+    return _name;
   }
 
-  bool get isSome {
-    return _some != null;
+  @override
+  bool get isComputed {
+    return _isComputed;
   }
 
-  bool get isNone {
-    return _none != null;
+  @override
+  bool get isPrivate {
+    return _isPrivate;
   }
 
-  void whenSome(void Function(T) handler) {
-    if (_some != null) return handler(_some);
+  @override
+  Option<SerializableField> get serialableField {
+    return _serialableField;
   }
 
-  void whenNone(void Function() handler) {
-    if (_none != null) return handler();
+  SealedField copy(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField}) {
+    return SealedField(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+    );
   }
 
-  WHEN when<WHEN>(
-      {@required WHEN Function(T) some, @required WHEN Function() none}) {
-    if (_some != null) {
-      return some(_some);
-    }
-    if (_none != null) {
-      return none();
-    }
-    throw FallThroughError();
+  SealedField copyField(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField}) {
+    return copy(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+    );
   }
 
-  WHEN wheno<WHEN>(
-      {WHEN Function() otherwise,
-      WHEN Function(T) some,
-      WHEN Function() none}) {
-    if (_some != null) {
-      if (some != null)
-        return some(_some);
-      else
-        return otherwise();
-    }
-    if (_none != null) {
-      if (none != null)
-        return none();
-      else
-        return otherwise();
-    }
-    return otherwise();
-  }
-
-  int get hashCode => $jf($jc($jc(0, _some.hashCode), _none.hashCode));
+  @override
+  int get hashCode => $jf($jc(
+      $jc(
+          $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
+              _isComputed.hashCode),
+          _isPrivate.hashCode),
+      _serialableField.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
-    if (other is! Option) return false;
-    return _some == other._some && _none == other._none;
+    if (other is! SealedField) return false;
+    return returnType == other.returnType &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        isPrivate == other.isPrivate &&
+        serialableField == other.serialableField;
   }
 
+  @override
   String toString() {
-    return "Option (${when(some: (some) => 'some $some', none: () => 'none')}))";
+    return 'SealedField (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)';
   }
 }
 
-abstract class OptionBase<T> {
-  bool get isSome;
-  bool get isNone;
-  void whenSome(void Function(T) handler);
-  void whenNone(void Function() handler);
-  WHEN when<WHEN>(
-      {@required WHEN Function(T) some, @required WHEN Function() none});
-  WHEN wheno<WHEN>(
-      {WHEN Function() otherwise, WHEN Function(T) some, WHEN Function() none});
+class SealedValue extends $SealedValue {
+  const SealedValue(
+      {@required FieldType returnType,
+      @required String name,
+      @required bool isComputed,
+      @required bool isPrivate,
+      @required Option<SerializableField> serialableField,
+      @required Object value})
+      : _returnType = returnType,
+        assert(returnType != null),
+        _name = name,
+        assert(name != null),
+        _isComputed = isComputed,
+        assert(isComputed != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _serialableField = serialableField,
+        assert(serialableField != null),
+        _value = value,
+        assert(value != null);
+
+  final FieldType _returnType;
+
+  final String _name;
+
+  final bool _isComputed;
+
+  final bool _isPrivate;
+
+  final Option<SerializableField> _serialableField;
+
+  final Object _value;
+
+  @override
+  FieldType get returnType {
+    return _returnType;
+  }
+
+  @override
+  String get name {
+    return _name;
+  }
+
+  @override
+  bool get isComputed {
+    return _isComputed;
+  }
+
+  @override
+  bool get isPrivate {
+    return _isPrivate;
+  }
+
+  @override
+  Option<SerializableField> get serialableField {
+    return _serialableField;
+  }
+
+  @override
+  Object get value {
+    return _value;
+  }
+
+  SealedValue copy(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField,
+      Object value}) {
+    return SealedValue(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+      value: value ?? _value,
+    );
+  }
+
+  SealedValue copyField(
+      {FieldType returnType,
+      String name,
+      bool isComputed,
+      bool isPrivate,
+      Option<SerializableField> serialableField}) {
+    return copy(
+      returnType: returnType ?? _returnType,
+      name: name ?? _name,
+      isComputed: isComputed ?? _isComputed,
+      isPrivate: isPrivate ?? _isPrivate,
+      serialableField: serialableField ?? _serialableField,
+    );
+  }
+
+  SealedValue copyValue({Object value}) {
+    return copy(
+      value: value ?? _value,
+    );
+  }
+
+  @override
+  int get hashCode => $jf($jc(
+      $jc(
+          $jc(
+              $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
+                  _isComputed.hashCode),
+              _isPrivate.hashCode),
+          _serialableField.hashCode),
+      _value.hashCode));
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! SealedValue) return false;
+    return returnType == other.returnType &&
+        name == other.name &&
+        isComputed == other.isComputed &&
+        isPrivate == other.isPrivate &&
+        serialableField == other.serialableField &&
+        value == other.value;
+  }
+
+  @override
+  String toString() {
+    return 'SealedValue (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)';
+  }
+}
+
+class Sealed<T extends _$SealedField, D extends _$DataField>
+    extends $Sealed<T, D> {
+  const Sealed(
+      {@required bool isConst,
+      @required Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
+      @required String name,
+      @required bool isPrivate,
+      @required Iterable<TypeParameterDeclaration> typeParameters,
+      @required Iterable<T> fields,
+      @required Iterable<Method> methods,
+      @required bool serializable,
+      @required bool implementsBase})
+      : _isConst = isConst,
+        assert(isConst != null),
+        _dataInterfaces = dataInterfaces,
+        assert(dataInterfaces != null),
+        _name = name,
+        assert(name != null),
+        _isPrivate = isPrivate,
+        assert(isPrivate != null),
+        _typeParameters = typeParameters,
+        assert(typeParameters != null),
+        _fields = fields,
+        assert(fields != null),
+        _methods = methods,
+        assert(methods != null),
+        _serializable = serializable,
+        assert(serializable != null),
+        _implementsBase = implementsBase,
+        assert(implementsBase != null);
+
+  final bool _isConst;
+
+  final Iterable<MetaInterface<D, Data<D>>> _dataInterfaces;
+
+  final String _name;
+
+  final bool _isPrivate;
+
+  final Iterable<TypeParameterDeclaration> _typeParameters;
+
+  final Iterable<T> _fields;
+
+  final Iterable<Method> _methods;
+
+  final bool _serializable;
+
+  final bool _implementsBase;
+
+  @override
+  bool get isConst {
+    return _isConst;
+  }
+
+  @override
+  Iterable<MetaInterface<D, Data<D>>> get dataInterfaces {
+    return _dataInterfaces;
+  }
+
+  @override
+  String get name {
+    return _name;
+  }
+
+  @override
+  bool get isPrivate {
+    return _isPrivate;
+  }
+
+  @override
+  Iterable<TypeParameterDeclaration> get typeParameters {
+    return _typeParameters;
+  }
+
+  @override
+  Iterable<T> get fields {
+    return _fields;
+  }
+
+  @override
+  Iterable<Method> get methods {
+    return _methods;
+  }
+
+  @override
+  bool get serializable {
+    return _serializable;
+  }
+
+  @override
+  bool get implementsBase {
+    return _implementsBase;
+  }
+
+  Sealed<T, D> copy(
+      {bool isConst,
+      Iterable<MetaInterface<D, Data<D>>> dataInterfaces,
+      String name,
+      bool isPrivate,
+      Iterable<TypeParameterDeclaration> typeParameters,
+      Iterable<T> fields,
+      Iterable<Method> methods,
+      bool serializable,
+      bool implementsBase}) {
+    return Sealed(
+      isConst: isConst ?? _isConst,
+      dataInterfaces: dataInterfaces ?? _dataInterfaces,
+      name: name ?? _name,
+      isPrivate: isPrivate ?? _isPrivate,
+      typeParameters: typeParameters ?? _typeParameters,
+      fields: fields ?? _fields,
+      methods: methods ?? _methods,
+      serializable: serializable ?? _serializable,
+      implementsBase: implementsBase ?? _implementsBase,
+    );
+  }
+
+  Sealed<T, D> copyMeta(
+      {String name,
+      bool isPrivate,
+      Iterable<TypeParameterDeclaration> typeParameters,
+      Iterable<T> fields,
+      Iterable<Method> methods,
+      bool serializable,
+      bool implementsBase}) {
+    return copy(
+      name: name ?? _name,
+      isPrivate: isPrivate ?? _isPrivate,
+      typeParameters: typeParameters ?? _typeParameters,
+      fields: fields ?? _fields,
+      methods: methods ?? _methods,
+      serializable: serializable ?? _serializable,
+      implementsBase: implementsBase ?? _implementsBase,
+    );
+  }
+
+  @override
+  int get hashCode => $jf($jc(
+      $jc(
+          $jc(
+              $jc(
+                  $jc(
+                      $jc(
+                          $jc(
+                              $jc($jc(0, _isConst.hashCode),
+                                  _dataInterfaces.hashCode),
+                              _name.hashCode),
+                          _isPrivate.hashCode),
+                      _typeParameters.hashCode),
+                  _fields.hashCode),
+              _methods.hashCode),
+          _serializable.hashCode),
+      _implementsBase.hashCode));
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! Sealed) return false;
+    return isConst == other.isConst &&
+        dataInterfaces == other.dataInterfaces &&
+        name == other.name &&
+        isPrivate == other.isPrivate &&
+        typeParameters == other.typeParameters &&
+        fields == other.fields &&
+        methods == other.methods &&
+        serializable == other.serializable &&
+        implementsBase == other.implementsBase;
+  }
+
+  @override
+  String toString() {
+    return 'Sealed (isConst: $isConst, dataInterfaces: $dataInterfaces, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)';
+  }
 }
 
 class SumField extends $SumField {
@@ -2080,22 +1910,27 @@ class SumField extends $SumField {
 
   final Option<SerializableField> _serialableField;
 
+  @override
   FieldType get returnType {
     return _returnType;
   }
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   bool get isComputed {
     return _isComputed;
   }
 
+  @override
   bool get isPrivate {
     return _isPrivate;
   }
 
+  @override
   Option<SerializableField> get serialableField {
     return _serialableField;
   }
@@ -2130,12 +1965,14 @@ class SumField extends $SumField {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc($jc($jc(0, _returnType.hashCode), _name.hashCode),
               _isComputed.hashCode),
           _isPrivate.hashCode),
       _serialableField.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SumField) return false;
@@ -2146,8 +1983,9 @@ class SumField extends $SumField {
         serialableField == other.serialableField;
   }
 
+  @override
   String toString() {
-    return "SumField (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)";
+    return 'SumField (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField)';
   }
 }
 
@@ -2184,26 +2022,32 @@ class SumValue extends $SumValue {
 
   final Object _value;
 
+  @override
   FieldType get returnType {
     return _returnType;
   }
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   bool get isComputed {
     return _isComputed;
   }
 
+  @override
   bool get isPrivate {
     return _isPrivate;
   }
 
+  @override
   Option<SerializableField> get serialableField {
     return _serialableField;
   }
 
+  @override
   Object get value {
     return _value;
   }
@@ -2246,6 +2090,7 @@ class SumValue extends $SumValue {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc(
@@ -2254,6 +2099,7 @@ class SumValue extends $SumValue {
               _isPrivate.hashCode),
           _serialableField.hashCode),
       _value.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SumValue) return false;
@@ -2265,8 +2111,9 @@ class SumValue extends $SumValue {
         value == other.value;
   }
 
+  @override
   String toString() {
-    return "SumValue (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)";
+    return 'SumValue (returnType: $returnType, name: $name, isComputed: $isComputed, isPrivate: $isPrivate, serialableField: $serialableField, value: $value)';
   }
 }
 
@@ -2276,9 +2123,6 @@ class Sum<T extends _$SumField> extends $Sum<T> {
       @required bool isInterface,
       @required bool isConst,
       @required Iterable<MetaInterface<T, Sum<T>>> interfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<T> localNonComputedFields,
       @required String name,
       @required bool isPrivate,
       @required Iterable<TypeParameterDeclaration> typeParameters,
@@ -2294,12 +2138,6 @@ class Sum<T extends _$SumField> extends $Sum<T> {
         assert(isConst != null),
         _interfaces = interfaces,
         assert(interfaces != null),
-        _computedFields = computedFields,
-        assert(computedFields != null),
-        _nonComputedFields = nonComputedFields,
-        assert(nonComputedFields != null),
-        _localNonComputedFields = localNonComputedFields,
-        assert(localNonComputedFields != null),
         _name = name,
         assert(name != null),
         _isPrivate = isPrivate,
@@ -2323,12 +2161,6 @@ class Sum<T extends _$SumField> extends $Sum<T> {
 
   final Iterable<MetaInterface<T, Sum<T>>> _interfaces;
 
-  final Iterable<T> _computedFields;
-
-  final Iterable<T> _nonComputedFields;
-
-  final Iterable<T> _localNonComputedFields;
-
   final String _name;
 
   final bool _isPrivate;
@@ -2343,60 +2175,59 @@ class Sum<T extends _$SumField> extends $Sum<T> {
 
   final bool _implementsBase;
 
+  @override
   bool get isFinal {
     return _isFinal;
   }
 
+  @override
   bool get isInterface {
     return _isInterface;
   }
 
+  @override
   bool get isConst {
     return _isConst;
   }
 
+  @override
   Iterable<MetaInterface<T, Sum<T>>> get interfaces {
     return _interfaces;
   }
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   bool get isPrivate {
     return _isPrivate;
   }
 
+  @override
   Iterable<TypeParameterDeclaration> get typeParameters {
     return _typeParameters;
   }
 
+  @override
   Iterable<T> get fields {
     return _fields;
   }
 
+  @override
   Iterable<Method> get methods {
     return _methods;
   }
 
+  @override
   bool get serializable {
     return _serializable;
   }
 
+  @override
   bool get implementsBase {
     return _implementsBase;
-  }
-
-  Iterable<T> get computedFields {
-    return _computedFields ?? super.computedFields;
-  }
-
-  Iterable<T> get nonComputedFields {
-    return _nonComputedFields ?? super.nonComputedFields;
-  }
-
-  Iterable<T> get localNonComputedFields {
-    return _localNonComputedFields ?? super.localNonComputedFields;
   }
 
   Sum<T> copy(
@@ -2404,9 +2235,6 @@ class Sum<T extends _$SumField> extends $Sum<T> {
       bool isInterface,
       bool isConst,
       Iterable<MetaInterface<T, Sum<T>>> interfaces,
-      Iterable<T> computedFields,
-      Iterable<T> nonComputedFields,
-      Iterable<T> localNonComputedFields,
       String name,
       bool isPrivate,
       Iterable<TypeParameterDeclaration> typeParameters,
@@ -2419,9 +2247,6 @@ class Sum<T extends _$SumField> extends $Sum<T> {
       isInterface: isInterface ?? _isInterface,
       isConst: isConst ?? _isConst,
       interfaces: interfaces ?? _interfaces,
-      computedFields: computedFields ?? _computedFields,
-      nonComputedFields: nonComputedFields ?? _nonComputedFields,
-      localNonComputedFields: localNonComputedFields ?? _localNonComputedFields,
       name: name ?? _name,
       isPrivate: isPrivate ?? _isPrivate,
       typeParameters: typeParameters ?? _typeParameters,
@@ -2451,6 +2276,7 @@ class Sum<T extends _$SumField> extends $Sum<T> {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc(
@@ -2460,16 +2286,10 @@ class Sum<T extends _$SumField> extends $Sum<T> {
                           $jc(
                               $jc(
                                   $jc(
-                                      $jc(
-                                          $jc(
-                                              $jc(
-                                                  $jc($jc(0, _isFinal.hashCode),
-                                                      _isInterface.hashCode),
-                                                  _isConst.hashCode),
-                                              _interfaces.hashCode),
-                                          _computedFields.hashCode),
-                                      _nonComputedFields.hashCode),
-                                  _localNonComputedFields.hashCode),
+                                      $jc($jc(0, _isFinal.hashCode),
+                                          _isInterface.hashCode),
+                                      _isConst.hashCode),
+                                  _interfaces.hashCode),
                               _name.hashCode),
                           _isPrivate.hashCode),
                       _typeParameters.hashCode),
@@ -2477,6 +2297,7 @@ class Sum<T extends _$SumField> extends $Sum<T> {
               _methods.hashCode),
           _serializable.hashCode),
       _implementsBase.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Sum) return false;
@@ -2484,9 +2305,6 @@ class Sum<T extends _$SumField> extends $Sum<T> {
         isInterface == other.isInterface &&
         isConst == other.isConst &&
         interfaces == other.interfaces &&
-        computedFields == other.computedFields &&
-        nonComputedFields == other.nonComputedFields &&
-        localNonComputedFields == other.localNonComputedFields &&
         name == other.name &&
         isPrivate == other.isPrivate &&
         typeParameters == other.typeParameters &&
@@ -2496,7 +2314,8 @@ class Sum<T extends _$SumField> extends $Sum<T> {
         implementsBase == other.implementsBase;
   }
 
+  @override
   String toString() {
-    return "Sum (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, computedFields: $computedFields, nonComputedFields: $nonComputedFields, localNonComputedFields: $localNonComputedFields, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)";
+    return 'Sum (isFinal: $isFinal, isInterface: $isInterface, isConst: $isConst, interfaces: $interfaces, name: $name, isPrivate: $isPrivate, typeParameters: $typeParameters, fields: $fields, methods: $methods, serializable: $serializable, implementsBase: $implementsBase)';
   }
 }

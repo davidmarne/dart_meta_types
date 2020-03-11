@@ -1,24 +1,24 @@
-part of meta_types_models;
+part of meta_types;
 
 @dataInterface
-abstract class _$EnumField implements Field {}
+abstract class _$SealedField implements Field {}
 
 @data
-abstract class $EnumField implements _$EnumField {
-  const $EnumField();
+abstract class $SealedField implements _$SealedField {
+  const $SealedField();
 }
 
 @data
-abstract class $EnumValue implements _$EnumField, Value {
-  const $EnumValue();
+abstract class $SealedValue implements _$SealedField, Value {
+  const $SealedValue();
 }
 
 @data
-abstract class $Enum<T extends _$EnumField, D extends _$DataField>
+abstract class $Sealed<T extends _$SealedField, D extends _$DataField>
     implements Meta<T> {
-  const $Enum();
+  const $Sealed();
 
-  String get type;
+  bool get isConst;
 
   Iterable<MetaInterface<D, Data<D>>> get dataInterfaces;
 

@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart' show Data, DataField;
+import 'package:meta_types/meta_types.dart' show Data, DataField;
 
 import '../common/code_builder_utils.dart';
 import 'interface_methods.dart';
@@ -87,6 +87,7 @@ Iterable<Field> _genNonComputedFields(Data e) => e.nonComputedFields.map(
 Iterable<Method> _nonDefaultedFieldsGetter(Data e) => e.nonDefaultedFields.map(
       (field) => Method(
         (b) => b
+          ..annotations.add(Reference('override'))
           ..name = field.name
           ..returns = Reference(field.returnType.typeStr)
           ..type = MethodType.getter
@@ -97,6 +98,7 @@ Iterable<Method> _nonDefaultedFieldsGetter(Data e) => e.nonDefaultedFields.map(
 Iterable<Method> _defaultedFieldsGetter(Data e) => e.defaultedFields.map(
       (field) => Method(
         (b) => b
+          ..annotations.add(Reference('override'))
           ..name = field.name
           ..returns = Reference(field.returnType.typeStr)
           ..type = MethodType.getter

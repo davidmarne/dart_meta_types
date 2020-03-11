@@ -1,4 +1,4 @@
-part of meta_types_models;
+part of core;
 
 @sum
 @serializable
@@ -21,11 +21,10 @@ abstract class $Option<T> implements OptionBase<T> {
 }
 
 extension IterableExtension<T> on Iterable<T> {
-  Option<T> get firstOption =>
-      this.isEmpty ? Option.none() : Option.some(first);
+  Option<T> get firstOption => isEmpty ? Option.none() : Option.some(first);
 
   Option<T> firstWhereOption(bool Function(T) test) {
-    final first = this.firstWhere(test, orElse: () => null);
+    final first = firstWhere(test, orElse: () => null);
     return first == null ? Option.none() : Option.some(first);
   }
 
@@ -51,7 +50,7 @@ extension IterableOfOptions<T> on Iterable<Option<T>> {
 extension MapOfOptions<K, V> on Map<K, Option<V>> {
   Map<K, V> get whereValueIsSome {
     final result = <K, V>{};
-    for (final k in this.keys) {
+    for (final k in keys) {
       final v = this[k];
       if (v.isSome) {
         result[k] = v.some;

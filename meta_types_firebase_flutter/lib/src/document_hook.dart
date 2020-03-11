@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:meta_types/meta_types.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:meta_types_firebase/meta_types_firebase.dart';
 
+import 'resolutions.dart';
 import 'resolution_wrappers/document_snapshot.dart';
 import 'typed_wrappers.dart';
 import 'document_updater.dart';

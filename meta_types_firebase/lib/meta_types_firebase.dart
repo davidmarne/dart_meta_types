@@ -1,8 +1,3 @@
-import 'package:meta_types/meta_types.dart';
-import 'package:built_collection/built_collection.dart';
-
-part 'meta_types_firebase.g.dart';
-
 class Schema {
   const Schema._();
 }
@@ -20,36 +15,6 @@ class DocumentField {
 /// if service field has no default value it will
 /// only be ommited by the updater
 const serviceField = DocumentField._(true);
-
-@data
-abstract class $Document<T> {
-  String get id;
-  T get data;
-}
-
-@sum
-abstract class $DocumentResolution<T> {
-  const $DocumentResolution();
-
-  void get fetching;
-  Document<T> get dirty;
-  Document<T> get resolved;
-  void get deleting;
-  void get denied;
-  void get notFound;
-}
-
-@sum
-abstract class $CollectionResolution<T> {
-  const $CollectionResolution();
-
-  void get fetching;
-  BuiltList<DocumentResolution<T>> get resolved;
-  BuiltList<DocumentResolution<T>> get dirty;
-  void get deleting;
-  void get denied;
-  void get notFound;
-}
 
 class Collection<T> {
   final String name;

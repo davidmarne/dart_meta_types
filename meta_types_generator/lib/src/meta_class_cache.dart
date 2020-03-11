@@ -1,7 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/meta_types.dart';
+import 'package:meta_types/core.dart';
 
 import 'data_class.dart';
 import 'sum_class.dart';

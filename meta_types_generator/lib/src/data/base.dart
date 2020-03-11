@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart' show Data, DataField;
+import 'package:meta_types/meta_types.dart' show Data, DataField;
 
 import '../common/code_builder_utils.dart';
 import 'interface_methods.dart';

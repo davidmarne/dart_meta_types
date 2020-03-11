@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
+import 'package:meta_types/meta_types.dart';
 import 'meta_class.dart' show TemplateException;
-import 'package:meta_types/meta_types_models.dart';
 import 'meta_class_cache.dart';
 import 'util.dart';
 

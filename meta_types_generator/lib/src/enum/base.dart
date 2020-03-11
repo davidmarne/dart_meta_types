@@ -1,6 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart'
-    show Enum, EnumField, DataField;
+import 'package:meta_types/meta_types.dart' show Enum, EnumField, DataField;
 import 'package:meta_types_generator/src/enum/interface_methods.dart';
 import '../common/code_builder_utils.dart';
 import 'common.dart';

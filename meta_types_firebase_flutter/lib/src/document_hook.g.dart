@@ -20,6 +20,7 @@ class DocumentResolutions<
 
   final Map<String, DocumentResolution<D>> __data;
 
+  @override
   Map<String, DocumentResolution<D>> get _data {
     return __data;
   }
@@ -36,14 +37,17 @@ class DocumentResolutions<
     );
   }
 
+  @override
   int get hashCode => $jf($jc(0, __data.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DocumentResolutions) return false;
     return _data == other._data;
   }
 
+  @override
   String toString() {
-    return "DocumentResolutions (_data: $_data)";
+    return 'DocumentResolutions (_data: $_data)';
   }
 }

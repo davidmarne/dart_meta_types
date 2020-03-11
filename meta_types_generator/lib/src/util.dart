@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/core.dart';
 import 'package:meta_types/meta_types.dart';
 
 Method methodElementToMethod(MethodElement e) => Method(
@@ -23,8 +23,8 @@ Option<SerializableField> getSerializableField(
       .where(
         (meta) => meta.type.name == 'SerializableField',
       )
-      .map((meta) => meta.getField('ommit').toBoolValue()
-          ? ommit
+      .map((meta) => meta.getField('omit').toBoolValue()
+          ? omitSerialization
           : SerializableField(meta.getField('wireName').toString()));
 
   return annos.isNotEmpty ? Option.some(annos.first) : Option.none();
@@ -160,11 +160,14 @@ FieldType resolveFieldExtensionName(Element a) {
   if (indexOfComma != -1 && indexOfComma < lowest) lowest = indexOfComma;
 
   final indexOfBracketSpace = afterExtends.indexOf('> ');
-  if (indexOfBracketSpace != -1 && indexOfBracketSpace < lowest)
+  if (indexOfBracketSpace != -1 && indexOfBracketSpace < lowest) {
     lowest = indexOfBracketSpace;
+  }
+
   final indexOfBracketNewLine = afterExtends.indexOf('>\n');
-  if (indexOfBracketNewLine != -1 && indexOfBracketNewLine < lowest)
+  if (indexOfBracketNewLine != -1 && indexOfBracketNewLine < lowest) {
     lowest = indexOfBracketNewLine;
+  }
 
   return resolveFieldReturnType(
     afterExtends.replaceRange(lowest, afterExtends.length, '').trim(),

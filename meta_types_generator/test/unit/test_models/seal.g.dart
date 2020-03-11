@@ -19,10 +19,12 @@ class DataInterfaceBasicImplementationA
 
   final int _inheritedValue;
 
+  @override
   int get a {
     return _a;
   }
 
+  @override
   int get inheritedValue {
     return _inheritedValue;
   }
@@ -41,15 +43,18 @@ class DataInterfaceBasicImplementationA
     );
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _a.hashCode), _inheritedValue.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataInterfaceBasicImplementationA) return false;
     return a == other.a && inheritedValue == other.inheritedValue;
   }
 
+  @override
   String toString() {
-    return "DataInterfaceBasicImplementationA (a: $a, inheritedValue: $inheritedValue)";
+    return 'DataInterfaceBasicImplementationA (a: $a, inheritedValue: $inheritedValue)';
   }
 }
 
@@ -115,10 +120,12 @@ class DataInterfaceBasicImplementationB
 
   final int _inheritedValue;
 
+  @override
   int get b {
     return _b;
   }
 
+  @override
   int get inheritedValue {
     return _inheritedValue;
   }
@@ -137,15 +144,18 @@ class DataInterfaceBasicImplementationB
     );
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _b.hashCode), _inheritedValue.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataInterfaceBasicImplementationB) return false;
     return b == other.b && inheritedValue == other.inheritedValue;
   }
 
+  @override
   String toString() {
-    return "DataInterfaceBasicImplementationB (b: $b, inheritedValue: $inheritedValue)";
+    return 'DataInterfaceBasicImplementationB (b: $b, inheritedValue: $inheritedValue)';
   }
 }
 
@@ -213,6 +223,7 @@ class Seal extends $Seal {
 
   final DataInterfaceBasicImplementationB _b;
 
+  @override
   int get inheritedValue {
     return when(
       a: (a) => a.inheritedValue,
@@ -220,11 +231,13 @@ class Seal extends $Seal {
     );
   }
 
+  @override
   DataInterfaceBasicImplementationA get a {
     if (_a != null) return _a;
     throw Exception('Illegal access of sealed field, a is not set');
   }
 
+  @override
   DataInterfaceBasicImplementationB get b {
     if (_b != null) return _b;
     throw Exception('Illegal access of sealed field, b is not set');
@@ -239,11 +252,15 @@ class Seal extends $Seal {
   }
 
   void whenA(void Function(DataInterfaceBasicImplementationA) handler) {
-    if (_a != null) return handler(_a);
+    if (_a != null) {
+      return handler(_a);
+    }
   }
 
   void whenB(void Function(DataInterfaceBasicImplementationB) handler) {
-    if (_b != null) return handler(_b);
+    if (_b != null) {
+      return handler(_b);
+    }
   }
 
   WHEN when<WHEN>(
@@ -263,29 +280,34 @@ class Seal extends $Seal {
       WHEN Function(DataInterfaceBasicImplementationA) a,
       WHEN Function(DataInterfaceBasicImplementationB) b}) {
     if (_a != null) {
-      if (a != null)
+      if (a != null) {
         return a(_a);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_b != null) {
-      if (b != null)
+      if (b != null) {
         return b(_b);
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _a.hashCode), _b.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Seal) return false;
     return _a == other._a && _b == other._b;
   }
 
+  @override
   String toString() {
-    return "Seal (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))";
+    return 'Seal (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))';
   }
 }
 
@@ -355,6 +377,7 @@ class SealConst extends $SealConst {
 
   final DataInterfaceBasicImplementationB _b;
 
+  @override
   int get inheritedValue {
     return when(
       a: (a) => a.inheritedValue,
@@ -362,11 +385,13 @@ class SealConst extends $SealConst {
     );
   }
 
+  @override
   DataInterfaceBasicImplementationA get a {
     if (_a != null) return _a;
     throw Exception('Illegal access of sealed field, a is not set');
   }
 
+  @override
   DataInterfaceBasicImplementationB get b {
     if (_b != null) return _b;
     throw Exception('Illegal access of sealed field, b is not set');
@@ -381,11 +406,15 @@ class SealConst extends $SealConst {
   }
 
   void whenA(void Function(DataInterfaceBasicImplementationA) handler) {
-    if (_a != null) return handler(_a);
+    if (_a != null) {
+      return handler(_a);
+    }
   }
 
   void whenB(void Function(DataInterfaceBasicImplementationB) handler) {
-    if (_b != null) return handler(_b);
+    if (_b != null) {
+      return handler(_b);
+    }
   }
 
   WHEN when<WHEN>(
@@ -405,29 +434,34 @@ class SealConst extends $SealConst {
       WHEN Function(DataInterfaceBasicImplementationA) a,
       WHEN Function(DataInterfaceBasicImplementationB) b}) {
     if (_a != null) {
-      if (a != null)
+      if (a != null) {
         return a(_a);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_b != null) {
-      if (b != null)
+      if (b != null) {
         return b(_b);
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _a.hashCode), _b.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SealConst) return false;
     return _a == other._a && _b == other._b;
   }
 
+  @override
   String toString() {
-    return "SealConst (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))";
+    return 'SealConst (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))';
   }
 }
 
@@ -504,11 +538,13 @@ class SealComputedFields extends $SealComputedFields {
     return _value ??= super.value;
   }
 
+  @override
   DataInterfaceBasicImplementationA get a {
     if (_a != null) return _a;
     throw Exception('Illegal access of sealed field, a is not set');
   }
 
+  @override
   DataInterfaceBasicImplementationB get b {
     if (_b != null) return _b;
     throw Exception('Illegal access of sealed field, b is not set');
@@ -523,11 +559,15 @@ class SealComputedFields extends $SealComputedFields {
   }
 
   void whenA(void Function(DataInterfaceBasicImplementationA) handler) {
-    if (_a != null) return handler(_a);
+    if (_a != null) {
+      return handler(_a);
+    }
   }
 
   void whenB(void Function(DataInterfaceBasicImplementationB) handler) {
-    if (_b != null) return handler(_b);
+    if (_b != null) {
+      return handler(_b);
+    }
   }
 
   WHEN when<WHEN>(
@@ -547,29 +587,34 @@ class SealComputedFields extends $SealComputedFields {
       WHEN Function(DataInterfaceBasicImplementationA) a,
       WHEN Function(DataInterfaceBasicImplementationB) b}) {
     if (_a != null) {
-      if (a != null)
+      if (a != null) {
         return a(_a);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_b != null) {
-      if (b != null)
+      if (b != null) {
         return b(_b);
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _a.hashCode), _b.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! SealComputedFields) return false;
     return _a == other._a && _b == other._b;
   }
 
+  @override
   String toString() {
-    return "SealComputedFields (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))";
+    return 'SealComputedFields (${when(a: (a) => 'a $a', b: (b) => 'b $b')}))';
   }
 }
 

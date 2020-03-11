@@ -1,4 +1,4 @@
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/meta_types.dart';
 import 'package:code_builder/code_builder.dart' as cb;
 
 import '../common/code_builder_utils.dart';
@@ -9,16 +9,16 @@ const enumGenericName = 'EGN';
 String Function(EnumField) enumWhenConditionGenerator(
         Enum<EnumField, DataField> enumeration) =>
     (EnumField field) =>
-        'if (this == ${enumeration.name}.${field.name}) { return ${field.name}(${_removeVoidPropertyNameSpaced(enumeration, field)}._value as ${field.returnType.typeStr}); }';
+        'if (this == ${enumeration.name}.${field.name}) { return ${field.name}(${_removeVoidPropertyNameSpaced(enumeration, field)}._value); }';
 
 String Function(EnumField) enumWhenoConditionGenerator(
         Enum<EnumField, DataField> enumeration) =>
     (EnumField field) =>
-        'if (this == ${enumeration.name}.${field.name}) { if (${field.name} != null) return ${field.name}(${_removeVoidPropertyNameSpaced(enumeration, field)}._value as ${field.returnType.typeStr}); else return otherwise(); }';
+        'if (this == ${enumeration.name}.${field.name}) { if (${field.name} != null) {return ${field.name}(${_removeVoidPropertyNameSpaced(enumeration, field)}._value);} else {return otherwise();} }';
 
 String enumWhenFieldGenerator(
         Enum<EnumField, DataField> enumeration, EnumField field) =>
-    'if (${enumeration.name}.${field.name} == this) handler(${_removeVoidPropertyNameSpaced(enumeration, field)}._value as ${field.returnType.typeStr});';
+    'if (${enumeration.name}.${field.name} == this) { handler(${_removeVoidPropertyNameSpaced(enumeration, field)}._value); }';
 
 String _removeVoidPropertyNameSpaced(
         Enum<EnumField, DataField> enumeration, EnumField field) =>

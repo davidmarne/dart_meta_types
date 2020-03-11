@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'meta_types_firebase.dart';
+part of 'resolutions.dart';
 
 // **************************************************************************
 // MetaTypesGenerator
@@ -17,10 +17,12 @@ class Document<T> extends $Document<T> {
 
   final T _data;
 
+  @override
   String get id {
     return _id;
   }
 
+  @override
   T get data {
     return _data;
   }
@@ -32,15 +34,18 @@ class Document<T> extends $Document<T> {
     );
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _id.hashCode), _data.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Document) return false;
     return id == other.id && data == other.data;
   }
 
+  @override
   String toString() {
-    return "Document (id: $id, data: $data)";
+    return 'Document (id: $id, data: $data)';
   }
 }
 
@@ -107,31 +112,37 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
 
   final bool _notFound;
 
+  @override
   void get fetching {
     if (_fetching != null) return;
     throw Exception('Illegal access of sum field, fetching is not set');
   }
 
+  @override
   Document<T> get dirty {
     if (_dirty != null) return _dirty;
     throw Exception('Illegal access of sum field, dirty is not set');
   }
 
+  @override
   Document<T> get resolved {
     if (_resolved != null) return _resolved;
     throw Exception('Illegal access of sum field, resolved is not set');
   }
 
+  @override
   void get deleting {
     if (_deleting != null) return;
     throw Exception('Illegal access of sum field, deleting is not set');
   }
 
+  @override
   void get denied {
     if (_denied != null) return;
     throw Exception('Illegal access of sum field, denied is not set');
   }
 
+  @override
   void get notFound {
     if (_notFound != null) return;
     throw Exception('Illegal access of sum field, notFound is not set');
@@ -162,27 +173,39 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
   }
 
   void whenFetching(void Function() handler) {
-    if (_fetching != null) return handler();
+    if (_fetching != null) {
+      return handler();
+    }
   }
 
   void whenDirty(void Function(Document<T>) handler) {
-    if (_dirty != null) return handler(_dirty);
+    if (_dirty != null) {
+      return handler(_dirty);
+    }
   }
 
   void whenResolved(void Function(Document<T>) handler) {
-    if (_resolved != null) return handler(_resolved);
+    if (_resolved != null) {
+      return handler(_resolved);
+    }
   }
 
   void whenDeleting(void Function() handler) {
-    if (_deleting != null) return handler();
+    if (_deleting != null) {
+      return handler();
+    }
   }
 
   void whenDenied(void Function() handler) {
-    if (_denied != null) return handler();
+    if (_denied != null) {
+      return handler();
+    }
   }
 
   void whenNotFound(void Function() handler) {
-    if (_notFound != null) return handler();
+    if (_notFound != null) {
+      return handler();
+    }
   }
 
   WHEN when<WHEN>(
@@ -222,44 +245,51 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
       WHEN Function() denied,
       WHEN Function() notFound}) {
     if (_fetching != null) {
-      if (fetching != null)
+      if (fetching != null) {
         return fetching();
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_dirty != null) {
-      if (dirty != null)
+      if (dirty != null) {
         return dirty(_dirty);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_resolved != null) {
-      if (resolved != null)
+      if (resolved != null) {
         return resolved(_resolved);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_deleting != null) {
-      if (deleting != null)
+      if (deleting != null) {
         return deleting();
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_denied != null) {
-      if (denied != null)
+      if (denied != null) {
         return denied();
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_notFound != null) {
-      if (notFound != null)
+      if (notFound != null) {
         return notFound();
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc(
@@ -268,6 +298,7 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
               _deleting.hashCode),
           _denied.hashCode),
       _notFound.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DocumentResolution) return false;
@@ -279,8 +310,9 @@ class DocumentResolution<T> extends $DocumentResolution<T> {
         _notFound == other._notFound;
   }
 
+  @override
   String toString() {
-    return "DocumentResolution (${when(fetching: () => 'fetching', dirty: (dirty) => 'dirty $dirty', resolved: (resolved) => 'resolved $resolved', deleting: () => 'deleting', denied: () => 'denied', notFound: () => 'notFound')}))";
+    return 'DocumentResolution (${when(fetching: () => 'fetching', dirty: (dirty) => 'dirty $dirty', resolved: (resolved) => 'resolved $resolved', deleting: () => 'deleting', denied: () => 'denied', notFound: () => 'notFound')}))';
   }
 }
 
@@ -347,31 +379,37 @@ class CollectionResolution<T> extends $CollectionResolution<T> {
 
   final bool _notFound;
 
+  @override
   void get fetching {
     if (_fetching != null) return;
     throw Exception('Illegal access of sum field, fetching is not set');
   }
 
+  @override
   BuiltList<DocumentResolution<T>> get resolved {
     if (_resolved != null) return _resolved;
     throw Exception('Illegal access of sum field, resolved is not set');
   }
 
+  @override
   BuiltList<DocumentResolution<T>> get dirty {
     if (_dirty != null) return _dirty;
     throw Exception('Illegal access of sum field, dirty is not set');
   }
 
+  @override
   void get deleting {
     if (_deleting != null) return;
     throw Exception('Illegal access of sum field, deleting is not set');
   }
 
+  @override
   void get denied {
     if (_denied != null) return;
     throw Exception('Illegal access of sum field, denied is not set');
   }
 
+  @override
   void get notFound {
     if (_notFound != null) return;
     throw Exception('Illegal access of sum field, notFound is not set');
@@ -402,27 +440,39 @@ class CollectionResolution<T> extends $CollectionResolution<T> {
   }
 
   void whenFetching(void Function() handler) {
-    if (_fetching != null) return handler();
+    if (_fetching != null) {
+      return handler();
+    }
   }
 
   void whenResolved(void Function(BuiltList<DocumentResolution<T>>) handler) {
-    if (_resolved != null) return handler(_resolved);
+    if (_resolved != null) {
+      return handler(_resolved);
+    }
   }
 
   void whenDirty(void Function(BuiltList<DocumentResolution<T>>) handler) {
-    if (_dirty != null) return handler(_dirty);
+    if (_dirty != null) {
+      return handler(_dirty);
+    }
   }
 
   void whenDeleting(void Function() handler) {
-    if (_deleting != null) return handler();
+    if (_deleting != null) {
+      return handler();
+    }
   }
 
   void whenDenied(void Function() handler) {
-    if (_denied != null) return handler();
+    if (_denied != null) {
+      return handler();
+    }
   }
 
   void whenNotFound(void Function() handler) {
-    if (_notFound != null) return handler();
+    if (_notFound != null) {
+      return handler();
+    }
   }
 
   WHEN when<WHEN>(
@@ -462,44 +512,51 @@ class CollectionResolution<T> extends $CollectionResolution<T> {
       WHEN Function() denied,
       WHEN Function() notFound}) {
     if (_fetching != null) {
-      if (fetching != null)
+      if (fetching != null) {
         return fetching();
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_resolved != null) {
-      if (resolved != null)
+      if (resolved != null) {
         return resolved(_resolved);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_dirty != null) {
-      if (dirty != null)
+      if (dirty != null) {
         return dirty(_dirty);
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_deleting != null) {
-      if (deleting != null)
+      if (deleting != null) {
         return deleting();
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_denied != null) {
-      if (denied != null)
+      if (denied != null) {
         return denied();
-      else
+      } else {
         return otherwise();
+      }
     }
     if (_notFound != null) {
-      if (notFound != null)
+      if (notFound != null) {
         return notFound();
-      else
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
           $jc(
@@ -508,6 +565,7 @@ class CollectionResolution<T> extends $CollectionResolution<T> {
               _deleting.hashCode),
           _denied.hashCode),
       _notFound.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! CollectionResolution) return false;
@@ -519,7 +577,8 @@ class CollectionResolution<T> extends $CollectionResolution<T> {
         _notFound == other._notFound;
   }
 
+  @override
   String toString() {
-    return "CollectionResolution (${when(fetching: () => 'fetching', resolved: (resolved) => 'resolved $resolved', dirty: (dirty) => 'dirty $dirty', deleting: () => 'deleting', denied: () => 'denied', notFound: () => 'notFound')}))";
+    return 'CollectionResolution (${when(fetching: () => 'fetching', resolved: (resolved) => 'resolved $resolved', dirty: (dirty) => 'dirty $dirty', deleting: () => 'deleting', denied: () => 'denied', notFound: () => 'notFound')}))';
   }
 }

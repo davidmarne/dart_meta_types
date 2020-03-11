@@ -2,7 +2,8 @@ import 'package:source_gen/source_gen.dart';
 import 'package:meta_types_generator/api.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/core.dart';
+import 'package:meta_types/meta_types.dart';
 
 import 'models.dart';
 

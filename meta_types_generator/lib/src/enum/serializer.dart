@@ -1,6 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart'
-    show Enum, EnumField, DataField;
+import 'package:meta_types/meta_types.dart' show Enum, EnumField, DataField;
 import '../common/serializer_utils.dart';
 
 Class generateEnumSerializer(Enum<EnumField, DataField> enumClass) =>

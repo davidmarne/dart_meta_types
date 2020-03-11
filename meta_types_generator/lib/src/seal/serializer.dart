@@ -1,6 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart'
-    show Sealed, SealedField, DataField;
+import 'package:meta_types/meta_types.dart' show Sealed, SealedField, DataField;
 import '../common/serializer_utils.dart';
 
 Class generateSealedSerializer(Sealed<SealedField, DataField> sealClass) =>

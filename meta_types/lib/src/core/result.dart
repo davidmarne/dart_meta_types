@@ -1,37 +1,4 @@
-part of meta_types_models;
-
-@sum
-abstract class $Json {
-  Map<String, Json> get object;
-  List<Json> get array;
-  String get string;
-  num get number;
-  bool get boolean;
-  Null get nil;
-}
-
-@sum
-@serializable
-abstract class $Either<A, B> implements EitherBase<A, B> {
-  A get a;
-  B get b;
-
-  Either<C, B> map<C>(C Function(A) mapper) => when(
-        a: (a) => Either.a(mapper(a)),
-        b: (b) => Either.b(b),
-      );
-
-  Either<C, B> fmap<C>(Either<C, B> Function(A) mapper) => when(
-        a: (a) => mapper(a),
-        b: (b) => Either.b(b),
-      );
-
-  @computed
-  Either<B, A> get reversed => when(
-        a: (a) => Either.b(a),
-        b: (b) => Either.a(b),
-      );
-}
+part of core;
 
 @sum
 abstract class $Result<S, E> implements ResultBase<S, E> {

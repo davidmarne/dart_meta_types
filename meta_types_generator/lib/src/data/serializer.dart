@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart'
+import 'package:meta_types/meta_types.dart'
     show Data, DataField, TypeParameterDeclaration, FieldType;
 
 // TODO: transitino to utils

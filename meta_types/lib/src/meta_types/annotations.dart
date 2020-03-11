@@ -10,8 +10,8 @@ class Computed {
 
 /// [data] can be used to annotate classes to generate data
 /// class boilerplate. generates as final.
-const data = const DataClass._(true, false);
-const dataInterface = const DataClass._(false, true);
+const data = DataClass._(true, false);
+const dataInterface = DataClass._(false, true);
 
 /// [DataClass] is used to annotate classes to generate data class boilerplate
 /// if `isInterface` is true, no constructor will be generated.
@@ -23,7 +23,7 @@ class DataClass {
 
 /// [enumeration] can be used to annotate classes to generate enumeration
 /// class boilerplate
-const enumeration = const EnumClass._();
+const enumeration = EnumClass._();
 
 /// [EnumClass] can be used to annotate classes to generate enumeration
 /// class boilerplate
@@ -33,7 +33,7 @@ class EnumClass {
 
 /// [sealed] can be used to annotate classes to generate sealed
 /// class boilerplate
-const seal = const SealedClass._();
+const seal = SealedClass._();
 
 /// [SealedClass] can be used to annotate classes to generate sealed
 /// class boilerplate
@@ -43,8 +43,7 @@ class SealedClass {
 
 /// [sum] can be used to annotate classes to generate sum
 /// class boilerplate
-const sum = const SumClass._(true, false);
-const sumInterface = const SumClass._(false, true);
+const sum = SumClass._(true, false);
 
 /// [SumClass] can be used to annotate classes to generate sumClass
 /// class boilerplate
@@ -54,34 +53,21 @@ class SumClass {
   const SumClass._(this.isFinal, this.isInterface);
 }
 
-/// [union] can be used to annotate classes to generate union
-/// class boilerplate
-const union = const UnionClass._(true, false);
-const unionInterface = const UnionClass._(false, true);
-
-/// [UnionClass] can be used to annotate classes to generate unionClass
-/// class boilerplate
-class UnionClass {
-  final bool isFinal;
-  final bool isInterface;
-  const UnionClass._(this.isFinal, this.isInterface);
-}
-
 class SerializableField {
-  final bool ommit;
+  final bool omit;
   final String wireName;
 
   const SerializableField._({
-    this.ommit: false,
-    this.wireName: '',
+    this.omit = false,
+    this.wireName = '',
   });
 
   const SerializableField(
     this.wireName,
-  ) : ommit = false;
+  ) : omit = false;
 }
 
-const ommit = SerializableField._(ommit: true);
+const omitSerialization = SerializableField._(omit: true);
 
 const serializable = Serializable();
 

@@ -1,9 +1,9 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/home/david/workspace/flutter
-FLUTTER_APPLICATION_PATH=/home/david/workspace/dart_meta_types/meta_types_firebase_flutter
+FLUTTER_ROOT=/home/davemarne/sdk/flutter
+FLUTTER_APPLICATION_PATH=/home/davemarne/workspace/dart_meta_types/meta_types_firebase_flutter
 FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
 SYMROOT=${SOURCE_ROOT}/../build/ios
-FLUTTER_FRAMEWORK_DIR=/home/david/workspace/flutter/bin/cache/artifacts/engine/ios
+FLUTTER_FRAMEWORK_DIR=/home/davemarne/sdk/flutter/bin/cache/artifacts/engine/ios
 FLUTTER_BUILD_NAME=0.0.1
 FLUTTER_BUILD_NUMBER=0.0.1

@@ -6,16 +6,16 @@ part of enumeration;
 // MetaTypesGenerator
 // **************************************************************************
 
-class Enum<EGN> extends $Enum {
-  const Enum._(this._value) : assert(_value != null);
+class TestEnum<EGN> extends $TestEnum {
+  const TestEnum._(this._value) : assert(_value != null);
 
   final EGN _value;
 
-  static const Enum<int> a = Enum._($Enum.a);
+  static const TestEnum<int> a = TestEnum._($TestEnum.a);
 
-  static const Enum<String> b = Enum._($Enum.b);
+  static const TestEnum<String> b = TestEnum._($TestEnum.b);
 
-  static const values = <Enum>[Enum.a, Enum.b];
+  static const values = <TestEnum>[TestEnum.a, TestEnum.b];
 
   EGN get value => _value;
   int get ordinal => values.indexOf(this);
@@ -28,20 +28,24 @@ class Enum<EGN> extends $Enum {
   }
 
   void whenA(void Function(int) handler) {
-    if (Enum.a == this) handler(Enum.a._value as int);
+    if (TestEnum.a == this) {
+      handler(TestEnum.a._value);
+    }
   }
 
   void whenB(void Function(String) handler) {
-    if (Enum.b == this) handler(Enum.b._value as String);
+    if (TestEnum.b == this) {
+      handler(TestEnum.b._value);
+    }
   }
 
   WHEN when<WHEN>(
       {@required WHEN Function(int) a, @required WHEN Function(String) b}) {
-    if (this == Enum.a) {
-      return a(Enum.a._value as int);
+    if (this == TestEnum.a) {
+      return a(TestEnum.a._value);
     }
-    if (this == Enum.b) {
-      return b(Enum.b._value as String);
+    if (this == TestEnum.b) {
+      return b(TestEnum.b._value);
     }
     throw FallThroughError();
   }
@@ -50,42 +54,47 @@ class Enum<EGN> extends $Enum {
       {WHEN Function() otherwise,
       WHEN Function(int) a,
       WHEN Function(String) b}) {
-    if (this == Enum.a) {
-      if (a != null)
-        return a(Enum.a._value as int);
-      else
+    if (this == TestEnum.a) {
+      if (a != null) {
+        return a(TestEnum.a._value);
+      } else {
         return otherwise();
+      }
     }
-    if (this == Enum.b) {
-      if (b != null)
-        return b(Enum.b._value as String);
-      else
+    if (this == TestEnum.b) {
+      if (b != null) {
+        return b(TestEnum.b._value);
+      } else {
         return otherwise();
+      }
     }
     return otherwise();
   }
 
-  int get hashCode => $jf($jc(_value.hashCode, 'Enum'.hashCode));
+  @override
+  int get hashCode => $jf($jc(_value.hashCode, 'TestEnum'.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
-    if (other is! Enum) return false;
+    if (other is! TestEnum) return false;
     return _value == other._value;
   }
 
+  @override
   String toString() {
-    return "Enum ($_value)";
+    return 'TestEnum ($_value)';
   }
 }
 
-class EnumSerializer extends StructuredSerializer<Enum> {
+class TestEnumSerializer extends StructuredSerializer<TestEnum> {
   @override
-  final Iterable<Type> types = const [Enum];
+  final Iterable<Type> types = const [TestEnum];
 
   @override
-  final String wireName = 'Enum';
+  final String wireName = 'TestEnum';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Enum object,
+  Iterable<Object> serialize(Serializers serializers, TestEnum object,
       {FullType specifiedType = FullType.unspecified}) {
     return <Object>[
       object.when(
@@ -97,13 +106,13 @@ class EnumSerializer extends StructuredSerializer<Enum> {
   }
 
   @override
-  Enum deserialize(Serializers serializers, Iterable<Object> serialized,
+  TestEnum deserialize(Serializers serializers, Iterable<Object> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     switch (serialized.first as String) {
       case 'a':
-        return Enum.a;
+        return TestEnum.a;
       case 'b':
-        return Enum.b;
+        return TestEnum.b;
     }
     throw FallThroughError();
   }

@@ -19,10 +19,12 @@ class DataInterfaceBasicImplementation
 
   final int _inheritedValue;
 
+  @override
   int get concreteValue {
     return _concreteValue;
   }
 
+  @override
   int get inheritedValue {
     return _inheritedValue;
   }
@@ -42,8 +44,10 @@ class DataInterfaceBasicImplementation
     );
   }
 
+  @override
   int get hashCode =>
       $jf($jc($jc(0, _concreteValue.hashCode), _inheritedValue.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataInterfaceBasicImplementation) return false;
@@ -51,8 +55,9 @@ class DataInterfaceBasicImplementation
         inheritedValue == other.inheritedValue;
   }
 
+  @override
   String toString() {
-    return "DataInterfaceBasicImplementation (concreteValue: $concreteValue, inheritedValue: $inheritedValue)";
+    return 'DataInterfaceBasicImplementation (concreteValue: $concreteValue, inheritedValue: $inheritedValue)';
   }
 }
 
@@ -119,10 +124,12 @@ class DataInterfaceGenericsImplementationUnset<T>
 
   final T _inheritedValue;
 
+  @override
   T get concreteValue {
     return _concreteValue;
   }
 
+  @override
   T get inheritedValue {
     return _inheritedValue;
   }
@@ -142,8 +149,10 @@ class DataInterfaceGenericsImplementationUnset<T>
     );
   }
 
+  @override
   int get hashCode =>
       $jf($jc($jc(0, _concreteValue.hashCode), _inheritedValue.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataInterfaceGenericsImplementationUnset) return false;
@@ -151,8 +160,9 @@ class DataInterfaceGenericsImplementationUnset<T>
         inheritedValue == other.inheritedValue;
   }
 
+  @override
   String toString() {
-    return "DataInterfaceGenericsImplementationUnset (concreteValue: $concreteValue, inheritedValue: $inheritedValue)";
+    return 'DataInterfaceGenericsImplementationUnset (concreteValue: $concreteValue, inheritedValue: $inheritedValue)';
   }
 }
 
@@ -229,10 +239,12 @@ class DataInterfaceGenericsImplementationSet
 
   final int _inheritedValue;
 
+  @override
   int get concreteValue {
     return _concreteValue;
   }
 
+  @override
   int get inheritedValue {
     return _inheritedValue;
   }
@@ -252,8 +264,10 @@ class DataInterfaceGenericsImplementationSet
     );
   }
 
+  @override
   int get hashCode =>
       $jf($jc($jc(0, _concreteValue.hashCode), _inheritedValue.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataInterfaceGenericsImplementationSet) return false;
@@ -261,8 +275,9 @@ class DataInterfaceGenericsImplementationSet
         inheritedValue == other.inheritedValue;
   }
 
+  @override
   String toString() {
-    return "DataInterfaceGenericsImplementationSet (concreteValue: $concreteValue, inheritedValue: $inheritedValue)";
+    return 'DataInterfaceGenericsImplementationSet (concreteValue: $concreteValue, inheritedValue: $inheritedValue)';
   }
 }
 
@@ -329,10 +344,12 @@ class DataClassGenerics<A, B extends DataInterfaceBasic>
 
   final B _genericDataClassExtension;
 
+  @override
   A get genericNoExtension {
     return _genericNoExtension;
   }
 
+  @override
   B get genericDataClassExtension {
     return _genericDataClassExtension;
   }
@@ -346,8 +363,10 @@ class DataClassGenerics<A, B extends DataInterfaceBasic>
     );
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _genericNoExtension.hashCode),
       _genericDataClassExtension.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataClassGenerics) return false;
@@ -355,8 +374,9 @@ class DataClassGenerics<A, B extends DataInterfaceBasic>
         genericDataClassExtension == other.genericDataClassExtension;
   }
 
+  @override
   String toString() {
-    return "DataClassGenerics (genericNoExtension: $genericNoExtension, genericDataClassExtension: $genericDataClassExtension)";
+    return 'DataClassGenerics (genericNoExtension: $genericNoExtension, genericDataClassExtension: $genericDataClassExtension)';
   }
 }
 
@@ -432,6 +452,7 @@ class DataClassConst extends $DataClassConst {
 
   final int _value;
 
+  @override
   int get value {
     return _value;
   }
@@ -442,15 +463,18 @@ class DataClassConst extends $DataClassConst {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(0, _value.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataClassConst) return false;
     return value == other.value;
   }
 
+  @override
   String toString() {
-    return "DataClassConst (value: $value)";
+    return 'DataClassConst (value: $value)';
   }
 }
 
@@ -498,6 +522,7 @@ class DataClassDefaultFields extends $DataClassDefaultFields {
 
   final int _value;
 
+  @override
   int get value {
     return _value ?? super.value;
   }
@@ -508,15 +533,18 @@ class DataClassDefaultFields extends $DataClassDefaultFields {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(0, value.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataClassDefaultFields) return false;
     return value == other.value;
   }
 
+  @override
   String toString() {
-    return "DataClassDefaultFields (value: $value)";
+    return 'DataClassDefaultFields (value: $value)';
   }
 }
 
@@ -570,6 +598,7 @@ class DataClassComputedFields extends $DataClassComputedFields {
 
   final int _value;
 
+  @override
   int get value {
     return _value;
   }
@@ -585,15 +614,18 @@ class DataClassComputedFields extends $DataClassComputedFields {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(0, _value.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! DataClassComputedFields) return false;
     return value == other.value;
   }
 
+  @override
   String toString() {
-    return "DataClassComputedFields (value: $value)";
+    return 'DataClassComputedFields (value: $value)';
   }
 }
 

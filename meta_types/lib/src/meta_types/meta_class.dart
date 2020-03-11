@@ -1,4 +1,4 @@
-part of meta_types_models;
+part of meta_types;
 
 @dataInterface
 abstract class Meta<T extends Field> {
@@ -37,8 +37,8 @@ abstract class $TypeParameterDeclaration {
   @computed
   String get typeParameterStr => '$type${genericsStr}';
   String get genericsStr => extension.when(
-        some: (type) => " extends ${type.typeStr}",
-        none: () => "",
+        some: (type) => ' extends ${type.typeStr}',
+        none: () => '',
       );
 }
 
@@ -51,8 +51,8 @@ abstract class $FieldType {
   @computed
   String get typeStr => '$type${genericsStr}';
   String get genericsStr => generics.when(
-        some: (gs) => "<${gs.map((g) => g.typeStr).join(",")}>",
-        none: () => "",
+        some: (gs) => '<${gs.map((g) => g.typeStr).join(',')}>',
+        none: () => '',
       );
 }
 

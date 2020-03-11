@@ -1,15 +1,16 @@
-import 'package:meta_types/meta_types_models.dart' as mtm;
+import 'package:meta_types/core.dart';
+import 'package:meta_types/meta_types.dart' as mtm;
 import 'package:code_builder/code_builder.dart';
 import 'models.dart';
 
 Iterable<Class> updatersContext(Context context) =>
     context.schema.documentMetaTypes
         .map(
-          (metaClass) => metaClass.when<mtm.Option<Class>>(
-            data: (d) => mtm.Option.some(_dataUpdater(context, metaClass)),
-            sealed: (s) => mtm.Option.some(_sumUpdater(context, metaClass)),
-            sum: (s) => mtm.Option.some(_sumUpdater(context, metaClass)),
-            enumeration: (e) => mtm.Option.none(),
+          (metaClass) => metaClass.when<Option<Class>>(
+            data: (d) => Option.some(_dataUpdater(context, metaClass)),
+            sealed: (s) => Option.some(_sumUpdater(context, metaClass)),
+            sum: (s) => Option.some(_sumUpdater(context, metaClass)),
+            enumeration: (e) => Option.none(),
           ),
         )
         .where((o) => o.isSome)

@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart' as cb;
-import 'package:meta_types/meta_types_models.dart';
+import 'package:meta_types/meta_types.dart';
 import '../util.dart';
 
 String emptyReturnTypeIfVoid<T extends Field>(T field) =>
@@ -78,6 +78,7 @@ String fieldParameterName<T extends Field>(T field) =>
 
 cb.Method equality(String className, String equalityCheck) => cb.Method(
       (b) => b
+        ..annotations.add(cb.Reference('override'))
         ..name = 'operator =='
         ..returns = cb.TypeReference((b) => b..symbol = 'bool')
         ..requiredParameters.add(
@@ -99,9 +100,10 @@ cb.Method equality(String className, String equalityCheck) => cb.Method(
 // returns a to string Method
 cb.Method toString(String className, String content) => cb.Method(
       (b) => b
+        ..annotations.add(cb.Reference('override'))
         ..name = 'toString'
         ..returns = cb.TypeReference((b) => b..symbol = 'String')
-        ..body = cb.Code('return "$className ($content)";'),
+        ..body = cb.Code('return \'$className ($content)\';'),
     );
 
 // returns a hash code Method
@@ -110,6 +112,7 @@ cb.Method hashCode(String body) => cb.Method(
         ..name = 'hashCode'
         ..type = cb.MethodType.getter
         ..lambda = true
+        ..annotations.add(cb.Reference('override'))
         ..returns = cb.TypeReference((b) => b..symbol = 'int')
         ..body = cb.Code(body),
     );
@@ -215,6 +218,7 @@ Iterable<cb.Method> dataInterfaceFields<T extends Field>(
     dataFields.map(
       (field) => cb.Method(
         (b) => b
+          ..annotations.add(cb.Reference('override'))
           ..name = field.name
           ..returns = cb.Reference(field.returnType.typeStr)
           ..type = cb.MethodType.getter
@@ -271,7 +275,7 @@ String whenOConditionGenerator<T extends Field>(T field) =>
 
 // when condition for a single field on seal/sum/union
 String whenFieldGenerator<T extends Field>(T field) =>
-    'if (_${field.name} != null) return handler(${privateEmptyFieldNameIfVoid(field)});';
+    'if (_${field.name} != null) { return handler(${privateEmptyFieldNameIfVoid(field)}); }';
 
 Iterable<cb.Method> isSetMethods<T extends Field>(
   Iterable<T> fields, {
@@ -297,6 +301,7 @@ Iterable<cb.Method> restrictedFieldAccessor<T extends Field>(
         (b) => b
           ..name = field.name
           ..type = cb.MethodType.getter
+          ..annotations.add(cb.Reference('override'))
           ..returns = cb.Reference(field.returnType.typeStr)
           ..body = abstractBody(isAbstract, '''
             if (_${field.name} != null) return ${privateEmptyFieldNameIfVoid(field)};

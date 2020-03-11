@@ -1,5 +1,8 @@
 library meta_types;
 
+import 'meta_types.dart';
+import 'core.dart';
+
 export 'package:meta/meta.dart' show required;
 export 'package:built_value/serializer.dart'
     show
@@ -8,14 +11,13 @@ export 'package:built_value/serializer.dart'
         FullType,
         Serializers,
         SerializerPlugin;
-export 'package:built_value/standard_json_plugin.dart';
+export 'package:built_value/standard_json_plugin.dart';// show StandardJsonPlugin;
 
-// part 'meta_types.g.dart';
-part 'src/annotations/annotations.dart';
-// part 'src/json/json.dart';
-// part 'src/models/sealed_class.dart';
-// part 'src/models/enum_class.dart';
-// part 'src/models/data_class.dart';
-// part 'src/models/meta_class.dart';
-// part 'src/models/field.dart';
-// part 'src/models/option.dart';
+part 'src/meta_types/annotations.dart';
+part 'src/meta_types/data_class.dart';
+part 'src/meta_types/enum_class.dart';
+part 'src/meta_types/meta_class.dart';
+part 'src/meta_types/sealed_class.dart';
+part 'src/meta_types/sum.dart';
+
+part 'meta_types.g.dart';

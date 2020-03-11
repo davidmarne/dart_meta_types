@@ -1,3 +1,5 @@
 # This is a generated file; do not edit or check into version control.
-cloud_firestore=/home/david/workspace/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.9+5/
-firebase_core=/home/david/workspace/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.0+9/
+cloud_firestore=/home/davemarne/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.13.4+1/
+cloud_firestore_web=/home/davemarne/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-0.1.1+1/
+firebase_core=/home/davemarne/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.4+2/
+firebase_core_web=/home/davemarne/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-0.1.1+2/

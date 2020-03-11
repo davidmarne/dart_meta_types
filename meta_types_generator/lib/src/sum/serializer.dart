@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types_models.dart' show Sum, SumField;
+import 'package:meta_types/meta_types.dart' show Sum, SumField;
 import '../common/serializer_utils.dart';
 
 Class generateSumSerializer(Sum<SumField> sumClass) => Class(
