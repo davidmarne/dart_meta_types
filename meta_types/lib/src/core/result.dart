@@ -37,3 +37,45 @@ Result<S, Object> computeResultCatchAll<S>(S Function() func) {
     return Result.error(Err(error: e, trace: s));
   }
 }
+
+Future<Result<S, E>> computeResultAsync<S, E>(Future<S> Function() func) async {
+  try {
+    return Result.success(await func());
+  } on E catch (e, s) {
+    return Result.error(Err(error: e, trace: s));
+  }
+}
+
+Future<Result<S, Object>> computeResultCatchAllAsync<S>(
+    Future<S> Function() func) async {
+  try {
+    return Result.success(await func());
+  } catch (e, s) {
+    return Result.error(Err(error: e, trace: s));
+  }
+}
+
+extension FutureResult<S, E> on Future<Result<S, E>> {
+  Future<Result<M, E>> map<M>(M Function(S) mapper) =>
+      then((v) => v.map(mapper));
+
+  Future<Result<M, E>> fmap<M>(Result<M, E> Function(S) mapper) =>
+      then((v) => v.fmap(mapper));
+
+  Future<Result<M, E>> fmapFuture<M>(
+    Future<Result<M, E>> Function(S) mapper, {
+    Future<Result<M, E>> Function(Err<E>) onError,
+  }) =>
+      then((v) => v.when(
+            success: mapper,
+            error: (e) => onError != null
+                ? onError(e)
+                : Future.value(Result<M, E>.error(e)),
+          ));
+
+  Future<Result<S, E>> onError(
+    Future<Result<S, E>> Function(Err<E>) onError,
+  ) =>
+      catchError((e, StackTrace s) =>
+          e is E ? onError(Err(error: e, trace: s)) : throw e);
+}
