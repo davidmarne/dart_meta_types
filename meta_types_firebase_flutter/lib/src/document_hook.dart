@@ -10,6 +10,26 @@ import 'document_updater.dart';
 
 part 'document_hook.g.dart';
 
+DocumentResolution<D> useFirebaseDocument<
+        D,
+        U extends DocumentUpdater<D>,
+        DR extends TypedDocumentReference<D, U, DR, DC>,
+        DC extends TypedCollectionReference<D, U, DR, DC>>(
+    TypedDocumentReference<D, U, DR, DC> ref) {
+  final state = useState(DocumentResolution<D>.fetching());
+  useEffect(() {
+    final _sub = DocumentResolver<D, U, DR, DC>(ref).resolutions.listen((r) {
+      state.value = r;
+    });
+
+    return () {
+      _sub.cancel();
+    };
+  }, [ref]);
+
+  return state.value;
+}
+
 @data
 abstract class $DocumentResolutions<
     D,
@@ -23,7 +43,7 @@ abstract class $DocumentResolutions<
   Iterable<DocumentResolution<D>> get datas => _data.values;
 }
 
-DocumentResolution<D> useFirebaseDocument<
+DocumentResolution<D> useFirebaseDocument_old<
         D,
         U extends DocumentUpdater<D>,
         DR extends TypedDocumentReference<D, U, DR, DC>,
