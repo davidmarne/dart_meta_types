@@ -1,5 +1,27 @@
 import 'package:meta/meta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meta_types/meta_types.dart';
+import 'package:built_collection/built_collection.dart';
+
+class TimestampSerializer extends PrimitiveSerializer<Timestamp> {
+  final bool structured = false;
+  @override
+  final Iterable<Type> types = BuiltList<Type>([Timestamp]);
+  @override
+  final String wireName = 'Timestamp';
+
+  @override
+  Object serialize(Serializers serializers, Timestamp timestamp,
+      {FullType specifiedType = FullType.unspecified}) {
+    return timestamp;
+  }
+
+  @override
+  Timestamp deserialize(Serializers serializers, Object serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    return serialized;
+  }
+}
 
 abstract class DocumentUpdater<D> {
   final Map<String, dynamic> _update = {};
@@ -19,8 +41,8 @@ abstract class DocumentUpdater<D> {
       MapUpdater((key, value) => update['$field.$key'] = value);
 
   @protected
-  DateTimeUpdater $dateTimeUpdater(String field) =>
-      DateTimeUpdater((ft) => update[field] = ft);
+  TimestampUpdater $timestampUpdater(String field) =>
+      TimestampUpdater((ft) => update[field] = ft);
 }
 
 class MapUpdater<T> {
@@ -61,84 +83,12 @@ class NumberUpdater<T extends num> {
       );
 }
 
-class DateTimeUpdater {
+class TimestampUpdater {
   void Function(FieldValue) setter;
 
-  DateTimeUpdater(this.setter);
+  TimestampUpdater(this.setter);
 
   void serverTimestamp() => setter(
         FieldValue.serverTimestamp(),
       );
 }
-
-// class Foo {
-//   int y;
-//   List<String> z;
-//   Bar b;
-// }
-
-// class Bar {
-//   String x;
-// }
-
-// class BarUpdater extends DocumentUpdater<Bar> {
-//   set x(int value) {
-//     data['x'] = value;
-//   }
-// }
-
-// class FooUpdater extends DocumentUpdater<Foo> {
-//   get y => numberUpdater<int>('y');
-//   set y(int value) {
-//     data['y'] = value;
-//   }
-
-//   get z => listUpdater<String>('z');
-//   set z(List<String> value) {
-//     data['z'] = value;
-//   }
-
-//   var _bar;
-//   get bar {
-//     if (_bar == null) {
-//       _bar = BarUpdater();
-//       data['b'] = _bar.data;
-//     }
-//     return _bar;
-//   }
-
-//   set bar(Bar b) => data['b'] = serializers.serialize(bar);
-// }
-
-// var a = FooUpdater()
-//   ..y = 5
-//   ..z = ['h']
-//   ..bar = Bar(x: 'sdf');
-
-// var b = FooUpdater()
-//   ..y.increment()
-//   ..z.arrayUinion('sdf');
-
-// abstract class Baz {
-//   int get x;
-//   String get y;
-// }
-
-// class BazUpdater extends DocumentUpdater<Baz> {
-//   get x => numberUpdater<int>('x');
-//   set x(int value) {
-//     if (data['kind'] != 'x') {
-//       data.clear();
-//     }
-//     data['kind'] = 'x';
-//     data['value'] = value;
-//   }
-
-//   set y(String value) {
-//     if (data['kind'] != 'y') {
-//       data.clear();
-//     }
-//     data['kind'] = 'y';
-//     data['value'] = value;
-//   }
-// }

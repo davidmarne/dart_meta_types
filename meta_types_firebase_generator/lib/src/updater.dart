@@ -124,8 +124,8 @@ Iterable<Method> _sumSealUpdaterGetters(Context context, mtm.MetaSeal meta) =>
             update.clear();
           }
           _${f.name} ??= ${f.returnType.type}Updater._();
-          update['kind'] = 'x';
-          update['value'] = _${f.name};
+          update['kind'] = '${f.name}';
+          update['value'] = _${_updaterSumSealGetterBody(context, f)};
           return _${f.name};
           '''),
           ),
@@ -169,7 +169,7 @@ bool _needsUpdater(Context context, mtm.Field f) {
 const customUpdaterTypes = [
   'int',
   'double',
-  'DateTime',
+  'Timestamp',
   'BuiltList',
   'BuiltMap',
 ];
@@ -180,8 +180,8 @@ String _updaterGetterType(mtm.Field field) {
       return 'NumberUpdater<int>';
     case 'double':
       return 'NumberUpdater<double>';
-    case 'DateTime':
-      return 'DateTimeUpdater';
+    case 'Timestamp':
+      return 'TimestampUpdater';
     case 'BuiltList':
       return 'ListUpdater${field.returnType.genericsStr}';
     case 'BuiltMap':
@@ -191,14 +191,31 @@ String _updaterGetterType(mtm.Field field) {
   }
 }
 
+String _updaterSumSealGetterBody(Context context, mtm.Field field) {
+  switch (field.returnType.type) {
+    case 'int':
+      return '\$numberUpdater(\'value\');';
+    case 'double':
+      return '\$numberUpdater(\'value\');';
+    case 'Timestamp':
+      return '\$timestampUpdater(\'value\');';
+    case 'BuiltList':
+      return '\$listUpdater(\'value\');';
+    case 'BuiltMap':
+      return '\$mapUpdater(\'value\');';
+    default:
+      return '${field.name}.update';
+  }
+}
+
 String _updaterDataGetterBody(Context context, mtm.Field field) {
   switch (field.returnType.type) {
     case 'int':
       return 'return \$numberUpdater(\'${field.name}\');';
     case 'double':
       return 'return \$numberUpdater(\'${field.name}\');';
-    case 'DateTime':
-      return 'return \$dateTimeUpdater(\'${field.name}\');';
+    case 'Timestamp':
+      return 'return \$timestampUpdater(\'${field.name}\');';
     case 'BuiltList':
       return 'return \$listUpdater(\'${field.name}\');';
     case 'BuiltMap':
@@ -215,8 +232,8 @@ String _updaterDataGetterBody(Context context, mtm.Field field) {
 //       return 'return \$numberUpdater(\'${field.name}\');';
 //     case 'double':
 //       return 'return \$numberUpdater(\'${field.name}\');';
-//     case 'DateTime':
-//       return 'return \$dateTimeUpdater(\'${field.name}\');';
+//     case 'Timestamp':
+//       return 'return \$TimestampUpdater(\'${field.name}\');';
 //     case 'BuiltList':
 //       return 'return \$listUpdater(\'${field.name}\');';
 //     case 'BuiltMap':

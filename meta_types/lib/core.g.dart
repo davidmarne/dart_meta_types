@@ -601,20 +601,20 @@ abstract class OptionBase<T> {
       {WHEN Function() otherwise, WHEN Function(T) some, WHEN Function() none});
 }
 
-class Result<S, E> extends $Result<S, E> {
+class Result<S> extends $Result<S> {
   Result.success(S success)
       : assert(success != null),
         _success = success,
         _error = null;
 
-  Result.error(Err<E> error)
+  Result.error(Err error)
       : _success = null,
         assert(error != null),
         _error = error;
 
   final S _success;
 
-  final Err<E> _error;
+  final Err _error;
 
   @override
   S get success {
@@ -623,7 +623,7 @@ class Result<S, E> extends $Result<S, E> {
   }
 
   @override
-  Err<E> get error {
+  Err get error {
     if (_error != null) return _error;
     throw Exception('Illegal access of sum field, error is not set');
   }
@@ -642,7 +642,7 @@ class Result<S, E> extends $Result<S, E> {
     }
   }
 
-  void whenError(void Function(Err<E>) handler) {
+  void whenError(void Function(Err) handler) {
     if (_error != null) {
       return handler(_error);
     }
@@ -650,7 +650,7 @@ class Result<S, E> extends $Result<S, E> {
 
   WHEN when<WHEN>(
       {@required WHEN Function(S) success,
-      @required WHEN Function(Err<E>) error}) {
+      @required WHEN Function(Err) error}) {
     if (_success != null) {
       return success(_success);
     }
@@ -663,7 +663,7 @@ class Result<S, E> extends $Result<S, E> {
   WHEN wheno<WHEN>(
       {WHEN Function() otherwise,
       WHEN Function(S) success,
-      WHEN Function(Err<E>) error}) {
+      WHEN Function(Err) error}) {
     if (_success != null) {
       if (success != null) {
         return success(_success);
@@ -696,33 +696,32 @@ class Result<S, E> extends $Result<S, E> {
   }
 }
 
-abstract class ResultBase<S, E> {
+abstract class ResultBase<S> {
   bool get isSuccess;
   bool get isError;
   void whenSuccess(void Function(S) handler);
-  void whenError(void Function(Err<E>) handler);
+  void whenError(void Function(Err) handler);
   WHEN when<WHEN>(
-      {@required WHEN Function(S) success,
-      @required WHEN Function(Err<E>) error});
+      {@required WHEN Function(S) success, @required WHEN Function(Err) error});
   WHEN wheno<WHEN>(
       {WHEN Function() otherwise,
       WHEN Function(S) success,
-      WHEN Function(Err<E>) error});
+      WHEN Function(Err) error});
 }
 
-class Err<E> extends $Err<E> {
-  Err({@required E error, @required StackTrace trace})
+class Err extends $Err {
+  Err({@required Object error, @required StackTrace trace})
       : _error = error,
         assert(error != null),
         _trace = trace,
         assert(trace != null);
 
-  final E _error;
+  final Object _error;
 
   final StackTrace _trace;
 
   @override
-  E get error {
+  Object get error {
     return _error;
   }
 
@@ -731,7 +730,7 @@ class Err<E> extends $Err<E> {
     return _trace;
   }
 
-  Err<E> copy({E error, StackTrace trace}) {
+  Err copy({Object error, StackTrace trace}) {
     return Err(
       error: error ?? _error,
       trace: trace ?? _trace,

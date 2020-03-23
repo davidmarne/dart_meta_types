@@ -65,7 +65,7 @@ class TypedQuery<
   /// set.
   ///
   /// protected, typed implementations will be generated
-  @protected
+  // @protected
   TypedQuery<D, U, DR, DC> where(
     String field, {
     dynamic isEqualTo,
@@ -95,7 +95,7 @@ class TypedQuery<
   /// [field].
   ///
   /// protected, typed implementations will be generated
-  @protected
+  // @protected
   TypedQuery<D, U, DR, DC> orderBy(
     String field, {
     bool descending = false,
@@ -164,7 +164,7 @@ class TypedQuery<
   // /// [endBefore], [endAtDocument] and [endBeforeDocument].
   ///
   /// protected, typed implementations will be generated
-  @protected
+  // @protected
   TypedQuery<D, U, DR, DC> startAfter(List<dynamic> values) =>
       TypedQuery._fromQuery(
         _query.startAfter(values),
@@ -182,7 +182,7 @@ class TypedQuery<
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
   ///
   /// protected, typed implementations will be generated
-  @protected
+  // @protected
   TypedQuery<D, U, DR, DC> startAt(List<dynamic> values) =>
       TypedQuery._fromQuery(
         _query.startAt(values),
@@ -222,7 +222,7 @@ class TypedQuery<
   /// [startAfter], [startAtDocument] and [startAfterDocument].
   ///
   /// protected, typed implementations will be generated
-  @protected
+  // @protected
   TypedQuery<D, U, DR, DC> endAt(List<dynamic> values) => TypedQuery._fromQuery(
         _query.endAt(values),
         _toTypedDocumentReference,
@@ -261,7 +261,7 @@ class TypedQuery<
   /// [startAfter], [startAtDocument] and [startAfterDocument].
   ///
   /// protected, typed implementations will be generated
-  @protected
+  // @protected
   TypedQuery<D, U, DR, DC> endBefore(List<dynamic> values) =>
       TypedQuery._fromQuery(
         _query.endBefore(values),

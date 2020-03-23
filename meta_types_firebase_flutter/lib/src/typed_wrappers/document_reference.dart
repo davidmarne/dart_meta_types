@@ -20,7 +20,6 @@ abstract class TypedDocumentReference<
     this._toTypedDocumentReference,
   ) : _ref = firestore.document(path);
 
-  @protected
   DocumentReference get ref => _ref;
 
   @override

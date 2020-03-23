@@ -47,7 +47,7 @@ class MetaTypesFirebaseGenerator extends Generator {
 }
 
 String serializers(MetaClassCache cache, LibraryReader reader) =>
-    'final serializers = (Serializers().toBuilder()..addPlugin(StandardJsonPlugin())..addAll([${_serializersParams(cache, reader)}])).build();';
+    'final serializers = (Serializers().toBuilder()..addPlugin(StandardJsonPlugin())..addAll([TimestampSerializer(),${_serializersParams(cache, reader)}])).build();';
 
 String _serializersParams(MetaClassCache cache, LibraryReader reader) =>
     reader.classes
