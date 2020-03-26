@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:meta_types/meta_types.dart' show Data, DataField;
+import 'package:meta_types/meta_types.dart' show Data, DataField, MetaInterface;
 
 import '../common/code_builder_utils.dart';
 import 'interface_methods.dart';
@@ -10,6 +10,7 @@ Class generateData(Data<DataField> dataClass) => Class(
         ..types.addAll(
           typeParameterReferences(dataClass.typeParameters),
         )
+        ..mixins.addAll(_mixins(dataClass))
         ..constructors.add(
           _defaultConstructor(dataClass),
         )
@@ -42,7 +43,18 @@ Class generateData(Data<DataField> dataClass) => Class(
         ]),
     );
 
-Constructor _defaultConstructor(Data<DataField> dataClass) => new Constructor(
+Iterable<Reference> _mixins(Data<DataField> dataClass) => dataClass.interfaces
+    .where((ifc) =>
+        ifc.meta.defaultedFields.isNotEmpty ||
+        ifc.meta.computedFields.isNotEmpty)
+    .map((ifc) => Reference('${ifc.meta.name}${_mixinTypeParameters(ifc)}'));
+
+String _mixinTypeParameters(MetaInterface<DataField, Data<DataField>> ifc) =>
+    ifc.typeArguments.isEmpty
+        ? ''
+        : '<${ifc.typeArguments.map((ta) => ta.typeStr).join(',')}>';
+
+Constructor _defaultConstructor(Data<DataField> dataClass) => Constructor(
       (b) => b
         ..constant = dataClass.isConst
         ..initializers.addAll(

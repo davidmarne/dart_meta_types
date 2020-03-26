@@ -19,7 +19,7 @@ class DocumentResolver<
     // subscribe to snapshots
     _subscription = _ref.snapshots(includeMetadataChanges: true).listen((d) {
       _controller.add(
-        _snapshotToResolution(d),
+        snapshotToResolution(d),
       );
     }, onError: (e) {
       // notfiy the client the data does not exist or is not accessable
@@ -35,7 +35,7 @@ class DocumentResolver<
   }
 }
 
-DocumentResolution<D> _snapshotToResolution<
+DocumentResolution<D> snapshotToResolution<
             D,
             U extends DocumentUpdater<D>,
             DR extends TypedDocumentReference<D, U, DR, DC>,
@@ -73,12 +73,12 @@ class CollectionResolver<
           c.metadata.isFromCache || c.metadata.hasPendingWrites
               ? CollectionResolution.dirty(
                   BuiltList<DocumentResolution<D>>(
-                    c.documents.map(_snapshotToResolution),
+                    c.documents.map(snapshotToResolution),
                   ),
                 )
               : CollectionResolution.resolved(
                   BuiltList<DocumentResolution<D>>(
-                    c.documents.map(_snapshotToResolution),
+                    c.documents.map(snapshotToResolution),
                   ),
                 ),
         );

@@ -26,23 +26,33 @@ class TimestampSerializer extends PrimitiveSerializer<Timestamp> {
 abstract class DocumentUpdater<D> {
   final Map<String, dynamic> _update = {};
 
+  void Function(String key, dynamic value) _setter;
+
+  DocumentUpdater() {
+    _setter = (key, value) => _update[key] = value;
+  }
+
+  DocumentUpdater.nested(String fieldName) {
+    _setter = (key, value) => update['$fieldName.$key'] = value;
+  }
+
   Map<String, dynamic> get update => _update;
 
   @protected
   NumberUpdater<T> $numberUpdater<T extends num>(String field) =>
-      NumberUpdater((ft) => update[field] = ft);
+      NumberUpdater((ft) => _setter(field, ft));
 
   @protected
   ListUpdater<T> $listUpdater<T>(String field) =>
-      ListUpdater((ft) => update[field] = ft);
+      ListUpdater((ft) => _setter(field, ft));
 
   @protected
   MapUpdater<T> $mapUpdater<T>(String field) =>
-      MapUpdater((key, value) => update['$field.$key'] = value);
+      MapUpdater((key, value) => _setter('$field.$key', value));
 
   @protected
   TimestampUpdater $timestampUpdater(String field) =>
-      TimestampUpdater((ft) => update[field] = ft);
+      TimestampUpdater((ft) => _setter(field, ft));
 }
 
 class MapUpdater<T> {

@@ -10,6 +10,12 @@ abstract class DataInterfaceBasic {
 }
 
 @dataInterface
+abstract class DataInterfaceDefaultValue<T> {
+  int get defaultValue => 1;
+  T get inheritedValue;
+}
+
+@dataInterface
 abstract class DataInterfaceGenerics<T> {
   T get inheritedValue;
 }
@@ -31,6 +37,13 @@ abstract class $DataInterfaceGenericsImplementationUnset<T>
 @serializable
 abstract class $DataInterfaceGenericsImplementationSet
     implements DataInterfaceGenerics<int> {
+  int get concreteValue;
+}
+
+@data
+@serializable
+abstract class $DataInterfaceDefaultValueImplementation
+    implements DataInterfaceDefaultValue<int> {
   int get concreteValue;
 }
 

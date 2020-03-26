@@ -331,6 +331,134 @@ class DataInterfaceGenericsImplementationSetSerializer
   }
 }
 
+class DataInterfaceDefaultValueImplementation
+    extends $DataInterfaceDefaultValueImplementation
+    with DataInterfaceDefaultValue<int> {
+  DataInterfaceDefaultValueImplementation(
+      {@required int concreteValue,
+      int defaultValue,
+      @required int inheritedValue})
+      : _concreteValue = concreteValue,
+        assert(concreteValue != null),
+        _defaultValue = defaultValue,
+        _inheritedValue = inheritedValue,
+        assert(inheritedValue != null);
+
+  final int _concreteValue;
+
+  final int _defaultValue;
+
+  final int _inheritedValue;
+
+  @override
+  int get concreteValue {
+    return _concreteValue;
+  }
+
+  @override
+  int get inheritedValue {
+    return _inheritedValue;
+  }
+
+  @override
+  int get defaultValue {
+    return _defaultValue ?? super.defaultValue;
+  }
+
+  DataInterfaceDefaultValueImplementation copy(
+      {int concreteValue, int defaultValue, int inheritedValue}) {
+    return DataInterfaceDefaultValueImplementation(
+      concreteValue: concreteValue ?? _concreteValue,
+      defaultValue: defaultValue ?? _defaultValue,
+      inheritedValue: inheritedValue ?? _inheritedValue,
+    );
+  }
+
+  DataInterfaceDefaultValueImplementation copyDataInterfaceDefaultValue(
+      {int defaultValue, int inheritedValue}) {
+    return copy(
+      defaultValue: defaultValue ?? _defaultValue,
+      inheritedValue: inheritedValue ?? _inheritedValue,
+    );
+  }
+
+  @override
+  int get hashCode => $jf($jc(
+      $jc($jc(0, _concreteValue.hashCode), defaultValue.hashCode),
+      _inheritedValue.hashCode));
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    if (other is! DataInterfaceDefaultValueImplementation) return false;
+    return concreteValue == other.concreteValue &&
+        defaultValue == other.defaultValue &&
+        inheritedValue == other.inheritedValue;
+  }
+
+  @override
+  String toString() {
+    return 'DataInterfaceDefaultValueImplementation (concreteValue: $concreteValue, defaultValue: $defaultValue, inheritedValue: $inheritedValue)';
+  }
+}
+
+class DataInterfaceDefaultValueImplementationSerializer
+    extends StructuredSerializer<DataInterfaceDefaultValueImplementation> {
+  @override
+  final Iterable<Type> types = const [DataInterfaceDefaultValueImplementation];
+
+  @override
+  final String wireName = 'DataInterfaceDefaultValueImplementation';
+
+  @override
+  Iterable<Object> serialize(
+      Serializers serializers, DataInterfaceDefaultValueImplementation object,
+      {FullType specifiedType = FullType.unspecified}) {
+    return <Object>[
+      'concreteValue',
+      serializers.serialize(object.concreteValue, specifiedType: FullType(int)),
+      'defaultValue',
+      serializers.serialize(object.defaultValue, specifiedType: FullType(int)),
+      'inheritedValue',
+      serializers.serialize(object.inheritedValue, specifiedType: FullType(int))
+    ];
+  }
+
+  @override
+  DataInterfaceDefaultValueImplementation deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    Object concreteValue;
+    Object defaultValue;
+    Object inheritedValue;
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value$ = iterator.current;
+      switch (key) {
+        case 'concreteValue':
+          concreteValue =
+              serializers.deserialize(value$, specifiedType: FullType(int));
+          break;
+        case 'defaultValue':
+          defaultValue =
+              serializers.deserialize(value$, specifiedType: FullType(int));
+          break;
+        case 'inheritedValue':
+          inheritedValue =
+              serializers.deserialize(value$, specifiedType: FullType(int));
+          break;
+      }
+    }
+
+    return DataInterfaceDefaultValueImplementation(
+      concreteValue: concreteValue as int,
+      defaultValue: defaultValue as int,
+      inheritedValue: inheritedValue as int,
+    );
+  }
+}
+
 class DataClassGenerics<A, B extends DataInterfaceBasic>
     extends $DataClassGenerics<A, B> {
   DataClassGenerics(

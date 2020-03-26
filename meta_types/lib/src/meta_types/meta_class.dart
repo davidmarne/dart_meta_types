@@ -28,6 +28,15 @@ abstract class $MetaSeal implements Meta<Field> {
   Enum<EnumField, DataField> get enumeration;
 }
 
+extension on MetaSeal {
+  Iterable<Field> get allFields => when(
+        data: (d) => d.nonComputedFields,
+        sealed: (s) => s.nonComputedFields,
+        sum: (s) => s.nonComputedFields,
+        enumeration: (e) => e.fields,
+      );
+}
+
 @data
 abstract class $TypeParameterDeclaration {
   const $TypeParameterDeclaration();

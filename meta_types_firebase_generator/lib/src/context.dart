@@ -32,7 +32,7 @@ Schema _loadSchema(TopLevelVariableElement element, MetaClassCache metaCache) {
         ),
       );
 
-  final collections = rootCollections.expand((s) => [s, ...s.subcollections]);
+  final collections = rootCollections.expand(_collections);
 
   return Schema(
     name: element.name,
@@ -41,6 +41,11 @@ Schema _loadSchema(TopLevelVariableElement element, MetaClassCache metaCache) {
     documentMetaTypes: _documentMetaTypes(metaCache, collections),
   );
 }
+
+Iterable<Collection> _collections(Collection collection) => [
+      collection,
+      ...collection.subcollections.map(_collections).expand((c) => c)
+    ];
 
 Iterable<MetaSeal> _documentMetaTypes(
         MetaClassCache metaCache, Iterable<Collection> collections) =>
@@ -60,7 +65,13 @@ Iterable<MetaSeal> _documentMetaTypesForCollection(
 
 Iterable<MetaSeal> _nestedDocumentMetaTypes(
         MetaClassCache metaCache, MetaSeal meta) =>
-    meta.fields
+    meta
+        .when(
+          data: (d) => d.nonComputedFields,
+          sealed: (s) => s.nonComputedFields,
+          sum: (s) => s.nonComputedFields,
+          enumeration: (e) => e.nonComputedFields,
+        )
         .map((f) => metaCache.find(f.returnType.type))
         .where((m) => m.isSome)
         .map((m) => [m.some, ..._nestedDocumentMetaTypes(metaCache, m.some)])

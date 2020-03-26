@@ -25,9 +25,19 @@ Class _dataUpdater(Context context, mtm.MetaSeal meta) => Class(
           ),
         )
         ..extend = Reference('DocumentUpdater<${meta.name}>')
-        ..constructors.add(
+        ..constructors.addAll([
           Constructor((b) => b..name = '_'),
-        )
+          Constructor(
+            (b) => b
+              ..name = 'nested'
+              ..requiredParameters.add(
+                Parameter((p) => p
+                  ..name = 'fieldName'
+                  ..type = Reference('String')),
+              )
+              ..initializers.add(Code('super.nested(fieldName)')),
+          ),
+        ])
         ..fields.addAll(_updaterGettersFields(context, meta))
         ..methods.addAll([
           ..._updaterDataSetters(context, meta),
@@ -41,9 +51,19 @@ Class _sumUpdater(Context context, mtm.MetaSeal meta) => Class(
         ..types.addAll(
             meta.typeParameters.map((t) => Reference(t.typeParameterStr)))
         ..extend = Reference('DocumentUpdater<${meta.name}>')
-        ..constructors.add(
+        ..constructors.addAll([
           Constructor((b) => b..name = '_'),
-        )
+          Constructor(
+            (b) => b
+              ..name = 'nested'
+              ..requiredParameters.add(
+                Parameter((p) => p
+                  ..name = 'fieldName'
+                  ..type = Reference('String')),
+              )
+              ..initializers.add(Code('super.nested(fieldName)')),
+          ),
+        ])
         ..fields.addAll(_updaterGettersFields(context, meta))
         ..methods.addAll([
           ..._sumSealUpdaterSetters(context, meta),
@@ -52,7 +72,7 @@ Class _sumUpdater(Context context, mtm.MetaSeal meta) => Class(
     );
 
 Iterable<Method> _updaterDataGetters(Context context, mtm.MetaSeal meta) =>
-    _nonServiceFields(meta.fields)
+    _nonServiceFields(meta)
         .where((f) => !f.isComputed && _needsGetter(context, f))
         .map(
           (f) => Method(
@@ -74,7 +94,7 @@ Iterable<Method> _updaterDataGetters(Context context, mtm.MetaSeal meta) =>
         );
 
 Iterable<Method> _updaterDataSetters(Context context, mtm.MetaSeal meta) =>
-    _nonServiceFields(meta.fields)
+    _nonServiceFields(meta)
         .where((f) => !f.isComputed && !_needsUpdater(context, f))
         .map(
           (f) => Method(
@@ -93,14 +113,14 @@ Iterable<Method> _updaterDataSetters(Context context, mtm.MetaSeal meta) =>
         );
 
 Iterable<Field> _updaterGettersFields(Context context, mtm.MetaSeal meta) =>
-    _nonServiceFields(meta.fields).where((f) => _needsUpdater(context, f)).map(
+    _nonServiceFields(meta).where((f) => _needsUpdater(context, f)).map(
           (f) => Field((b) => b
             ..type = Reference(f.returnType.type + 'Updater')
             ..name = '_${f.name}'),
         );
 
 Iterable<Method> _sumSealUpdaterGetters(Context context, mtm.MetaSeal meta) =>
-    _nonServiceFields(meta.fields)
+    _nonServiceFields(meta)
         .where(
           (f) => !f.isComputed && _needsGetter(context, f),
         )
@@ -123,7 +143,7 @@ Iterable<Method> _sumSealUpdaterGetters(Context context, mtm.MetaSeal meta) =>
           if (update['kind'] != '${f.name}') {
             update.clear();
           }
-          _${f.name} ??= ${f.returnType.type}Updater._();
+          _${f.name} ??= ${f.returnType.type}Updater.nested('${f.name}');
           update['kind'] = '${f.name}';
           update['value'] = _${_updaterSumSealGetterBody(context, f)};
           return _${f.name};
@@ -132,7 +152,7 @@ Iterable<Method> _sumSealUpdaterGetters(Context context, mtm.MetaSeal meta) =>
         );
 
 Iterable<Method> _sumSealUpdaterSetters(Context context, mtm.MetaSeal meta) =>
-    _nonServiceFields(meta.fields)
+    _nonServiceFields(meta)
         .where((f) => !f.isComputed && !_needsUpdater(context, f))
         .map(
           (f) => Method(
@@ -245,10 +265,14 @@ String _updaterDataGetterBody(Context context, mtm.Field field) {
 // }
 
 String _objectGetterBody(mtm.MetaSeal s, mtm.Field f) => '''
-  _${f.name} ??= ${s.name}Updater._();
+  _${f.name} ??= ${s.name}Updater.nested('${f.name}');
   update['${f.name}'] = _${f.name}.update;
   return _${f.name};
 ''';
 
-Iterable<mtm.Field> _nonServiceFields(Iterable<mtm.Field> fields) =>
-    fields; // TODO
+Iterable<mtm.Field> _nonServiceFields(mtm.MetaSeal metaSeal) => metaSeal.when(
+      data: (d) => d.nonComputedFields,
+      sealed: (s) => s.nonComputedFields,
+      sum: (s) => s.nonComputedFields,
+      enumeration: (e) => e.fields,
+    ); // TODO

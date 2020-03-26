@@ -76,6 +76,19 @@ void main() {
       _expectSerializable(
           data, FullType(DataInterfaceGenericsImplementationSet));
     });
+    test('interface default value', () {
+      final data = DataInterfaceDefaultValueImplementation(
+        concreteValue: 1,
+        inheritedValue: 2,
+      );
+
+      expect(data.defaultValue, 1);
+      expect(data.inheritedValue, 2);
+      expect(data.concreteValue, 1);
+      _expectEquality(data, data.copy());
+      _expectSerializable(
+          data, FullType(DataInterfaceDefaultValueImplementation));
+    });
   });
 }
 
@@ -94,6 +107,7 @@ final serializers = (Serializers().toBuilder()
       ..addPlugin(StandardJsonPlugin())
       ..addAll([
         DataInterfaceBasicImplementationSerializer(),
+        DataInterfaceDefaultValueImplementationSerializer(),
         DataClassGenericsSerializer(),
         DataClassConstSerializer(),
         DataClassDefaultFieldsSerializer(),
