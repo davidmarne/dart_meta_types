@@ -18,6 +18,12 @@ abstract class $Option<T> implements OptionBase<T> {
         some: (v) => mapper(v),
         none: () => Option.none(),
       );
+
+  T get toNullable => when(none: () => null, some: (s) => s);
+}
+
+extension AsSome<T> on T {
+  Option<T> get asSome => Option<T>.some(this);
 }
 
 extension IterableExtension<T> on Iterable<T> {
