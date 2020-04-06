@@ -23,36 +23,92 @@ class TimestampSerializer extends PrimitiveSerializer<Timestamp> {
   }
 }
 
+// abstract class DocumentUpdater<D> {
+//   final String _fieldPrefix;
+
+//   final Map<String, dynamic> _update;
+
+//   DocumentUpdater()
+//       : _fieldPrefix = '',
+//         _update = {};
+
+//   DocumentUpdater.nested(
+//     String fieldName,
+//     DocumentUpdater parent,
+//   )   : _fieldPrefix = '${parent._fieldPrefix}$fieldName.',
+//         _update = parent._update {
+//     parent[parent._fieldPrefix] = _update;
+//   }
+
+//   String _formatKey(String key) => '$_fieldPrefix$key';
+
+//   @protected
+//   void write(String key, dynamic value) {
+//     _update[_formatKey(key)] = value;
+//   }
+
+//   @protected
+//   dynamic read(String key) {
+//     return _update[_formatKey(key)];
+//   }
+
+//   @protected
+//   void clear() => _update.removeWhere(
+//         (k, v) => k.startsWith(_fieldPrefix),
+//       );
+
+//   @protected
+//   Map<String, dynamic> get update {
+//     if (_fieldPrefix.isEmpty) print('DAVE update is $_update');
+//     return _fieldPrefix.isEmpty
+//         ? _update
+//         : throw StateError('invalid update call on nested updated');
+//   }
 abstract class DocumentUpdater<D> {
   final Map<String, dynamic> _update = {};
 
-  void Function(String key, dynamic value) _setter;
+  DocumentUpdater();
 
-  DocumentUpdater() {
-    _setter = (key, value) => _update[key] = value;
+  DocumentUpdater.nested(
+    String fieldName,
+    DocumentUpdater parent,
+  ) {
+    parent._update[fieldName] = _update;
   }
 
-  DocumentUpdater.nested(String fieldName) {
-    _setter = (key, value) => update['$fieldName.$key'] = value;
+  @protected
+  void write(String key, dynamic value) {
+    _update[key] = value;
   }
 
-  Map<String, dynamic> get update => _update;
+  @protected
+  dynamic read(String key) {
+    return _update[key];
+  }
+
+  @protected
+  void clear() => _update.clear();
+
+  @protected
+  Map<String, dynamic> get update {
+    return _update;
+  }
 
   @protected
   NumberUpdater<T> $numberUpdater<T extends num>(String field) =>
-      NumberUpdater((ft) => _setter(field, ft));
+      NumberUpdater((ft) => write(field, ft));
 
   @protected
   ListUpdater<T> $listUpdater<T>(String field) =>
-      ListUpdater((ft) => _setter(field, ft));
+      ListUpdater((ft) => write(field, ft));
 
   @protected
   MapUpdater<T> $mapUpdater<T>(String field) =>
-      MapUpdater((key, value) => _setter('$field.$key', value));
+      MapUpdater((key, value) => write('$field.$key', value));
 
   @protected
   TimestampUpdater $timestampUpdater(String field) =>
-      TimestampUpdater((ft) => _setter(field, ft));
+      TimestampUpdater((ft) => write(field, ft));
 }
 
 class MapUpdater<T> {

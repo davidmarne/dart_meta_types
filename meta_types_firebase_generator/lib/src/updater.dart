@@ -30,12 +30,17 @@ Class _dataUpdater(Context context, mtm.MetaSeal meta) => Class(
           Constructor(
             (b) => b
               ..name = 'nested'
-              ..requiredParameters.add(
-                Parameter((p) => p
-                  ..name = 'fieldName'
-                  ..type = Reference('String')),
+              ..requiredParameters.addAll(
+                [
+                  Parameter((p) => p
+                    ..name = 'fieldName'
+                    ..type = Reference('String')),
+                  Parameter((p) => p
+                    ..name = 'parent'
+                    ..type = Reference('DocumentUpdater')),
+                ],
               )
-              ..initializers.add(Code('super.nested(fieldName)')),
+              ..initializers.add(Code('super.nested(fieldName, parent)')),
           ),
         ])
         ..fields.addAll(_updaterGettersFields(context, meta))
@@ -56,12 +61,15 @@ Class _sumUpdater(Context context, mtm.MetaSeal meta) => Class(
           Constructor(
             (b) => b
               ..name = 'nested'
-              ..requiredParameters.add(
+              ..requiredParameters.addAll([
                 Parameter((p) => p
                   ..name = 'fieldName'
                   ..type = Reference('String')),
-              )
-              ..initializers.add(Code('super.nested(fieldName)')),
+                Parameter((p) => p
+                  ..name = 'parent'
+                  ..type = Reference('DocumentUpdater')),
+              ])
+              ..initializers.add(Code('super.nested(fieldName, parent)')),
           ),
         ])
         ..fields.addAll(_updaterGettersFields(context, meta))
@@ -94,9 +102,7 @@ Iterable<Method> _updaterDataGetters(Context context, mtm.MetaSeal meta) =>
         );
 
 Iterable<Method> _updaterDataSetters(Context context, mtm.MetaSeal meta) =>
-    _nonServiceFields(meta)
-        .where((f) => !f.isComputed && !_needsUpdater(context, f))
-        .map(
+    _nonServiceFields(meta).where((f) => !f.isComputed).map(
           (f) => Method(
             (b) => b
               ..type = MethodType.setter
@@ -108,9 +114,15 @@ Iterable<Method> _updaterDataSetters(Context context, mtm.MetaSeal meta) =>
                     ..type = Reference(f.returnType.typeStr),
                 ),
               )
-              ..body = Code('update[\'${f.name}\'] = ${f.name};'),
+              ..body =
+                  Code('write(\'${f.name}\', ${_writeValueData(context, f)});'),
           ),
         );
+
+String _writeValueData(Context context, mtm.Field f) => _needsUpdater(
+        context, f)
+    ? 'serializers.serializeWith(${f.returnType.type}Serializer(), ${f.name})'
+    : f.name;
 
 Iterable<Field> _updaterGettersFields(Context context, mtm.MetaSeal meta) =>
     _nonServiceFields(meta).where((f) => _needsUpdater(context, f)).map(
@@ -140,21 +152,18 @@ Iterable<Method> _sumSealUpdaterGetters(Context context, mtm.MetaSeal meta) =>
                 ),
               )
               ..body = Code('''
-          if (update['kind'] != '${f.name}') {
-            update.clear();
+          if (read('kind') != '${f.name}') {
+            clear();
           }
-          _${f.name} ??= ${f.returnType.type}Updater.nested('${f.name}');
-          update['kind'] = '${f.name}';
-          update['value'] = _${_updaterSumSealGetterBody(context, f)};
+          _${f.name} ??= ${f.returnType.type}Updater.nested('value', this);
+          write('kind', '${f.name}');
           return _${f.name};
           '''),
           ),
         );
 
 Iterable<Method> _sumSealUpdaterSetters(Context context, mtm.MetaSeal meta) =>
-    _nonServiceFields(meta)
-        .where((f) => !f.isComputed && !_needsUpdater(context, f))
-        .map(
+    _nonServiceFields(meta).where((f) => !f.isComputed).map(
           (f) => Method(
             (b) => b
               ..type = MethodType.setter
@@ -167,14 +176,21 @@ Iterable<Method> _sumSealUpdaterSetters(Context context, mtm.MetaSeal meta) =>
                 ),
               )
               ..body = Code('''
-                if (update['kind'] != '${f.name}') {
-                  update.clear();
+                if (read('kind') != '${f.name}') {
+                  clear();
                 }
-                update['kind'] = '${f.name}';
-                update['value'] = ${f.returnType.type == "void" ? null : f.name};
+                write('kind', '${f.name}');
+                write('value', ${_writeValueSum(context, f)});
               '''),
           ),
         );
+
+String _writeValueSum(Context context, mtm.Field f) => f.returnType.type ==
+        "void"
+    ? null
+    : _needsUpdater(context, f)
+        ? 'serializers.serializeWith(${f.returnType.type}Serializer(), ${f.name})'
+        : f.name;
 
 bool _needsGetter(Context context, mtm.Field f) =>
     _needsUpdater(context, f) || customUpdaterTypes.contains(f.returnType.type);
@@ -265,8 +281,7 @@ String _updaterDataGetterBody(Context context, mtm.Field field) {
 // }
 
 String _objectGetterBody(mtm.MetaSeal s, mtm.Field f) => '''
-  _${f.name} ??= ${s.name}Updater.nested('${f.name}');
-  update['${f.name}'] = _${f.name}.update;
+  _${f.name} ??= ${s.name}Updater.nested('${f.name}', this);
   return _${f.name};
 ''';
 

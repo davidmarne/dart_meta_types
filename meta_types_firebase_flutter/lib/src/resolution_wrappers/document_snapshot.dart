@@ -85,6 +85,7 @@ class CollectionResolver<
       }
     }, onError: (e) {
       // notfiy the client the data does not exist or is not accessable
+      print(e);
       _controller.add(
         CollectionResolution.denied(),
       );
