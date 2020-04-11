@@ -44,12 +44,23 @@ String _generateSerializeValues(Sealed<SealedField, DataField> sealClass) =>
 
 String _deserializeBody(Sealed<SealedField, DataField> sealClass) => '''
   final iterator = serialized.iterator;
+  String key;
+  dynamic value\$;
+
   iterator.moveNext();
-  iterator.moveNext();
-  final key = iterator.current as String;
-  iterator.moveNext();
-  iterator.moveNext();
-  final dynamic value\$ = iterator.current;
+  if (iterator.current == 'kind') {
+    iterator.moveNext();
+    key = iterator.current as String;
+    iterator.moveNext();
+    iterator.moveNext();
+    value\$ = iterator.current;
+  } else {
+    iterator.moveNext();
+    value\$ = iterator.current;
+    iterator.moveNext();
+    iterator.moveNext();
+    key = iterator.current as String;
+  }
   switch(key) {
     ${_switchClauses(sealClass)}
   }
