@@ -46,12 +46,23 @@ String _serializeFirstParameter(SumField f) =>
 
 String _deserializeBody(Sum<SumField> sumClass) => '''
   final iterator = serialized.iterator;
+  String key;
+  dynamic value\$;
+
   iterator.moveNext();
-  iterator.moveNext();
-  final key = iterator.current as String;
-  iterator.moveNext();
-  iterator.moveNext();
-  final dynamic value\$ = iterator.current;
+  if (iterator.current == 'kind') {
+    iterator.moveNext();
+    key = iterator.current as String;
+    iterator.moveNext();
+    iterator.moveNext();
+    value\$ = iterator.current;
+  } else {
+    iterator.moveNext();
+    value\$ = iterator.current;
+    iterator.moveNext();
+    iterator.moveNext();
+    key = iterator.current as String;
+  }
   switch(key) {
     ${_switchClauses(sumClass)}
   }
