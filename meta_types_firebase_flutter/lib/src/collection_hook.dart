@@ -54,10 +54,8 @@ class _FirebaseCollectionHookState<
   void _setupSub() {
     _sub?.cancel();
     _state = CollectionResolution.fetching();
-    print("a ");
     _sub =
         CollectionResolver<D, U, DR, DC>(hook.ref).resolutions.listen((next) {
-      print("B $next");
       _state = next;
       setState(() {});
     });
