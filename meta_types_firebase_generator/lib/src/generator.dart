@@ -34,7 +34,9 @@ class MetaTypesFirebaseGenerator extends Generator {
 
       writeEach((c) => [flutterClient(c)]);
       writeEach(flutterDocumentRefs);
+      writeEach(flutterAbstractDocumentRefs);
       writeEach(flutterCollectionRefs);
+      writeEach(flutterAbstractCollectionRefs);
       writeEach(updatersContext);
       result.write(serializers(metaCache, library));
     } catch (e, s) {

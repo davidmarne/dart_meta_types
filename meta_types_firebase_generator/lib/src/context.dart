@@ -88,6 +88,7 @@ Collection _loadCollection(
   final name = _calcName(dartObject);
   return Collection(
     name: name,
+    isRenamed: dartObject.getField('name').toStringValue().isNotEmpty,
     type: dartObject.type,
     parent: parentName == null || parentName.isEmpty
         ? const Option.none()

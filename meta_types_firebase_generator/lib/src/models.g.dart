@@ -12,6 +12,7 @@ class Collection extends $Collection {
       @required MetaSeal documentMetaType,
       @required String name,
       @required Iterable<Collection> subcollections,
+      @required bool isRenamed,
       Option<String> parent})
       : _type = type,
         assert(type != null),
@@ -21,6 +22,8 @@ class Collection extends $Collection {
         assert(name != null),
         _subcollections = subcollections,
         assert(subcollections != null),
+        _isRenamed = isRenamed,
+        assert(isRenamed != null),
         _parent = parent;
 
   final ParameterizedType _type;
@@ -31,24 +34,36 @@ class Collection extends $Collection {
 
   final Iterable<Collection> _subcollections;
 
+  final bool _isRenamed;
+
   final Option<String> _parent;
 
+  @override
   ParameterizedType get type {
     return _type;
   }
 
+  @override
   MetaSeal get documentMetaType {
     return _documentMetaType;
   }
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   Iterable<Collection> get subcollections {
     return _subcollections;
   }
 
+  @override
+  bool get isRenamed {
+    return _isRenamed;
+  }
+
+  @override
   Option<String> get parent {
     return _parent ?? super.parent;
   }
@@ -58,22 +73,28 @@ class Collection extends $Collection {
       MetaSeal documentMetaType,
       String name,
       Iterable<Collection> subcollections,
+      bool isRenamed,
       Option<String> parent}) {
     return Collection(
       type: type ?? _type,
       documentMetaType: documentMetaType ?? _documentMetaType,
       name: name ?? _name,
       subcollections: subcollections ?? _subcollections,
+      isRenamed: isRenamed ?? _isRenamed,
       parent: parent ?? _parent,
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc(
-          $jc($jc($jc(0, _type.hashCode), _documentMetaType.hashCode),
-              _name.hashCode),
-          _subcollections.hashCode),
+          $jc(
+              $jc($jc($jc(0, _type.hashCode), _documentMetaType.hashCode),
+                  _name.hashCode),
+              _subcollections.hashCode),
+          _isRenamed.hashCode),
       parent.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Collection) return false;
@@ -81,11 +102,13 @@ class Collection extends $Collection {
         documentMetaType == other.documentMetaType &&
         name == other.name &&
         subcollections == other.subcollections &&
+        isRenamed == other.isRenamed &&
         parent == other.parent;
   }
 
+  @override
   String toString() {
-    return "Collection (type: $type, documentMetaType: $documentMetaType, name: $name, subcollections: $subcollections, parent: $parent)";
+    return 'Collection (type: $type, documentMetaType: $documentMetaType, name: $name, subcollections: $subcollections, isRenamed: $isRenamed, parent: $parent)';
   }
 }
 
@@ -112,18 +135,22 @@ class Schema extends $Schema {
 
   final Iterable<MetaSeal> _documentMetaTypes;
 
+  @override
   String get name {
     return _name;
   }
 
+  @override
   Iterable<Collection> get rootCollections {
     return _rootCollections;
   }
 
+  @override
   Iterable<Collection> get collections {
     return _collections;
   }
 
+  @override
   Iterable<MetaSeal> get documentMetaTypes {
     return _documentMetaTypes;
   }
@@ -141,10 +168,12 @@ class Schema extends $Schema {
     );
   }
 
+  @override
   int get hashCode => $jf($jc(
       $jc($jc($jc(0, _name.hashCode), _rootCollections.hashCode),
           _collections.hashCode),
       _documentMetaTypes.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Schema) return false;
@@ -154,8 +183,9 @@ class Schema extends $Schema {
         documentMetaTypes == other.documentMetaTypes;
   }
 
+  @override
   String toString() {
-    return "Schema (name: $name, rootCollections: $rootCollections, collections: $collections, documentMetaTypes: $documentMetaTypes)";
+    return 'Schema (name: $name, rootCollections: $rootCollections, collections: $collections, documentMetaTypes: $documentMetaTypes)';
   }
 }
 
@@ -170,10 +200,12 @@ class Context extends $Context {
 
   final MetaClassCache _metaCache;
 
+  @override
   Schema get schema {
     return _schema;
   }
 
+  @override
   MetaClassCache get metaCache {
     return _metaCache;
   }
@@ -185,14 +217,17 @@ class Context extends $Context {
     );
   }
 
+  @override
   int get hashCode => $jf($jc($jc(0, _schema.hashCode), _metaCache.hashCode));
+  @override
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! Context) return false;
     return schema == other.schema && metaCache == other.metaCache;
   }
 
+  @override
   String toString() {
-    return "Context (schema: $schema, metaCache: $metaCache)";
+    return 'Context (schema: $schema, metaCache: $metaCache)';
   }
 }

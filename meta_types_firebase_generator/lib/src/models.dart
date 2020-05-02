@@ -11,6 +11,7 @@ abstract class $Collection {
   MetaSeal get documentMetaType;
   String get name;
   Iterable<Collection> get subcollections;
+  bool get isRenamed;
   Option<String> get parent => const Option.none();
 }
 
