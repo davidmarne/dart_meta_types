@@ -1,10 +1,11 @@
 import 'package:meta/meta.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import 'package:meta_types_firebase/meta_types_firebase.dart' as mtf;
 import 'package:meta_types/meta_types.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:meta_types_firebase/meta_types_firebase.dart' as mtf;
 
-class FlutterTimestampSerializer extends PrimitiveSerializer<FlutterTimestamp> {
+class FunctionsTimestampSerializer
+    extends PrimitiveSerializer<FunctionsTimestamp> {
   final bool structured = false;
   @override
   final Iterable<Type> types = BuiltList<Type>([Timestamp]);
@@ -12,22 +13,22 @@ class FlutterTimestampSerializer extends PrimitiveSerializer<FlutterTimestamp> {
   final String wireName = 'Timestamp';
 
   @override
-  Object serialize(Serializers serializers, FlutterTimestamp timestamp,
+  Object serialize(Serializers serializers, FunctionsTimestamp timestamp,
       {FullType specifiedType = FullType.unspecified}) {
     return timestamp._internal;
   }
 
   @override
-  FlutterTimestamp deserialize(Serializers serializers, Object serialized,
+  FunctionsTimestamp deserialize(Serializers serializers, Object serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    return FlutterTimestamp.from(serialized as Timestamp);
+    return FunctionsTimestamp.from(serialized as Timestamp);
   }
 }
 
-class FlutterTimestamp extends mtf.Timestamp {
+class FunctionsTimestamp extends mtf.Timestamp {
   final Timestamp _internal;
 
-  FlutterTimestamp.from(this._internal);
+  FunctionsTimestamp.from(this._internal);
 
   @override
   int get seconds => _internal.seconds;
@@ -38,50 +39,9 @@ class FlutterTimestamp extends mtf.Timestamp {
   @override
   int get microsecondsSinceEpoch => _internal.microsecondsSinceEpoch;
   @override
-  DateTime toDateTime() => _internal.toDate();
+  DateTime toDateTime() => _internal.toDateTime();
 }
 
-// abstract class DocumentUpdater<D> {
-//   final String _fieldPrefix;
-
-//   final Map<String, dynamic> _update;
-
-//   DocumentUpdater()
-//       : _fieldPrefix = '',
-//         _update = {};
-
-//   DocumentUpdater.nested(
-//     String fieldName,
-//     DocumentUpdater parent,
-//   )   : _fieldPrefix = '${parent._fieldPrefix}$fieldName.',
-//         _update = parent._update {
-//     parent[parent._fieldPrefix] = _update;
-//   }
-
-//   String _formatKey(String key) => '$_fieldPrefix$key';
-
-//   @protected
-//   void write(String key, dynamic value) {
-//     _update[_formatKey(key)] = value;
-//   }
-
-//   @protected
-//   dynamic read(String key) {
-//     return _update[_formatKey(key)];
-//   }
-
-//   @protected
-//   void clear() => _update.removeWhere(
-//         (k, v) => k.startsWith(_fieldPrefix),
-//       );
-
-//   @protected
-//   Map<String, dynamic> get update {
-//     if (_fieldPrefix.isEmpty) print('DAVE update is $_update');
-//     return _fieldPrefix.isEmpty
-//         ? _update
-//         : throw StateError('invalid update call on nested updated');
-//   }
 abstract class DocumentUpdater<D> {
   final Map<String, dynamic> _update = {};
 
@@ -107,7 +67,6 @@ abstract class DocumentUpdater<D> {
   @protected
   void clear() => _update.clear();
 
-  @protected
   Map<String, dynamic> get update {
     return _update;
   }
@@ -139,7 +98,7 @@ class MapUpdater<T> {
   }
 
   void delete(String key) {
-    setter(key, FieldValue.delete());
+    setter(key, Firestore.fieldValues.delete());
   }
 }
 
@@ -149,11 +108,11 @@ class ListUpdater<T> {
   ListUpdater(this.setter);
 
   void arrayRemove(List<T> elements) => setter(
-        FieldValue.arrayRemove(elements),
+        Firestore.fieldValues.arrayRemove(elements),
       );
 
   void arrayUnion(List<T> elements) => setter(
-        FieldValue.arrayUnion(elements),
+        Firestore.fieldValues.arrayUnion(elements),
       );
 }
 
@@ -162,9 +121,8 @@ class NumberUpdater<T extends num> {
 
   NumberUpdater(this.setter);
 
-  void increment(T i) => setter(
-        FieldValue.increment(i),
-      );
+  void increment(T i) =>
+      throw Exception('Increment is not accessible in functions');
 }
 
 class TimestampUpdater {
@@ -173,6 +131,6 @@ class TimestampUpdater {
   TimestampUpdater(this.setter);
 
   void serverTimestamp() => setter(
-        FieldValue.serverTimestamp(),
+        Firestore.fieldValues.serverTimestamp(),
       );
 }

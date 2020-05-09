@@ -11,7 +11,7 @@ abstract class $Collection {
   MetaSeal get documentMetaType;
   String get name;
   Iterable<Collection> get subcollections;
-  Environment get environment;
+  bool get isRenamed;
   Option<String> get parent => const Option.none();
 }
 
@@ -25,12 +25,14 @@ abstract class $Schema {
 
 @data
 abstract class $Context {
+  Environment get environment;
   Schema get schema;
   MetaClassCache get metaCache;
 }
 
 @enumeration
 abstract class $Environment {
+  const $Environment();
   static const String flutter = "flutter";
   static const String cloudFunctions = "cloudFunctions";
 }

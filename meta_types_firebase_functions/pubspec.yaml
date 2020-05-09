@@ -1,0 +1,20 @@
+name: meta_types_firebase_functions
+description: A new Flutter project.
+version: 0.0.1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  meta_types:
+    path: ../meta_types
+  firebase_functions_interop: ^1.0.2
+  built_collection: ^4.0.0
+  meta_types_firebase:
+    path: ../meta_types_firebase
+
+dev_dependencies:
+  build_runner: ^1.0.0
+  pedantic: ^1.8.0
+  meta_types_generator: #^0.1.0
+    path: ../meta_types_generator

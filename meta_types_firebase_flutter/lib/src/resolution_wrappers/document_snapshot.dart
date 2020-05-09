@@ -22,6 +22,7 @@ class DocumentResolver<
         snapshotToResolution(d),
       );
     }, onError: (e) {
+      print(e);
       // notfiy the client the data does not exist or is not accessable
       _controller.add(DocumentResolution.denied());
     });

@@ -5,6 +5,9 @@ version: 0.0.1
 
 environment:
   sdk: ">=2.0.0 <3.0.0"
+dependencies:
+  built_value: ^7.0.0
+  built_collection: ^4.0.0
 
 dev_dependencies:
   pedantic: ^1.8.0

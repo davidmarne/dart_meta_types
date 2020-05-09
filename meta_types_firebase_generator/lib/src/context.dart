@@ -7,11 +7,20 @@ import 'package:meta_types/meta_types.dart';
 
 import 'models.dart';
 
+// TODO: hack
+bool isFlutter = false;
+
 Iterable<Context> readContexts(MetaClassCache metaCache, LibraryReader reader) {
+  isFlutter =
+      reader.element.importedLibraries.any((l) => l.name == 'cloud_firestore');
   return _loadSchemas(reader, metaCache).map(
     (schema) => Context(
       schema: schema,
       metaCache: metaCache,
+      environment: reader.element.importedLibraries
+              .any((l) => l.name == 'cloud_firestore')
+          ? Environment.flutter
+          : Environment.cloudFunctions,
     ),
   );
 }
@@ -88,6 +97,7 @@ Collection _loadCollection(
   final name = _calcName(dartObject);
   return Collection(
     name: name,
+    isRenamed: dartObject.getField('name').toStringValue().isNotEmpty,
     type: dartObject.type,
     parent: parentName == null || parentName.isEmpty
         ? const Option.none()
